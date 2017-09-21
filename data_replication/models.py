@@ -17,15 +17,11 @@ __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
 
-
-class ReplicationType(models.Model):
-    name = models.CharField(max_length=32)
-    backend = models.CharField(max_length=128)
+REPLICATION_TYPES = ((1, "Mongo"), (2, "Splunk"))
 
 
-class Replication(models):
-
-    replication_type = models.ForeignKey(ReplicationType)
+class Replication(models.Model):
+    replication_type = models.IntegerField(choices=REPLICATION_TYPES)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
@@ -40,50 +36,42 @@ class Replication(models):
 
 # This is to be included in the model data you want to push to the replication
 
-class MongoReplicationMixin(object):
-
-    @property
-    def mongo_replication(self):
+class ReplicationMixin(object):
+    def _get_replication_object(self, replication_type):
         ctype = ContentType.objects.get_for_model(self.__class__)
         try:
-            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type__name="mongo")
+            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type=replication_type)
         except Replication.DoesNotExist:
             return None
         return obj
 
+
+class MongoReplicationMixin(ReplicationMixin):
+
+    @property
+    def mongo_replication(self):
+        return self._get_replication_object(1)
+
     @property
     def in_mongo(self):
-        ctype = ContentType.objects.get_for_model(self.__class__)
-        try:
-            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type__name="mongo")
-        except Replication.DoesNotExist:
-            return False
-        return obj.state == 1
+        obj = self._get_replication_object(1)
+        return obj.state == 1 if obj else False
 
     @property
     def _should_replicate_mongo(self):
         return getattr(self, 'should_replicate_mongo', True)
 
 
-class SplunkReplicationMixin(object):
+class SplunkReplicationMixin(ReplicationMixin):
 
     @property
     def splunk_replication(self):
-        ctype = ContentType.objects.get_for_model(self.__class__)
-        try:
-            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type__name="splunk")
-        except Replication.DoesNotExist:
-            return None
-        return obj
+        return self._get_replication_object(2)
 
     @property
     def in_splunk(self):
-        ctype = ContentType.objects.get_for_model(self.__class__)
-        try:
-            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type__name="splunk")
-        except Replication.DoesNotExist:
-            return False
-        return obj.state == 1
+        obj = self._get_replication_object(2)
+        return obj.state == 1 if obj else False
 
     @property
     def _should_replicate_mongo(self):
