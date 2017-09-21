@@ -1,0 +1,2 @@
+recursive-include data_replication/templates *
+recursive-include data_replication/static *
