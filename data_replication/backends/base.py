@@ -42,6 +42,10 @@ class BaseReplicationCollector(object):
         self.max_count = max_count
         self.use_subtasks = kwargs.get('use_subtasks', True)
 
+        self.log_level = kwargs.get('log_level')
+        if self.log_level:
+            log.setLevel(self.log_level)
+
         if self.get_model() is None:
             raise AttributeError("You must provide a reference model by defining the attribute `model` or redefine `get_model()`")
         if not self.change_keys:
@@ -52,7 +56,8 @@ class BaseReplicationCollector(object):
         return self.model
 
     def get_queryset(self, **kwargs):
-        return self.get_model().objects.filter(**kwargs)
+        order = ['-%s' % x for x in self.change_keys]
+        return self.get_model().objects.filter(**kwargs).order_by(*order)
 
     @property
     def content_type(self):
@@ -91,7 +96,15 @@ class BaseReplicationCollector(object):
     def unlock(self):
         """Sets our last look and open the db"""
         self.last_look.state = 0
-        self.last_look.last_updated = self.query_time
+        if not self.reset and not self.max_count:
+            self.last_look.last_updated = self.query_time
+        else:
+            from data_replication.models import Replication
+            replications = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
+            try:
+                self.last_look.last_updated = max(list(replications.values_list('last_updated', flat=True)))
+            except ValueError:
+                pass
         self.last_look.save()
         self.locked = False
 
@@ -133,7 +146,7 @@ class BaseReplicationCollector(object):
         self.add_pks = list(set(change_pks) - set(accounted_pks))
         self.update_pks = list(set(accounted_pks).intersection(set(change_pks) - set(self.add_pks)))
 
-        log.info("%s identified %d add actions, %d update actions and %d delete actions",
+        log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
                  self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
         return (self.add_pks, self.update_pks, self.delete_pks)
@@ -150,11 +163,11 @@ class BaseReplicationCollector(object):
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         delete_pks = update_pks + delete_pks
-        delete_pks = delete_pks[:self.max_count] if self.max_count else delete_pks
+        delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         self._delete_items(delete_pks)
 
         add_pks = add_pks + update_pks
-        add_pks = add_pks[:self.max_count] if self.max_count else add_pks
+        add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         self._add_items(add_pks)
 
         self.unlock()

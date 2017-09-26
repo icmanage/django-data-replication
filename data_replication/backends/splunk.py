@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class SplunkReplicator(BaseReplicationCollector):
-    replication_type = 1
+    replication_type = 2
     splunk_ready = False
 
     @property

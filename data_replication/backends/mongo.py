@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class MongoReplicator(BaseReplicationCollector):
-    replication_type = 2
+    replication_type = 1
     mongo_ready = False
 
     @property

@@ -72,6 +72,7 @@ class Command(BaseCommand):
                 use_subtasks=not self.no_subtasks,
                 max_count=self.max_count,
                 reset=self.reset,
+                log_level=self.log_level,
             )
             replicator.analyze()
         print("Done!!")
