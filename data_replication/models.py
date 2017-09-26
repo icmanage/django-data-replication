@@ -59,7 +59,7 @@ class ReplicationTracker(models.Model):
                     log.debug("Using replicator - %r", Replcate)
                     return Replcate()
 
-        raise IOError("Unable to identify replication module")
+        raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
 
 
 

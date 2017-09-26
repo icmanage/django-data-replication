@@ -65,7 +65,5 @@ class Command(BaseCommand):
             log.info("Working on %d/%d %s", idx, total, replication)
             replicator = replication.get_replicator()
             replicator.analyze()
-            replicator.replicate()
-
         print("Done!!")
         pass

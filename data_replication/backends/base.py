@@ -41,11 +41,17 @@ class BaseReplicationCollector(object):
         self.output_file = None
         self.max_count = max_count
 
+        if self.get_model() is None:
+            raise AttributeError("You must provide a reference model by defining the attribute `model` or redefine `get_model()`")
+        if not self.change_keys:
+            raise AttributeError(
+                "You must provide a a date to reference changes by setting the attribute `change_keys`")
+
     def get_model(self):
         return self.model
 
-    def get_queryset(self):
-        return self.get_model().objects.all()
+    def get_queryset(self, **kwargs):
+        return self.get_model().objects.filter(**kwargs)
 
     @property
     def content_type(self):
@@ -97,8 +103,9 @@ class BaseReplicationCollector(object):
             return self._accounted_pks
 
         self._accounted_pks = Replication.objects.filter(
-            content_type=self.content_type,
-            replication_type=self.replication_type).values_list('object_id', flat=True)
+            tracker=self.last_look).values_list('object_id', flat=True)
+
+        return self._accounted_pks
 
     @property
     def changed_queryset_pks(self):
@@ -107,8 +114,10 @@ class BaseReplicationCollector(object):
 
         self.query_time = now()
 
-        kwargs = {k: self.last_look.last_updated for k in self.change_keys}
+        kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
         self._queryset_pks = self.get_queryset(**kwargs).values_list('pk', flat=True)
+
+        return self._queryset_pks
 
     def get_actions(self):
         assert self.locked, "You need to lock the db first"
@@ -151,26 +160,28 @@ class BaseReplicationCollector(object):
 
     def _delete_items(self, object_pks):
         from data_replication.models import Replication
-        self.delete_pks(object_pks)
+        self.delete_items(object_pks)
         Replication.objects.filter(
+            tracker=self.last_look,
             object_id__in=object_pks,
-            content_type=self.content_type,
-            replication_type=self.replication_type).delete()
+            content_type=self.content_type,).delete()
 
-    def delete_items(self):
+    def delete_items(self, object_pks):
         raise NotImplemented
 
     def _add_items(self, object_pks):
         from data_replication.models import Replication
         self.add_items(object_pks)
         bulk_inserts = []
-        for item in self.get_queryset().values_list('pk', *self.change_keys):
+        for item in self.get_queryset(pk__in=object_pks).values_list('pk', *self.change_keys):
+            item = list(item)
             pk = item.pop(0)
             last_updated = max(item)
             bulk_inserts.append(
-                Replication(content_type=self.content_type, replication_type=self.replication_type,
+                Replication(content_type=self.content_type, tracker=self.last_look,
                             object_id=pk, state=1, last_updated=last_updated))
-        Replication.objects.bulk_create(bulk_inserts)
+        if len(bulk_inserts):
+            Replication.objects.bulk_create(bulk_inserts)
 
-    def add_items(self):
+    def add_items(self, object_pks):
         raise NotImplemented
