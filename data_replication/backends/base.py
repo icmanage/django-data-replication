@@ -35,7 +35,6 @@ class BaseReplicationCollector(object):
         self.delete_pks = []
         self._accounted_pks = []
         self._queryset_pks = []
-        self.splunk_ready = False
         self.skip_locks = True
         self.reset = reset
         self.output_file = None
@@ -55,9 +54,9 @@ class BaseReplicationCollector(object):
     def get_model(self):
         return self.model
 
-    def get_queryset(self, **kwargs):
+    def get_queryset(self):
         order = ['-%s' % x for x in self.change_keys]
-        return self.get_model().objects.filter(**kwargs).order_by(*order)
+        return self.get_model().objects.all().order_by(*order)
 
     @property
     def content_type(self):
@@ -170,6 +169,10 @@ class BaseReplicationCollector(object):
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         self._add_items(add_pks)
 
+        if self.max_count:
+            log.info("%s reduced a max of %d add actions and %d delete actions",
+                     self.verbose_name, len(add_pks), len(delete_pks))
+
         self.unlock()
 
     def _delete_items(self, object_pks):
@@ -187,7 +190,7 @@ class BaseReplicationCollector(object):
         from data_replication.models import Replication
         self.add_items(object_pks)
         bulk_inserts = []
-        for item in self.get_queryset(pk__in=object_pks).values_list('pk', *self.change_keys):
+        for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
             item = list(item)
             pk = item.pop(0)
             last_updated = max(item)

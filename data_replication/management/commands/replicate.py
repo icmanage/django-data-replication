@@ -28,8 +28,8 @@ class Command(BaseCommand):
         make_option('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
                     help='Provide the type of replication'),
         make_option('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
-        make_option('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count'),
-        make_option('--reset', action='store_true', dest='reset', default=None, help='Reset'),
+        make_option('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count -- DEV ONLY FOR TESTING'),
+        make_option('--reset', action='store_true', dest='reset', default=None, help='Reset -- DEV ONLY FOR TESTING'),
     )
     requires_system_checks = True
 
