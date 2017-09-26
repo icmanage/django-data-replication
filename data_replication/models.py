@@ -4,11 +4,18 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
+import importlib
+import inspect
 import logging
 
+from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+
+from data_replication.backends.base import BaseReplicationCollector
+from data_replication.backends.mongo import MongoReplicator
+from data_replication.backends.splunk import SplunkReplicator
 
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 07:56'
@@ -20,17 +27,53 @@ log = logging.getLogger(__name__)
 REPLICATION_TYPES = ((1, "Mongo"), (2, "Splunk"))
 
 
-class Replication(models.Model):
+class ReplicationTracker(models.Model):
+    """Tracks a general model processing"""
     replication_type = models.IntegerField(choices=REPLICATION_TYPES)
+    content_type = models.ForeignKey(ContentType)
+    state = models.SmallIntegerField(choices=[(1, 'Ready'), (2, 'In-Process')])
+    last_updated = models.DateTimeField()
+
+    def __unicode__(self):
+        return "%r replication of %r" % (
+            self.get_replication_type_display(), self.content_type.model_class()._meta.verbose_name)
+
+    def get_replicator(self):
+
+        app_config = apps.get_app_config(self.content_type.app_label)
+        try:
+            module = app_config.module.replication
+        except AttributeError:
+            try:
+                module = importlib.import_module("{}.replication".format(self.content_type.app_label))
+            except ImportError:
+                raise ImportError("Unable to find replication.py in app %s" % self.content_type.app_label)
+
+        target_module = SplunkReplicator if self.replication_type == 2 else MongoReplicator
+        ignored_classes = [BaseReplicationCollector, SplunkReplicator, MongoReplicator]
+
+        if module:
+            for name in dir(module):
+                Replcate = getattr(module, name)
+                if inspect.isclass(Replcate) and Replcate not in ignored_classes and issubclass(Replcate, target_module):
+                    log.debug("Using replicator - %r", Replcate)
+                    return Replcate()
+
+        raise IOError("Unable to identify replication module")
+
+
+
+class Replication(models.Model):
+    tracker = models.ForeignKey('ReplicationTracker')
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
 
-    state = models.IntegerField(choices=((0, "Not Replicated"), (1, "In Storage"), (2, "Removed")))
+    state = models.IntegerField(choices=((-1, "Locked"), (0, "Not Replicated"), (1, "In Storage"), (2, "Removed")))
     last_updated = models.DateTimeField()
 
     class Meta:
-        unique_together = ('content_type', 'object_id', 'replication_type')
+        unique_together = ('content_type', 'object_id', 'tracker')
         permissions = (('view_replication', "View Replication"),)
 
 
