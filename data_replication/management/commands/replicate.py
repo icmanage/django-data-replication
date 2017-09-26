@@ -27,6 +27,9 @@ class Command(BaseCommand):
         make_option('-a', '--app-name', action='store', dest='app', help='Provide the app to work on to replication'),
         make_option('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
                     help='Provide the type of replication'),
+        make_option('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
+        make_option('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count'),
+        make_option('--reset', action='store_true', dest='reset', default=None, help='Reset'),
     )
     requires_system_checks = True
 
@@ -55,7 +58,9 @@ class Command(BaseCommand):
 
         if not self.replications.count():
             raise CommandError("No Replication Trackers are not present")
-
+        self.no_subtasks = options.get('no_subtasks', False)
+        self.max_count = int(options.get('max_count')) if options.get('max_count') else None
+        self.reset = options.get('reset', False)
 
     def handle(self, **options):
         self.set_options(**options)
@@ -63,7 +68,11 @@ class Command(BaseCommand):
         total = self.replications.count()
         for idx, replication in enumerate(self.replications, start=1):
             log.info("Working on %d/%d %s", idx, total, replication)
-            replicator = replication.get_replicator()
+            replicator = replication.get_replicator(
+                use_subtasks=not self.no_subtasks,
+                max_count=self.max_count,
+                reset=self.reset,
+            )
             replicator.analyze()
         print("Done!!")
         pass

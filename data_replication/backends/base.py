@@ -26,7 +26,7 @@ class BaseReplicationCollector(object):
     change_keys = []
     field_map = OrderedDict()
 
-    def __init__(self, reset=False, max_count=None):
+    def __init__(self, reset=False, max_count=None, **kwargs):
         self.last_look = None
         self.locked = False
         self.query_time = None
@@ -40,6 +40,7 @@ class BaseReplicationCollector(object):
         self.reset = reset
         self.output_file = None
         self.max_count = max_count
+        self.use_subtasks = kwargs.get('use_subtasks', True)
 
         if self.get_model() is None:
             raise AttributeError("You must provide a reference model by defining the attribute `model` or redefine `get_model()`")
@@ -81,7 +82,7 @@ class BaseReplicationCollector(object):
             if self.reset:
                 log.warning("Resetting {}".format(self.verbose_name))
                 Replication.objects.filter(content_type=self.content_type,
-                                           replication_type=self.replication_type).delete()
+                                           tracker=self.last_look).delete()
                 self.last_look.last_updated = prior_date
             self.last_look.state = 2
             self.last_look.save()
@@ -145,7 +146,7 @@ class BaseReplicationCollector(object):
             log.info("Unable to lock! - %r", err)
             return err
 
-        log.debug("Getting actions")
+        log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         delete_pks = update_pks + delete_pks

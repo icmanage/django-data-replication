@@ -38,7 +38,7 @@ class ReplicationTracker(models.Model):
         return "%r replication of %r" % (
             self.get_replication_type_display(), self.content_type.model_class()._meta.verbose_name)
 
-    def get_replicator(self):
+    def get_replicator(self, **kwargs):
 
         app_config = apps.get_app_config(self.content_type.app_label)
         try:
@@ -57,7 +57,7 @@ class ReplicationTracker(models.Model):
                 Replcate = getattr(module, name)
                 if inspect.isclass(Replcate) and Replcate not in ignored_classes and issubclass(Replcate, target_module):
                     log.debug("Using replicator - %r", Replcate)
-                    return Replcate()
+                    return Replcate(**kwargs)
 
         raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
 
