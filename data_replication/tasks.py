@@ -71,6 +71,8 @@ def push_mongo_objects(**kwargs):
     content_type_id = kwargs.get('content_type_id')
     model_name = kwargs.get('model_name')
 
+    collection_name = kwargs.get('collection_name', model_name)
+
     assert object_ids is not None, "You failed to include object ids"
     assert tracker_id is not None, "You failed to include tracker_id"
     assert content_type_id is not None, "You failed to include content_type_id"
@@ -86,12 +88,12 @@ def push_mongo_objects(**kwargs):
         assert 'pk' in item.keys(), "Missing pk in model"
 
     mongo = MongoRequest()
-    mongo.post_data(content=data, collection_name=model_name)
+    mongo.post_data(content=data, collection_name=collection_name)
 
     from data_replication.models import Replication
     Replication.objects.filter(
         content_type_id=content_type_id, tracker_id=tracker_id,
         object_id__in=object_ids).update(state=1)
 
-    return "Added %d %s models objects to mongo" % (len(data), model_name)
+    return "Added %d %s models objects to mongo" % (len(data), collection_name)
 

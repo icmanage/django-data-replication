@@ -75,9 +75,13 @@ class MongoRequest(object):
 class MongoReplicator(BaseReplicationCollector):
     replication_type = 1
 
+    @property
+    def collection_name(self):
+        return self.model._meta.model_name
+
     def delete_items(self, object_pks):
         mongo = MongoRequest()
-        mongo.delete_ids(collection_name=self.model._meta.model_name, object_ids=object_pks)
+        mongo.delete_ids(collection_name=self.collection_name, object_ids=object_pks)
 
     @property
     def task_name(self):
@@ -85,4 +89,4 @@ class MongoReplicator(BaseReplicationCollector):
         return push_mongo_objects
 
     def get_task_kwargs(self):
-        return {'model_name': self.model._meta.model_name}
+        return {'model_name': self.model._meta.model_name, 'collection_name': self.collection_name}
