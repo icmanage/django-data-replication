@@ -233,4 +233,5 @@ class SplunkReplicator(BaseReplicationCollector):
         return push_splunk_objects
 
     def get_task_kwargs(self):
-        return {'source': self.source, 'source_type': self.source_type, 'host': self.host}
+        return {'source': self.source, 'source_type': self.source_type, 'host': self.host,
+                'model_name': self.model._meta.model_name}

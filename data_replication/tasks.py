@@ -10,6 +10,7 @@ from conf import settings
 
 from celery import shared_task
 
+from data_replication.backends.mongo import MongoRequest
 from data_replication.backends.splunk import SplunkRequest
 
 __author__ = 'Steven Klass'
@@ -36,6 +37,7 @@ def push_splunk_objects(**kwargs):
     assert object_ids is not None, "You failed to include object ids"
     assert tracker_id is not None, "You failed to include tracker_id"
     assert content_type_id is not None, "You failed to include content_type_id"
+    assert model_name is not None, "You failed to include model_name"
 
     from data_replication.models import ReplicationTracker
     tracker = ReplicationTracker.objects.get(id=tracker_id)
@@ -45,7 +47,7 @@ def push_splunk_objects(**kwargs):
 
     for item in data:
         if 'model' not in item.keys():
-            item['model'] = Replicator.model._meta.model_name
+            item['model'] = model_name
         else:
             log.warning("Model already exists?")
         assert 'pk' in item.keys(), "Missing pk in model"
@@ -58,4 +60,38 @@ def push_splunk_objects(**kwargs):
         content_type_id=content_type_id, tracker_id=tracker_id,
         object_id__in=object_ids).update(state=1)
 
-    return "Added %d %s models objects to splunk" % (len(data), item['model'])
+    return "Added %d %s models objects to splunk" % (len(data), model_name)
+
+
+@shared_task(ignore_result=True, store_errors_even_if_ignored=True)
+def push_mongo_objects(**kwargs):
+
+    object_ids = kwargs.get('object_ids')
+    tracker_id = kwargs.get('tracker_id')
+    content_type_id = kwargs.get('content_type_id')
+    model_name = kwargs.get('model_name')
+
+    assert object_ids is not None, "You failed to include object ids"
+    assert tracker_id is not None, "You failed to include tracker_id"
+    assert content_type_id is not None, "You failed to include content_type_id"
+    assert model_name is not None, "You failed to include model_name"
+
+    from data_replication.models import ReplicationTracker
+    tracker = ReplicationTracker.objects.get(id=tracker_id)
+
+    Replicator = tracker.get_replicator()
+    data = Replicator.add_items(object_ids)
+
+    for item in data:
+        assert 'pk' in item.keys(), "Missing pk in model"
+
+    mongo = MongoRequest()
+    mongo.post_data(content=data, collection_name=model_name)
+
+    from data_replication.models import Replication
+    Replication.objects.filter(
+        content_type_id=content_type_id, tracker_id=tracker_id,
+        object_id__in=object_ids).update(state=1)
+
+    return "Added %d %s models objects to mongo" % (len(data), model_name)
+

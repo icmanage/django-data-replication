@@ -1,7 +1,7 @@
 [
   {
     "fields": {
-      "replication_type": 2,
+      "replication_type": 1,
       "state": 1,
       "last_updated": "1900-01-01T00:00:00",
       "content_type": [
@@ -11,5 +11,18 @@
     },
     "model": "data_replication.replicationtracker",
     "pk": 1
+  },
+  {
+    "fields": {
+      "replication_type": 2,
+      "state": 1,
+      "last_updated": "1900-01-01T00:00:00",
+      "content_type": [
+        "ip_verification",
+        "testresultlink"
+      ]
+    },
+    "model": "data_replication.replicationtracker",
+    "pk": 2
   }
 ]
