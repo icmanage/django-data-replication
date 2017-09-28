@@ -22,9 +22,9 @@ log = logging.getLogger(__name__)
 
 class BaseReplicationCollector(object):
     model = None
-    fields = ('pk',)
     change_keys = []
     field_map = OrderedDict()
+    search_quantifiers = None
 
     def __init__(self, reset=False, max_count=None, **kwargs):
         self.last_look = None
@@ -59,6 +59,13 @@ class BaseReplicationCollector(object):
         return self.get_model().objects.all().order_by(*order)
 
     @property
+    def search_quantifier(self):
+        data = ""
+        if self.search_quantifiers:
+            data = self.search_quantifier
+        return data + " model={}".format(self.model._meta.model_name)
+
+    @property
     def content_type(self):
         return get_content_type_for_model(self.get_model())
 
@@ -85,8 +92,8 @@ class BaseReplicationCollector(object):
                     raise RuntimeError("Already processing")
             if self.reset:
                 log.warning("Resetting {}".format(self.verbose_name))
-                Replication.objects.filter(content_type=self.content_type,
-                                           tracker=self.last_look).delete()
+                del_pks = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
+                self._delete_items(list(del_pks.values_list('object_id', flat=True)))
                 self.last_look.last_updated = prior_date
             self.last_look.state = 2
             self.last_look.save()
@@ -128,7 +135,7 @@ class BaseReplicationCollector(object):
         self.query_time = now()
 
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
-        self._queryset_pks = self.get_queryset(**kwargs).values_list('pk', flat=True)
+        self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
 
         return self._queryset_pks
 
@@ -163,11 +170,13 @@ class BaseReplicationCollector(object):
 
         delete_pks = update_pks + delete_pks
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
-        self._delete_items(delete_pks)
+        if len(delete_pks):
+            self._delete_items(delete_pks)
 
         add_pks = add_pks + update_pks
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
-        self._add_items(add_pks)
+        if len(add_pks):
+            self._add_items(add_pks)
 
         if self.max_count:
             log.info("%s reduced a max of %d add actions and %d delete actions",
@@ -186,9 +195,20 @@ class BaseReplicationCollector(object):
     def delete_items(self, object_pks):
         raise NotImplemented
 
-    def _add_items(self, object_pks):
+    @property
+    def task_name(self):
+        raise NotImplemented
+
+    def get_task_kwargs(self):
+        return {}
+
+    @classmethod
+    def add_items(cls, chunk_ids):
+        """Given a chuck of items get some information"""
+        raise NotImplemented("You need to figure this out..")
+
+    def _add_items(self, object_pks, chunk_size=1000):
         from data_replication.models import Replication
-        self.add_items(object_pks)
         bulk_inserts = []
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
             item = list(item)
@@ -196,9 +216,29 @@ class BaseReplicationCollector(object):
             last_updated = max(item)
             bulk_inserts.append(
                 Replication(content_type=self.content_type, tracker=self.last_look,
-                            object_id=pk, state=1, last_updated=last_updated))
-        if len(bulk_inserts):
-            Replication.objects.bulk_create(bulk_inserts)
+                            object_id=pk, state=0, last_updated=last_updated))
+        if not len(bulk_inserts):
+            return
 
-    def add_items(self, object_pks):
-        raise NotImplemented
+        Replication.objects.bulk_create(bulk_inserts)
+        log.debug("Added %d replication entries", len(bulk_inserts))
+
+        def chunks(l, n):
+            """Yield successive n-sized chunks from l."""
+            for i in range(0, len(l), n):
+                yield l[i:i + n]
+
+        for count, chunk in (enumerate(chunks(object_pks, chunk_size))):
+            kwargs = {
+                'object_ids': chunk,
+                'tracker_id': self.last_look.id,
+                'content_type_id': self.content_type.id
+            }
+
+            kwargs.update(self.get_task_kwargs())
+
+            if self.use_subtasks:
+                self.task_name.delay(**kwargs)
+            else:
+                self.task_name(**kwargs)
+

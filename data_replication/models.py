@@ -69,7 +69,7 @@ class Replication(models.Model):
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
 
-    state = models.IntegerField(choices=((-1, "Locked"), (0, "Not Replicated"), (1, "In Storage"), (2, "Removed")))
+    state = models.IntegerField(choices=((0, "Not Replicated"), (1, "In Storage")))
     last_updated = models.DateTimeField()
 
     class Meta:
