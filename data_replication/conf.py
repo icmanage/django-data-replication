@@ -67,3 +67,5 @@ class DataMigrationConf(AppConf):
     """A short cut in lieu of filling out all of the data.
     
     """
+
+    MONGO_DB_NAME = None

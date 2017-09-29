@@ -25,6 +25,12 @@ class MongoRequest(object):
     def __init__(self, *args, **kwargs):
 
         self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
+
+        # This is explicitly called out as I could not get this to work with using a replicaSet
+        try:
+            self.database_name = kwargs.get('database_name', settings.MONGO_DB_NAME)
+        except AttributeError:
+            self.database_name = None
         self._client = None
 
     @property
@@ -44,6 +50,8 @@ class MongoRequest(object):
 
     @property
     def db(self):
+        if self.database_name:
+            return self.client[self.database_name]
         return self.client.get_database()
 
     def post_data(self, content, collection_name='default'):
