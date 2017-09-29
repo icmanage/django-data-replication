@@ -23,22 +23,8 @@ log = logging.getLogger(__name__)
 
 class MongoRequest(object):
     def __init__(self, *args, **kwargs):
-        self.connect_params = {}
-        self.username = kwargs.get('username', settings.MONGO_USERNAME)
-        if self.username:
-            self.connect_params['username'] = self.username
-        self.password = kwargs.get('password', settings.MONGO_PASSWORD)
-        if self.password:
-            self.connect_params['password'] = self.password
-        self.host = kwargs.get('host', settings.MONGO_HOST)
-        if self.host:
-            self.connect_params['host'] = self.host
 
-        self.replica_set = kwargs.get('replica_set', settings.MONGO_REPLICA_SET)
-        if self.replica_set:
-            self.connect_params['replicaSet'] = self.replica_set
-
-        self.database = kwargs.get('db', settings.MONGO_DB)
+        self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
         self._client = None
 
     @property
@@ -46,10 +32,7 @@ class MongoRequest(object):
         if self._client is not None:
             return self._client
 
-        if self.database:
-            self._client = MongoClient(**self.connect_params)[self.database]
-        else:
-            self._client = MongoClient(**self.connect_params)
+        self._client = MongoClient(self.uri)
 
         try:
             self._client.admin.command('ismaster')

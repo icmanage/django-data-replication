@@ -63,37 +63,7 @@ class DataMigrationConf(AppConf):
         SPLUNK_APP = "foo" 
     """
 
-    MONGO_HOST = 'localhost'
-    """
-    The host for Mongo.  This can be a list
-
-        MONGO_HOST = "localhost:27017" 
-    """
-
-    MONGO_USERNAME = None
-    """
-    User used for connecting to Mongo.
-
-        MONGO_USERNAME = "mongo" 
-    """
-
-    MONGO_PASSWORD = None
-    """
-    Password used for connecting to Mongo.
-
-        MONGO_PASSWORD = "password" 
-    """
-
-    MONGO_DB = 'local'
-    """
-    DB used for Mongo.
-
-        MONGO_DB = "local" 
-    """
-
-    MONGO_REPLICA_SET = None
-    """
-    ReplicaSet used for Mongo.
-
-        MONGO_REPLICA_SET = "local" 
+    MONGO_CONNECTION_URI = None
+    """A short cut in lieu of filling out all of the data.
+    
     """
