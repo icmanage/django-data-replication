@@ -65,16 +65,9 @@ class DataMigrationConf(AppConf):
 
     MONGO_HOST = 'localhost'
     """
-    The host for Mongo.
+    The host for Mongo.  This can be a list
 
-        MONGO_HOST = "localhost" 
-    """
-
-    MONGO_PORT = '27017'
-    """
-    Port used for connecting to Mongo.
-
-        MONGO_PORT = "27017" 
+        MONGO_HOST = "localhost:27017" 
     """
 
     MONGO_USERNAME = None
@@ -96,4 +89,11 @@ class DataMigrationConf(AppConf):
     DB used for Mongo.
 
         MONGO_DB = "local" 
+    """
+
+    MONGO_REPLICA_SET = None
+    """
+    ReplicaSet used for Mongo.
+
+        MONGO_REPLICA_SET = "local" 
     """
