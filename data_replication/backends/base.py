@@ -20,6 +20,12 @@ __credits__ = ['Steven Klass', ]
 log = logging.getLogger(__name__)
 
 
+def make_sure_mysql_usable():
+    from django.db import connection, connections
+    if connection.connection and not connection.is_usable():
+        del connections._connections.default
+
+
 class BaseReplicationCollector(object):
     model = None
     change_keys = []
@@ -122,6 +128,7 @@ class BaseReplicationCollector(object):
         if len(self._accounted_pks):
             return self._accounted_pks
 
+        make_sure_mysql_usable()
         self._accounted_pks = Replication.objects.filter(
             tracker=self.last_look).values_list('object_id', flat=True)
 
@@ -134,6 +141,7 @@ class BaseReplicationCollector(object):
 
         self.query_time = now()
 
+        make_sure_mysql_usable()
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
         self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
 
@@ -148,6 +156,7 @@ class BaseReplicationCollector(object):
         change_pks = self.changed_queryset_pks
         accounted_pks = self.accounted_pks
 
+        make_sure_mysql_usable()
         self.delete_pks = list(set(accounted_pks) - set(list(self.get_queryset().values_list('pk', flat=True))))
         self.add_pks = list(set(change_pks) - set(accounted_pks))
         self.update_pks = list(set(accounted_pks).intersection(set(change_pks) - set(self.add_pks)))
@@ -187,6 +196,7 @@ class BaseReplicationCollector(object):
     def _delete_items(self, object_pks):
         from data_replication.models import Replication
         self.delete_items(object_pks)
+        make_sure_mysql_usable()
         Replication.objects.filter(
             tracker=self.last_look,
             object_id__in=object_pks,
@@ -220,6 +230,7 @@ class BaseReplicationCollector(object):
         if not len(bulk_inserts):
             return
 
+        make_sure_mysql_usable()
         Replication.objects.bulk_create(bulk_inserts)
         log.debug("Added %d replication entries", len(bulk_inserts))
 
