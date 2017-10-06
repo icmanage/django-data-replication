@@ -177,21 +177,27 @@ class BaseReplicationCollector(object):
         log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
+        msg = "Analyzed %s replication of %s" % (
+            self.last_look.get_replication_type_display(), self.verbose_name)
+
         delete_pks = update_pks + delete_pks
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         if len(delete_pks):
             self._delete_items(delete_pks)
+            msg += " deleted %d items" % len(delete_pks)
 
         add_pks = add_pks + update_pks
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         if len(add_pks):
             self._add_items(add_pks)
+            msg += " added %d items" % len(add_pks)
 
         if self.max_count:
             log.info("%s reduced a max of %d add actions and %d delete actions",
                      self.verbose_name, len(add_pks), len(delete_pks))
 
         self.unlock()
+        return msg
 
     def _delete_items(self, object_pks):
         from data_replication.models import Replication
