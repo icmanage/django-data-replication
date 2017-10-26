@@ -231,13 +231,18 @@ class BaseReplicationCollector(object):
             pk = item.pop(0)
             last_updated = max(item)
             bulk_inserts.append(
-                Replication(content_type=self.content_type, tracker=self.last_look,
-                            object_id=pk, state=0, last_updated=last_updated))
+                dict(content_type=self.content_type, tracker=self.last_look,
+                     object_id=pk, defaults=dict(state=0, last_updated=last_updated)))
         if not len(bulk_inserts):
             return
 
-        make_sure_mysql_usable()
-        Replication.objects.bulk_create(bulk_inserts)
+        for replication_data in bulk_inserts:
+            make_sure_mysql_usable()
+            try:
+                Replication.objects.get_or_create(**replication_data)
+            except:
+                log.error("Issue with creating %r".format(replication_data))
+
         log.debug("Added %d replication entries", len(bulk_inserts))
 
         def chunks(l, n):
