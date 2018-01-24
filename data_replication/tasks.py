@@ -10,6 +10,7 @@ from conf import settings
 
 from celery import shared_task
 
+from data_replication.backends.base import ImproperlyConfiguredException
 from data_replication.backends.mongo import MongoRequest
 from data_replication.backends.splunk import SplunkRequest
 
@@ -52,7 +53,11 @@ def push_splunk_objects(**kwargs):
             log.warning("Model already exists?")
         assert 'pk' in item.keys(), "Missing pk in model"
 
-    splunk = SplunkRequest()
+    try:
+        splunk = SplunkRequest()
+    except ImproperlyConfiguredException as err:
+        log.error("Splunk Improperly configured - %s" % err)
+        return
     splunk.post_data(content=data, source=source, sourcetype=source_type, host=host, dry_run=dry_run)
 
     from data_replication.models import Replication
@@ -87,7 +92,11 @@ def push_mongo_objects(**kwargs):
     for item in data:
         assert 'pk' in item.keys(), "Missing pk in model"
 
-    mongo = MongoRequest()
+    try:
+        mongo = MongoRequest()
+    except ImproperlyConfiguredException as err:
+        log.error("Mongo Improperly configured - %s" % err)
+        return
     mongo.post_data(content=data, collection_name=collection_name)
 
     from data_replication.models import Replication

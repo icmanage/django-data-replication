@@ -9,7 +9,7 @@ from urllib import quote_plus
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from base import BaseReplicationCollector
+from base import BaseReplicationCollector, ImproperlyConfiguredException
 from ..conf import settings
 
 
@@ -24,7 +24,10 @@ log = logging.getLogger(__name__)
 class MongoRequest(object):
     def __init__(self, *args, **kwargs):
 
-        self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
+        try:
+            self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
+        except AttributeError:
+            raise ImproperlyConfiguredException("Missing Mongo settings.MONGO_CONNECTION_URI")
 
         # This is explicitly called out as I could not get this to work with using a replicaSet
         try:

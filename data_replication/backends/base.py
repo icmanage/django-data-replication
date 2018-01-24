@@ -19,6 +19,9 @@ __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
 
+class ImproperlyConfiguredException(Exception):
+    pass
+
 
 def make_sure_mysql_usable():
     from django.db import connection, connections

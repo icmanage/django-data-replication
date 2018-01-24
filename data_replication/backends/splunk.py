@@ -14,7 +14,7 @@ from collections import OrderedDict
 import datetime
 import requests
 
-from base import BaseReplicationCollector
+from base import BaseReplicationCollector, ImproperlyConfiguredException
 from ..conf import settings
 
 __author__ = 'Steven Klass'
@@ -55,8 +55,15 @@ class SplunkPostException(Exception):
 
 class SplunkRequest(object):
     def __init__(self, *args, **kwargs):
-        self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
-        self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
+
+        try:
+            self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
+        except AttributeError:
+            raise ImproperlyConfiguredException("Missing settings.SPLUNK_USERNAME")
+        try:
+            self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
+        except AttributeError:
+            raise ImproperlyConfiguredException("Missing settings.SPLUNK_PASSWORD")
         self.scheme = kwargs.get('scheme', settings.SPLUNK_SCHEME)
         self.host = kwargs.get('host', settings.SPLUNK_HOST)
         self.port = kwargs.get('port', settings.SPLUNK_PORT)
@@ -142,7 +149,8 @@ class SplunkRequest(object):
         search_id = self.splunk.create_search(delete_query)
         return self.splunk.get_search_status(search_id, wait_for_results=True)
 
-    def get_normalized_data(self, content):
+    @classmethod
+    def get_normalized_data(cls, content):
 
         data = OrderedDict()
         keys = content.keys()
