@@ -6,7 +6,7 @@ from __future__ import print_function
 
 import logging
 
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, OperationFailure
 
 from conf import settings
 
@@ -101,7 +101,7 @@ def push_mongo_objects(**kwargs):
         return
     try:
         mongo.post_data(content=data, collection_name=collection_name)
-    except ConnectionFailure as err:
+    except (ConnectionFailure, OperationFailure) as err:
         log.error("Unable to connect to Mongo!! - %s", err)
 
     else:
