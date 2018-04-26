@@ -30,7 +30,7 @@ REPLICATION_TYPES = ((1, "Mongo"), (2, "Splunk"))
 class ReplicationTracker(models.Model):
     """Tracks a general model processing"""
     replication_type = models.IntegerField(choices=REPLICATION_TYPES)
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     state = models.SmallIntegerField(choices=[(1, 'Ready'), (2, 'In-Process')])
     last_updated = models.DateTimeField()
 
@@ -64,8 +64,8 @@ class ReplicationTracker(models.Model):
 
 
 class Replication(models.Model):
-    tracker = models.ForeignKey('ReplicationTracker')
-    content_type = models.ForeignKey(ContentType)
+    tracker = models.ForeignKey('ReplicationTracker', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(db_index=True)
     content_object = GenericForeignKey(ct_field="content_type", fk_field="object_id")
 
