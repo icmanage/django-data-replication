@@ -1,1 +1,1 @@
-django-data-replication
+django
