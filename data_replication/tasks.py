@@ -6,6 +6,8 @@ from __future__ import print_function
 
 import logging
 
+from pymongo.errors import ConnectionFailure, OperationFailure
+
 from conf import settings
 
 from celery import shared_task
@@ -97,12 +99,16 @@ def push_mongo_objects(**kwargs):
     except ImproperlyConfiguredException as err:
         log.error("Mongo Improperly configured - %s" % err)
         return
-    mongo.post_data(content=data, collection_name=collection_name)
+    try:
+        mongo.post_data(content=data, collection_name=collection_name)
+    except (ConnectionFailure, OperationFailure) as err:
+        log.error("Unable to connect to Mongo!! - %s", err)
 
-    from data_replication.models import Replication
-    Replication.objects.filter(
-        content_type_id=content_type_id, tracker_id=tracker_id,
-        object_id__in=object_ids).update(state=1)
+    else:
+        from data_replication.models import Replication
+        Replication.objects.filter(
+            content_type_id=content_type_id, tracker_id=tracker_id,
+            object_id__in=object_ids).update(state=1)
 
-    return "Added %d %s models objects to mongo" % (len(data), collection_name)
+        return "Added %d %s models objects to mongo" % (len(data), collection_name)
 

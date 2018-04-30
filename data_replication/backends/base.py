@@ -10,7 +10,7 @@ from collections import OrderedDict
 
 from django.contrib.admin.options import get_content_type_for_model
 from django.utils.timezone import now
-
+from kombu.exceptions import OperationalError
 
 __author__ = 'Steven Klass'
 __date__ = '9/25/17 16:15'
@@ -263,7 +263,11 @@ class BaseReplicationCollector(object):
             kwargs.update(self.get_task_kwargs())
 
             if self.use_subtasks:
-                self.task_name.delay(**kwargs)
+                try:
+                    self.task_name.delay(**kwargs)
+                except OperationalError as err:
+                    log.error("Unable dispatch task %s - %s", self.task_name, err)
+                    self.task_name(**kwargs)
             else:
                 self.task_name(**kwargs)
 
