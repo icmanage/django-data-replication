@@ -5,11 +5,11 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import logging
-from urllib import quote_plus
+from urllib.parse import quote_plus
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from base import BaseReplicationCollector, ImproperlyConfiguredException
+from .base import BaseReplicationCollector, ImproperlyConfiguredException
 from ..conf import settings
 
 

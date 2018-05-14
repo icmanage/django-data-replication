@@ -14,7 +14,7 @@ from collections import OrderedDict
 import datetime
 import requests
 
-from base import BaseReplicationCollector, ImproperlyConfiguredException
+from .base import BaseReplicationCollector, ImproperlyConfiguredException
 from ..conf import settings
 
 __author__ = 'Steven Klass'
