@@ -52,13 +52,23 @@ class ReplicationTracker(models.Model):
         target_module = SplunkReplicator if self.replication_type == 2 else MongoReplicator
         ignored_classes = [BaseReplicationCollector, SplunkReplicator, MongoReplicator]
 
+        replication_class_name = kwargs.get('replication_class_name')
+        options = []
         if module:
             for name in dir(module):
                 Replcate = getattr(module, name)
                 if inspect.isclass(Replcate) and Replcate not in ignored_classes and issubclass(Replcate, target_module):
-                    log.debug("Using replicator - %r", Replcate)
-                    return Replcate(**kwargs)
-
+                    if ContentType.objects.get_for_model(Replcate.model) == self.content_type:
+                        if replication_class_name is not None:
+                            if replication_class_name == Replcate().__class__.__name__:
+                                log.debug("Using matching replication with class name %s - %r", replication_class_name, Replcate)
+                                return Replcate(**kwargs)
+                        else:
+                            options.append(Replcate)
+        if len(options) == 1:
+            return options[1]
+        elif len(options) > 1:
+            raise IOError("Unable to identify replication module for %s many found use replication_class_name %r" % self.content_type.app_label, options)
         raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
 
 

@@ -31,6 +31,7 @@ def push_splunk_objects(**kwargs):
     tracker_id = kwargs.get('tracker_id')
     content_type_id = kwargs.get('content_type_id')
     model_name  = kwargs.get('model_name')
+    replication_class_name = kwargs.get('replication_class_name')
 
     source_type = kwargs.get('source_type', 'json')
     source = kwargs.get('source', None)
@@ -45,7 +46,7 @@ def push_splunk_objects(**kwargs):
     from data_replication.models import ReplicationTracker
     tracker = ReplicationTracker.objects.get(id=tracker_id)
 
-    Replicator = tracker.get_replicator()
+    Replicator = tracker.get_replicator(replication_class_name=replication_class_name)
     data = Replicator.add_items(object_ids)
 
     for item in data:
@@ -77,6 +78,7 @@ def push_mongo_objects(**kwargs):
     tracker_id = kwargs.get('tracker_id')
     content_type_id = kwargs.get('content_type_id')
     model_name = kwargs.get('model_name')
+    replication_class_name = kwargs.get('replication_class_name')
 
     collection_name = kwargs.get('collection_name', model_name)
 
@@ -88,7 +90,7 @@ def push_mongo_objects(**kwargs):
     from data_replication.models import ReplicationTracker
     tracker = ReplicationTracker.objects.get(id=tracker_id)
 
-    Replicator = tracker.get_replicator()
+    Replicator = tracker.get_replicator(replication_class_name=replication_class_name)
     data = Replicator.add_items(object_ids)
 
     for item in data:

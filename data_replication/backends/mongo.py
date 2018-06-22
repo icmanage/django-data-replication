@@ -85,4 +85,5 @@ class MongoReplicator(BaseReplicationCollector):
         return push_mongo_objects
 
     def get_task_kwargs(self):
-        return {'model_name': self.model._meta.model_name, 'collection_name': self.collection_name}
+        return {'model_name': self.model._meta.model_name, 'collection_name': self.collection_name,
+                'replication_class_name': self.__class__.__name__}

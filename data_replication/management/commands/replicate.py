@@ -27,6 +27,7 @@ class Command(BaseCommand):
         make_option('-a', '--app-name', action='store', dest='app', help='Provide the app to work on to replication'),
         make_option('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
                     help='Provide the type of replication'),
+        make_option('-R', '--replication_class_name', required=False, action='store', dest='replication_class_name', help='Replication Class Name'),
         make_option('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
         make_option('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count -- DEV ONLY FOR TESTING'),
         make_option('--reset', action='store_true', dest='reset', default=None, help='Reset -- DEV ONLY FOR TESTING'),
@@ -41,6 +42,8 @@ class Command(BaseCommand):
         self.app_name = options.get('app')
         if self.app_name:
             kwargs['content_type__in'] = ContentType.objects.filter(app_label=self.app_name)
+
+        self.replication_class_name = options.get('replication_class_name')
 
         self.replication_type = options.get('replication_type')
         if options.get('replication_type') is not None:
@@ -69,6 +72,7 @@ class Command(BaseCommand):
         for idx, replication in enumerate(self.replications, start=1):
             log.info("Working on %d/%d %s", idx, total, replication)
             replicator = replication.get_replicator(
+                replication_class_name=self.replication_class_name,
                 use_subtasks=not self.no_subtasks,
                 max_count=self.max_count,
                 reset=self.reset,
