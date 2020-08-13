@@ -5,12 +5,12 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import logging
-from optparse import make_option
 
 import sys
 
+from django.core.management import BaseCommand
 from django.contrib.contenttypes.models import ContentType
-from django.core.management.base import BaseCommand, CommandError
+
 from data_replication.models import ReplicationTracker, REPLICATION_TYPES
 
 __author__ = 'Steven Klass'
@@ -22,16 +22,17 @@ log = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Replicate data to the different engines'
-    option_list = (
-        make_option('-f', '--no-confirm', action='store_true', dest='no_confirm', help='Do not prompt for confirmation'),
-        make_option('-a', '--app-name', action='store', dest='app', help='Provide the app to work on to replication'),
-        make_option('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
+    
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--no-confirm', action='store_true', dest='no_confirm', help='Do not prompt for confirmation'),
+        parser.add_argument('-a', '--app-name', action='store', dest='app', help='Provide the app to work on to replication'),
+        parser.add_argument('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
                     help='Provide the type of replication'),
-        make_option('-R', '--replication_class_name', required=False, action='store', dest='replication_class_name', help='Replication Class Name'),
-        make_option('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
-        make_option('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count -- DEV ONLY FOR TESTING'),
-        make_option('--reset', action='store_true', dest='reset', default=None, help='Reset -- DEV ONLY FOR TESTING'),
-    )
+        parser.add_argument('-R', '--replication_class_name', action='store', dest='replication_class_name', help='Replication Class Name'),
+        parser.add_argument('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
+        parser.add_argument('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count -- DEV ONLY FOR TESTING'),
+        parser.add_argument('--reset', action='store_true', dest='reset', default=None, help='Reset -- DEV ONLY FOR TESTING'),
+
     requires_system_checks = True
 
     def set_options(self, **options):
