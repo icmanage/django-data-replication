@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """base.py: Django """
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
 import datetime
 from collections import OrderedDict

@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 """replicate.py: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
 
 import sys
 
-from django.core.management import BaseCommand
+from django.core.management import BaseCommand, CommandError
 from django.contrib.contenttypes.models import ContentType
 
 from data_replication.models import ReplicationTracker, REPLICATION_TYPES

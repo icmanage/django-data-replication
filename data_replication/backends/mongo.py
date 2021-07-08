@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 """mongo: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
-from urllib import quote_plus
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from base import BaseReplicationCollector, ImproperlyConfiguredException
-from ..conf import settings
+from .base import BaseReplicationCollector, ImproperlyConfiguredException
+from ..apps import DataMigrationConf
 
 
 __author__ = 'Steven Klass'
@@ -23,6 +19,8 @@ log = logging.getLogger(__name__)
 
 class MongoRequest(object):
     def __init__(self, *args, **kwargs):
+
+        settings = DataMigrationConf()
 
         try:
             self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)

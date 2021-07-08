@@ -1,20 +1,13 @@
 # -*- coding: utf-8 -*-
 """tasks.py: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
-
-from pymongo.errors import ConnectionFailure, OperationFailure
-
-from conf import settings
 
 from celery import shared_task
 
-from data_replication.backends.base import ImproperlyConfiguredException
-from data_replication.backends.mongo import MongoRequest
-from data_replication.backends.splunk import SplunkRequest
+from .backends.base import ImproperlyConfiguredException
+from .backends.mongo import MongoRequest
+from .backends.splunk import SplunkRequest
 
 __author__ = 'Steven Klass'
 __date__ = '9/26/17 10:12'
@@ -73,6 +66,8 @@ def push_splunk_objects(**kwargs):
 
 @shared_task(ignore_result=True, store_errors_even_if_ignored=True)
 def push_mongo_objects(**kwargs):
+
+    from pymongo.errors import ConnectionFailure, OperationFailure
 
     object_ids = kwargs.get('object_ids')
     tracker_id = kwargs.get('tracker_id')

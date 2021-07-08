@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """models.py: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import importlib
 import inspect
 import logging
@@ -34,7 +31,7 @@ class ReplicationTracker(models.Model):
     state = models.SmallIntegerField(choices=[(1, 'Ready'), (2, 'In-Process')])
     last_updated = models.DateTimeField()
 
-    def __unicode__(self):
+    def __str__(self):
         return "%r replication of %r" % (
             self.get_replication_type_display(), self.content_type.model_class()._meta.verbose_name)
 

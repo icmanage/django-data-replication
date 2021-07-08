@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """splunk: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import decimal
 import json
 import logging
@@ -14,8 +11,8 @@ from collections import OrderedDict
 import datetime
 import requests
 
-from base import BaseReplicationCollector, ImproperlyConfiguredException
-from ..conf import settings
+from .base import BaseReplicationCollector, ImproperlyConfiguredException
+from ..apps import settings
 
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 08:11'
@@ -170,7 +167,7 @@ class SplunkRequest(object):
 
         for key in keys:
             value = content.get(key)
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 if value.startswith("00"):
                     pass
                 elif INTS.search(value):

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 """urls.py: Django data_replication"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
-
 import logging
 
 __author__ = 'Steven Klass'
