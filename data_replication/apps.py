@@ -16,6 +16,8 @@ from django.conf import settings
 class DataMigrationConf(AppConfig):
     """Settings for data replication."""
 
+    name = "data_replication"
+
     SPLUNK_HOST = getattr(settings, 'SPLUNK_HOST', 'localhost')
     """
     The host for Splunk.
