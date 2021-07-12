@@ -81,7 +81,6 @@ class Replication(models.Model):
 
     class Meta:
         unique_together = ('content_type', 'object_id', 'tracker')
-        permissions = (('view_replication', "View Replication"),)
 
 
 # This is to be included in the model data you want to push to the replication
