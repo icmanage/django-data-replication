@@ -18,9 +18,7 @@ class Migration(migrations.Migration):
                 ('last_updated', models.DateTimeField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE)),
             ],
-            options={
-                'permissions': (('view_replication', 'View Replication'),),
-            },
+            options={},
         ),
         migrations.CreateModel(
             name='ReplicationTracker',
