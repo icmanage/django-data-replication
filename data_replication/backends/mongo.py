@@ -6,7 +6,7 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 from .base import BaseReplicationCollector, ImproperlyConfiguredException
-from ..apps import DataMigrationConf
+from ..apps import DataMigrationSettings
 
 
 __author__ = 'Steven Klass'
@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 class MongoRequest(object):
     def __init__(self, *args, **kwargs):
 
-        settings = DataMigrationConf()
+        settings = DataMigrationSettings()
 
         try:
             self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)

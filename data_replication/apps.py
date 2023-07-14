@@ -7,7 +7,7 @@ __copyright__ = 'Copyright 2011-2022 IC Manage Inc Pivotal Energy Solutions. All
 __credits__ = ['Steven Klass', ]
 
 
-__all__ = ('DataMigrationConf',)
+__all__ = ('DataMigrationConf', 'DataMigrationSettings')
 
 from django.apps import AppConfig
 from django.conf import settings
@@ -17,6 +17,8 @@ class DataMigrationConf(AppConfig):
     """Settings for data replication."""
 
     name = "data_replication"
+
+class DataMigrationSettings:
 
     SPLUNK_HOST = getattr(settings, 'SPLUNK_HOST', 'localhost')
     """
