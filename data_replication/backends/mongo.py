@@ -23,6 +23,8 @@ class MongoRequest(object):
         settings = DataMigrationSettings()
 
         try:
+            if getattr(settings, 'MONGO_CONNECTION_URI', None) is None:
+                raise AttributeError
             self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
         except AttributeError:
             raise ImproperlyConfiguredException("Missing Mongo settings.MONGO_CONNECTION_URI")
