@@ -14,6 +14,8 @@ from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
 from data_replication.backends.splunk import SplunkReplicator
 
+#from .config import AppConfig
+
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 07:56'
 __copyright__ = 'Copyright 2017 IC Manage. All rights reserved.'
@@ -67,7 +69,6 @@ class ReplicationTracker(models.Model):
         elif len(options) > 1:
             raise IOError("Unable to identify replication module for %s many found use replication_class_name %r" % self.content_type.app_label, options)
         raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
-
 
 
 class Replication(models.Model):
