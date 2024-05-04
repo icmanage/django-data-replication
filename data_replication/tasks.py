@@ -23,7 +23,7 @@ def push_splunk_objects(**kwargs):
     object_ids = kwargs.get('object_ids')
     tracker_id = kwargs.get('tracker_id')
     content_type_id = kwargs.get('content_type_id')
-    model_name  = kwargs.get('model_name')
+    model_name = kwargs.get('model_name')
     replication_class_name = kwargs.get('replication_class_name')
 
     source_type = kwargs.get('source_type', 'json')
@@ -109,3 +109,6 @@ def push_mongo_objects(**kwargs):
 
         return "Added %d %s models objects to mongo" % (len(data), collection_name)
 
+
+def object_ids():
+    return None

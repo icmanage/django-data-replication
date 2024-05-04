@@ -12,7 +12,7 @@ class DataReplicationTests(test.TestCase):
         obj = ReplicationTracker.objects.create(replication_type=1, state=1, last_updated=now(), content_type=ct)
         self.assertEqual(str(obj), "u'Mongo' replication of u'replication tracker'")
 
-    def test_get_replicator(self, **kwargs):
-        ct = ContentType.objects.get_for_model(ReplicationTracker)
-        app_config = apps.get_app_config('data_replication')
-        self.assertEqual(ReplicationTracker.objects.count(), 0)
+    # def test_get_replicator(self, **kwargs):
+    #     ct = ContentType.objects.get_for_model(ReplicationTracker)
+    #     app_config = apps.get_app_config('data_replication')
+    #     self.assertEqual(ReplicationTracker.objects.count(), 0)

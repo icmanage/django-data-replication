@@ -268,3 +268,6 @@ class BaseReplicationCollector(object):
             else:
                 self.task_name(**kwargs)
 
+
+def locked():
+    return None
