@@ -19,6 +19,8 @@ class DataReplicationTests(test.TestCase):
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         rt = replication_tracker_factory(state=1)
         self.assertEqual(rt.state, 1)
+        # rt2 = ReplicationTracker.objects.create(state=10)
+        # self.assertEqual(rt2.state, 1 or 2)
 
     def test_get_replicator_mongo(self):
         rt = replication_tracker_factory(replication_type=1)
@@ -34,5 +36,6 @@ class DataReplicationTests(test.TestCase):
     def test_replication_combo(self):
         mt = replication_tracker_factory(replication_type=1)
         st = replication_tracker_factory(replication_type=2)
+        #this isnt catching the error like intended from models line 62
         gt = replication_tracker_factory(replication_type=2)
         st.get_replicator()

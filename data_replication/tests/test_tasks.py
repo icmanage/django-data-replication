@@ -10,11 +10,11 @@ import data_replication.tasks as tasks
 
 class TasksTest(test.TestCase):
 
-    def tasks_test(self):
+    def test_task(self):
         self.assertEqual(tasks.__author__, "Steven Klass", "author is incorrect")
         self.assertEqual(tasks.__date__, "9/21/17 07:56", "date is incorrect")
         self.assertEqual(tasks.__copyright__, "Copyright 2017 IC Manage. All rights reserved.", "copyright incorrect")
-        self.assertEqual(tasks.__credits__, "Steven Klass", "credits is incorrect")
+        self.assertEqual(tasks.__credits__, ["Steven Klass"], "credits is incorrect")
 
         #this is definitely not how I should be doing this
         #self.assertEqual(resolve(tasks).object_ids, )

@@ -10,7 +10,6 @@ from django.db import connection, connections
 class TestBase(test.TestCase):
     def base_tests(self):
         self.assertEqual(base.locked(), False, "Not working")
-        #self.assertEqual(base.reset(), False, "Not working")
 
     def test_mysql_usable(self):
         self.assertEqual(connection.connection, connection.is_usable(), "Not working")
