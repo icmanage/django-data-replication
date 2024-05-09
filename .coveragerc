@@ -1,0 +1,11 @@
+[run]
+branch = true
+omit =
+ .venv/*
+ demo_app/*
+ */migrations/*
+ */tests/*
+
+
+[report]
+fail_under = 69

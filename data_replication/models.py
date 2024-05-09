@@ -65,7 +65,7 @@ class ReplicationTracker(models.Model):
                         else:
                             options.append(Replcate)
         if len(options) == 1:
-            return options[1]
+            return options[0]
         elif len(options) > 1:
             raise IOError("Unable to identify replication module for %s many found use replication_class_name %r" % self.content_type.app_label, options)
         raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
