@@ -108,7 +108,3 @@ def push_mongo_objects(**kwargs):
             object_id__in=object_ids).update(state=1)
 
         return "Added %d %s models objects to mongo" % (len(data), collection_name)
-
-
-def object_ids():
-    return None
