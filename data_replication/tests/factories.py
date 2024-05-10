@@ -2,11 +2,12 @@ import random
 
 from celery import Task
 from celery.worker.consumer import Tasks
-from coverage import data
+import data
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.utils.timezone import now
 
+from data_replication import tasks
 from data_replication.models import REPLICATION_TYPES, ReplicationTracker, Replication
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
@@ -51,7 +52,7 @@ def replication_factory(tracker=None, content_object=None, **kwargs):
 def tasks_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, **kwargs):
 
     if object_ids is None:
-        pass
+        object_ids = test_result_link_factory(**kwargs).object_ids
     if content_type_id is None:
         pass
     if model_name is None:
@@ -67,4 +68,4 @@ def tasks_factory(object_ids=None, content_type_id=None, model_name=None, tracke
                 model_name=kwargs.get('model_name'),
                 content_type_id=kwargs.get('content_type_id'))
     data.update(**kwargs)
-    return Tasks.objects.create(**data)
+    return tasks.objects.create(**data)

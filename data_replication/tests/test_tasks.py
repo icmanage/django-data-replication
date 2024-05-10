@@ -6,8 +6,9 @@ import logging
 from pymongo.errors import ConnectionFailure, OperationFailure
 from data_replication.models import ReplicationTracker
 
+
 import data_replication.tasks as tasks
-from data_replication.tests.factories import replication_tracker_factory, tasks_factory
+from data_replication.tests.factories import replication_tracker_factory, tasks_factory, test_result_link_factory
 
 
 class TasksTest(test.TestCase):
@@ -18,7 +19,7 @@ class TasksTest(test.TestCase):
         self.assertEqual(tasks.__copyright__, "Copyright 2017 IC Manage. All rights reserved.", "copyright incorrect")
         self.assertEqual(tasks.__credits__, ["Steven Klass"], "credits is incorrect")
 
-    def test_push_splunk_objects(self):
+    def test_push_splunk_objects(self, **kwargs):
         ct = ContentType.objects.get_for_model(ReplicationTracker)
         rt = replication_tracker_factory()
         self.assertEqual(ReplicationTracker.objects.count(), 1)
@@ -26,6 +27,8 @@ class TasksTest(test.TestCase):
         self.assertEqual(rt.state, 1)
 
         #new stuff and error is here
+        #oid = tasks_factory.object_ids
+        #self.assertEqual(oid, kwargs.get('object_ids'))
         #tf = tasks_factory()
         #tf = tasks_factory(model_name='mode_name')
         #self.assertEqual(tf.model_name, 'model_name')
