@@ -49,10 +49,15 @@ def replication_factory(tracker=None, content_object=None, **kwargs):
     return Replication.objects.create(**data)
 
 
-def tasks_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, **kwargs):
-
+def tasks_splunk_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, ignore_result=True,
+                  store_errors_even_if_ignored=True, **kwargs):
+    if ignore_result is True:
+        pass
+    if store_errors_even_if_ignored is True:
+        pass
     if object_ids is None:
-        object_ids = test_result_link_factory(**kwargs).object_ids
+        pass
+        #object_ids = test_result_link_factory(**kwargs).object_ids
     if content_type_id is None:
         pass
     if model_name is None:
@@ -60,12 +65,51 @@ def tasks_factory(object_ids=None, content_type_id=None, model_name=None, tracke
     if object_ids is None:
         pass
     if tracker_id is None:
-        tracker_id = replication_tracker_factory(
-            content_type=kwargs.get('tracker_id')
-        )
+        #tracker_id = replication_tracker_factory(content_type=kwargs.get('tracker_id'))
+        pass
+
 
     data = dict(state=1,
                 model_name=kwargs.get('model_name'),
-                content_type_id=kwargs.get('content_type_id'))
+                content_type_id=kwargs.get('content_type_id'),
+                object_ids=kwargs.get('object_ids'),
+                tracker_id=kwargs.get('tracker_id'),
+                replication_class_name=kwargs.get('replication_class_name'),
+                source_type=kwargs.get('source_type', 'json'),
+                )
     data.update(**kwargs)
-    return tasks.objects.create(**data)
+    return tasks.push_splunk_objects(**data)
+
+#these two should be nearly the same
+
+
+def tasks_mongo_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, ignore_result=True,
+                  store_errors_even_if_ignored=True, **kwargs):
+    if ignore_result is True:
+        pass
+    if store_errors_even_if_ignored is True:
+        pass
+    if object_ids is None:
+        pass
+        #object_ids = test_result_link_factory(**kwargs).object_ids
+    if content_type_id is None:
+        pass
+    if model_name is None:
+        pass
+    if object_ids is None:
+        pass
+    if tracker_id is None:
+        #tracker_id = replication_tracker_factory(content_type=kwargs.get('tracker_id'))
+        pass
+
+
+    data = dict(state=1,
+                model_name=kwargs.get('model_name'),
+                content_type_id=kwargs.get('content_type_id'),
+                object_ids=kwargs.get('object_ids'),
+                tracker_id=kwargs.get('tracker_id'),
+                replication_class_name=kwargs.get('replication_class_name'),
+                source_type=kwargs.get('source_type', 'json'),
+                )
+    data.update(**kwargs)
+    return tasks.push_mongo_objects(**data)

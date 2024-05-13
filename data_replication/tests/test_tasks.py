@@ -6,9 +6,10 @@ import logging
 from pymongo.errors import ConnectionFailure, OperationFailure
 from data_replication.models import ReplicationTracker
 
-
 import data_replication.tasks as tasks
-from data_replication.tests.factories import replication_tracker_factory, tasks_factory, test_result_link_factory
+from data_replication.tests import factories
+from data_replication.tests.factories import replication_tracker_factory, test_result_link_factory, \
+    tasks_mongo_factory
 
 
 class TasksTest(test.TestCase):
@@ -26,9 +27,31 @@ class TasksTest(test.TestCase):
         rt = replication_tracker_factory(state=1)
         self.assertEqual(rt.state, 1)
 
-        #new stuff and error is here
-        #oid = tasks_factory.object_ids
-        #self.assertEqual(oid, kwargs.get('object_ids'))
-        #tf = tasks_factory()
-        #tf = tasks_factory(model_name='mode_name')
-        #self.assertEqual(tf.model_name, 'model_name')
+        #tsf = tasks_splunk_factory()
+        #tsf = tasks_splunk_factory(ignore_result=True, store_errors_even_if_ignored=True)
+        #self.assertEqual(tsf.ignore_result, True)
+        #self.assertEqual(tsf.store_errors_even_if_ignored, True)
+
+        #if factories.tasks_splunk_factory(tracker_id=tsf.tracker_id):
+        #    pass
+
+        self.assertEqual(factories.tasks_splunk_factory(tracker_id='tracker_id'))
+
+        #now to do the same for the similar function
+
+    def test_mongo_objects(self, **kwargs):
+        ct = ContentType.objects.get_for_model(ReplicationTracker)
+        rt = replication_tracker_factory()
+        self.assertEqual(ReplicationTracker.objects.count(), 1)
+        rt = replication_tracker_factory(state=1)
+        self.assertEqual(rt.state, 1)
+
+        #tmf = tasks_mongo_factory()
+        #tmf = tasks_mongo_factory(ignore_result=True, store_errors_even_if_ignored=True)
+        # self.assertEqual(tmf.ignore_result, True)
+        # self.assertEqual(tmf.store_errors_even_if_ignored, True)
+
+        # if factories.tasks_mongo_factory(tracker_id=tf.tracker_id):
+        #    pass
+
+        self.assertEqual(tasks.push_mongo_objects(tracker_id='tracker_id'), 'tracker_id')
