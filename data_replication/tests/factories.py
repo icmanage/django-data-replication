@@ -112,3 +112,18 @@ def tasks_mongo_factory(object_ids=None, content_type_id=None, model_name=None, 
                 )
     data.update(**kwargs)
     return tasks.push_mongo_objects(**data)
+
+
+#def base_factory(reset=False, max_count=None, **kwargs)
+    #if reset is False:
+    #    pass
+    #if max_count is None:
+    #    pass
+
+    #data = dict(last_look=None, self.locked=False, query_time=None, add_pks=[], update_pks=[], delete_pks=[],
+    #_accounted_pks=[], _queryset_pks=[], skip_locks=True, reset=reset, output_file=None,
+    #max_count = max_count, use_subtasks=kwargs.get('use_subtasks', True)
+
+    #data.update(**kwargs)
+    #return tasks.push_mongo_objects(**data)
+
