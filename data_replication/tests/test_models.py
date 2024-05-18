@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from data_replication import apps
 from data_replication.models import ReplicationTracker
 from data_replication.tests.factories import replication_tracker_factory
+import data_replication.models as models
 
 
 class DataReplicationTests(test.TestCase):
@@ -21,12 +22,13 @@ class DataReplicationTests(test.TestCase):
         self.assertEqual(rt.state, 1)
         # rt2 = ReplicationTracker.objects.create(state=10)
         # self.assertEqual(rt2.state, 1 or 2)
+        #self.assertRaisesMessage(self, "Unable to find replication.py in app %s",  ReplicationTracker.content_type.app_label)
+        #self.assertIsInstance(isinstance(models.module, ReplicationTracker))
 
     def test_get_replicator_mongo(self):
         rt = replication_tracker_factory(replication_type=1)
         replicator = rt.get_replicator()
         self.assertIn("TestResultMongoReplicator", str(replicator))
-
 
     def test_get_replicator_splunk(self):
         rt = replication_tracker_factory(replication_type=2)

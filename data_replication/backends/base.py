@@ -16,6 +16,7 @@ __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
 
+
 class ImproperlyConfiguredException(Exception):
     pass
 
@@ -52,7 +53,8 @@ class BaseReplicationCollector(object):
             log.setLevel(self.log_level)
 
         if self.get_model() is None:
-            raise AttributeError("You must provide a reference model by defining the attribute `model` or redefine `get_model()`")
+            raise AttributeError("You must provide a reference model by defining the attribute "
+                                 "`model` or redefine `get_model()`")
         if not self.change_keys:
             raise AttributeError(
                 "You must provide a a date to reference changes by setting the attribute `change_keys`")
@@ -206,7 +208,7 @@ class BaseReplicationCollector(object):
         Replication.objects.filter(
             tracker=self.last_look,
             object_id__in=object_pks,
-            content_type=self.content_type,).delete()
+            content_type=self.content_type, ).delete()
 
     def delete_items(self, object_pks):
         raise NotImplemented
