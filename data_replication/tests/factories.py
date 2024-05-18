@@ -50,7 +50,7 @@ def replication_factory(tracker=None, content_object=None, **kwargs):
 
 
 def tasks_splunk_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, ignore_result=True,
-                  store_errors_even_if_ignored=True, **kwargs):
+                         store_errors_even_if_ignored=True, **kwargs):
     if ignore_result is True:
         pass
     if store_errors_even_if_ignored is True:
@@ -67,7 +67,6 @@ def tasks_splunk_factory(object_ids=None, content_type_id=None, model_name=None,
     if tracker_id is None:
         #tracker_id = replication_tracker_factory(content_type=kwargs.get('tracker_id'))
         pass
-
 
     data = dict(state=1,
                 model_name=kwargs.get('model_name'),
@@ -80,11 +79,12 @@ def tasks_splunk_factory(object_ids=None, content_type_id=None, model_name=None,
     data.update(**kwargs)
     return tasks.push_splunk_objects(**data)
 
+
 #these two should be nearly the same
 
 
 def tasks_mongo_factory(object_ids=None, content_type_id=None, model_name=None, tracker_id=None, ignore_result=True,
-                  store_errors_even_if_ignored=True, **kwargs):
+                        store_errors_even_if_ignored=True, **kwargs):
     if ignore_result is True:
         pass
     if store_errors_even_if_ignored is True:
@@ -101,7 +101,6 @@ def tasks_mongo_factory(object_ids=None, content_type_id=None, model_name=None, 
     if tracker_id is None:
         #tracker_id = replication_tracker_factory(content_type=kwargs.get('tracker_id'))
         pass
-
 
     data = dict(state=1,
                 model_name=kwargs.get('model_name'),

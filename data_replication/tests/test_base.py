@@ -13,3 +13,6 @@ class TestBase(test.TestCase):
 
     def test_mysql_usable(self):
         self.assertEqual(connection.connection, connection.is_usable(), "Not working")
+
+    def test_get_models(self):
+        self.assertIn(base.BaseReplicationCollector.model, base.BaseReplicationCollector.model)

@@ -37,6 +37,9 @@ class TasksTest(test.TestCase):
 
         self.assertEqual(factories.tasks_splunk_factory(tracker_id='tracker_id'))
 
+        #if factories.tasks_splunk_factory(tracker_id=not None):
+            #assert "You failed to include object ids"
+
         #now to do the same for the similar function
 
     def test_mongo_objects(self, **kwargs):
