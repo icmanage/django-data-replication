@@ -22,6 +22,7 @@ class MongoTestCase(test.TestCase):
 
     def test_delete_items(self):
         #ct = ContentType.objects.get_for_model(mongo.MongoRequest)
+        self.assertEqual(mongo.MongoReplicator(mongo), mongo.MongoRequest())
         pass
 
     def test_get_task_kwargs(self):

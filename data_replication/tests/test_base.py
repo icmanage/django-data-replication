@@ -8,12 +8,16 @@ from kombu.exceptions import OperationalError
 import data_replication.backends.base as base
 from django.db import connection, connections
 from django.contrib.contenttypes.models import ContentType
+from data_replication.models import Replication
 
 
 class TestBase(test.TestCase):
     def test_base(self):
         ct = ContentType.objects.get_for_model(base.BaseReplicationCollector)
         #self.assertEqual(base.locked(), False)
+        #get_task = base()
+        #tgtk = base.get_task_kwargs()
+        #self.assertEqual(tgtk, {})
 
     def test_init(self):
         ct = ContentType.objects.get_for_model(base.BaseReplicationCollector)
@@ -31,3 +35,4 @@ class TestBase(test.TestCase):
 
     def test_delete_items(self, object_pks):
         self.assertEqual(NotImplemented, None)
+        #self.assertIn(base.BaseReplicationCollector.delete_items, tracker=self.last_look, object_id__in=object_pks, content_type=self.content_type)
