@@ -1,13 +1,15 @@
 import random
-
-from celery import Task
+from collections import OrderedDict
+#from celery.result.AsyncResult import kwargs
 from celery.worker.consumer import Tasks
 import data
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.models import ContentType, ContentTypeManager
 from django.utils.timezone import now
+#from pip._vendor.pyparsing.ParseResults import pop
 
 from data_replication import tasks
+from data_replication.backends.base import BaseReplicationCollector
 from data_replication.models import REPLICATION_TYPES, ReplicationTracker, Replication
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
@@ -115,15 +117,29 @@ def tasks_mongo_factory(object_ids=None, content_type_id=None, model_name=None, 
 
 
 #def base_factory(reset=False, max_count=None, **kwargs)
-    #if reset is False:
-    #    pass
-    #if max_count is None:
-    #    pass
+#if reset is False:
+#    pass
+#if max_count is None:
+#    pass
 
-    #data = dict(last_look=None, self.locked=False, query_time=None, add_pks=[], update_pks=[], delete_pks=[],
-    #_accounted_pks=[], _queryset_pks=[], skip_locks=True, reset=reset, output_file=None,
-    #max_count = max_count, use_subtasks=kwargs.get('use_subtasks', True)
+#data = dict(last_look=None, self.locked=False, query_time=None, add_pks=[], update_pks=[], delete_pks=[],
+#_accounted_pks=[], _queryset_pks=[], skip_locks=True, reset=reset, output_file=None,
+#max_count = max_count, use_subtasks=kwargs.get('use_subtasks', True)
 
-    #data.update(**kwargs)
-    #return tasks.push_mongo_objects(**data)
+#data.update(**kwargs)
+#return tasks.push_mongo_objects(**data)
 
+
+def base_factory(model=None, change_keys=[], field_map=OrderedDict(), search_quantifiers=None, days=365 * 100,
+                      last_updated=now(), **kwargs):
+    if model is None:
+        pass
+
+    data = dict(state=0, days=365 * 100,
+                #tracker=self.last_look, object_id__in=object_pks, content_type=self.content_type,
+                #content_type=self.content_type, tracker=self.last_look,
+                #object_id=pop(0),
+                last_updated=last_updated)
+
+    data.update(**kwargs)
+    return BaseReplicationCollector.objects.create(**data)

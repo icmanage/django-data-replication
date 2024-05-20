@@ -8,21 +8,22 @@ from kombu.exceptions import OperationalError
 import data_replication.backends.base as base
 from django.db import connection, connections
 from django.contrib.contenttypes.models import ContentType
-from data_replication.models import Replication
+from data_replication.models import Replication, ReplicationTracker
+from data_replication.tests.factories import replication_tracker_factory, base_factory
 
 
 class TestBase(test.TestCase):
     def test_base(self):
         ct = ContentType.objects.get_for_model(base.BaseReplicationCollector)
-        #self.assertEqual(base.locked(), False)
-        #get_task = base()
-        #tgtk = base.get_task_kwargs()
-        #self.assertEqual(tgtk, {})
+        self.base1 = ct.objects.create(model=None, change_keys=[], field_map=OrderedDict(), search_quantifiers=None)
+        bf = base_factory()
+        bf.objects.create(model=None, change_keys=[], field_map=OrderedDict(), search_quantifiers=None)
 
-    def test_init(self):
+    def test_init(self, **kwargs):
         ct = ContentType.objects.get_for_model(base.BaseReplicationCollector)
-        obj = base.BaseReplicationCollector.objects.create(model=1, change_keys=[], field_map=OrderedDict(),
-                                                           search_quantifiers=None)
+        self.baseIn = ct.objects.create(self, last_look=None, reset=False, max_count=None, **kwargs)
+        self.assertEqual(self.baseIn.last_look, None)
+
         #self.assertFalse(base.locked())
         #self.assertEqual(base.last_look(), None)
         pass
@@ -32,6 +33,14 @@ class TestBase(test.TestCase):
 
     def test_get_models(self):
         self.assertIn(base.BaseReplicationCollector.model, base.BaseReplicationCollector.model)
+
+    #I'm not sure this is necessary, but i see the lock function shares a lot of similarities to replication_tracker
+    def test_replicator_factory_lock(self, **kwargs):
+        ct = ContentType.objects.get_for_model(ReplicationTracker)
+        rt = replication_tracker_factory()
+        self.assertEqual(ReplicationTracker.objects.count(), 1)
+        rt = replication_tracker_factory(state=1)
+        self.assertEqual(rt.state, 1)
 
     def test_delete_items(self, object_pks):
         self.assertEqual(NotImplemented, None)
