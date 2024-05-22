@@ -19,7 +19,6 @@ log = logging.getLogger(__name__)
 
 @shared_task(ignore_result=True, store_errors_even_if_ignored=True)
 def push_splunk_objects(**kwargs):
-
     object_ids = kwargs.get('object_ids')
     tracker_id = kwargs.get('tracker_id')
     content_type_id = kwargs.get('content_type_id')
@@ -66,7 +65,6 @@ def push_splunk_objects(**kwargs):
 
 @shared_task(ignore_result=True, store_errors_even_if_ignored=True)
 def push_mongo_objects(**kwargs):
-
     from pymongo.errors import ConnectionFailure, OperationFailure
 
     object_ids = kwargs.get('object_ids')

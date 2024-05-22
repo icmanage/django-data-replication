@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.test import TestCase
 from django.urls import resolve
 from django.utils.timezone import now
 from django import test
@@ -12,7 +13,7 @@ from data_replication.tests.factories import replication_tracker_factory, test_r
     tasks_mongo_factory
 
 
-class TasksTest(test.TestCase):
+class TestTasks(TestCase):
 
     def test_tasks(self):
         self.assertEqual(tasks.__author__, "Steven Klass", "author is incorrect")

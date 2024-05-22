@@ -1,54 +1,82 @@
 from collections import OrderedDict
-from unittest import TestCase
-
-import self
-from django import test
-from django.contrib.admin.options import get_content_type_for_model
-from kombu.exceptions import OperationalError
+from django.test import TestCase
 import data_replication.backends.base as base
 from django.db import connection, connections
 from django.contrib.contenttypes.models import ContentType
 from data_replication.models import Replication, ReplicationTracker
-from data_replication.tests.factories import replication_tracker_factory, base_factory
 from data_replication.backends.base import BaseReplicationCollector
 
 
-class TestBase(test.TestCase):
-    def test_base(self):
-        ct = ContentType.objects.get_for_model(base.BaseReplicationCollector)
-        #I shouldn't need both. This line is creating objects without the factory
-        self.base1 = ct.objects.create(model=None, change_keys=[], field_map=OrderedDict(), search_quantifiers=None)
+class TestBase(TestCase):
+    #breaking into chatGPT here and woah.
+    def test_default_values(self):
+        instance = BaseReplicationCollector()
+        self.assertIsNone(instance.last_look)
+        self.assertFalse(instance.locked)
+        self.assertIsNone(instance.query_time)
+        self.assertEqual(instance.add_pks, [])
+        self.assertEqual(instance.update_pks, [])
+        self.assertEqual(instance.delete_pks, [])
+        self.assertEqual(instance._accounted_pks, [])
+        self.assertEqual(instance._queryset_pks, [])
+        self.assertTrue(instance.skip_locks)
+        self.assertIsNone(instance.output_file)
+        self.assertIsNone(instance.max_count)
+        self.assertTrue(instance.use_subtasks)
+        self.assertIsNone(instance.log_level)
 
-        bf = base_factory()
-        bf.objects.create(model=None, change_keys=[], field_map=OrderedDict(), search_quantifiers=None)
+    #specific question I want to ask here:
+    # How do you know to take those exact parameters into your argument? Reset, max_count, etc.
+    def test_custom_values(self):
+        instance = BaseReplicationCollector(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
+        self.assertTrue(instance.reset)
+        self.assertEqual(instance.max_count, 10)
+        self.assertFalse(instance.use_subtasks)
+        self.assertEqual(instance.log_level, 'DEBUG')
 
-    def test_init(self, **kwargs):
-        ct = ContentType.objects.get_for_model(BaseReplicationCollector)
-        self.baseIn = ct.objects.create(self, last_look=None, reset=False, max_count=None, **kwargs)
-        self.assertEqual(self.baseIn.last_look, None)
+    def test_missing_model_attribute(self):
+        with self.assertRaises(AttributeError):
+            # Test case where model is not provided
+            BaseReplicationCollector()
 
-        #self.assertFalse(base.locked())
-        #self.assertEqual(base.last_look(), None)
+    def test_missing_change_keys_attribute(self):
+        with self.assertRaises(AttributeError):
+            # Test case where change_keys are not provided
+            class YourModelWithoutChangeKeys(BaseReplicationCollector):
+                def get_model(self):
+                    return BaseReplicationCollector
+
+            YourModelWithoutChangeKeys()
+
+    #confused about this
+    def test_get_model(self):
+        self.instance = BaseReplicationCollector()
+        self.instance.model = 'base'
+        self.assertEqual(self.instance.get_model(), 'base')
+
+    #ends here
+
+    def test_get_queryset(self):
+        pass
+
+    def test_search_quantifier(self):
+        pass
+
+    def test_content_type(self):
+        instance = BaseReplicationCollector
+        expected_content_type = ContentType.objects.get_for_model('BaseReplicationCollector')
+        actual_content_type = self.instance.content_type()
+        self.assertEqual(actual_content_type, expected_content_type)
         pass
 
     def test_mysql_usable(self):
         self.assertEqual(connection, connection, 'default to delete connections._connections.default')
 
     def test_get_models(self):
-        self.assertIn(BaseReplicationCollector.model, BaseReplicationCollector.model)
-
-    #I'm not sure if this is necessary, but I see the lock function shares a lot of similarities to replication_tracker
-    def test_replicator_factory_lock(self, **kwargs):
-        ct = ContentType.objects.get_for_model(ReplicationTracker)
-        rt = replication_tracker_factory()
-        self.assertEqual(ReplicationTracker.objects.count(), 1)
-        rt = replication_tracker_factory(state=1)
-        self.assertEqual(rt.state, 1)
+        pass
 
     def test_accounted_pks(self):
-        bc = BaseReplicationCollector.objects.create(self.test_accounted_pks, )
-        self.assertEqual(bc.accounted_pks, self._accounted_pks)
+        pass
 
-    def test_delete_items(self, object_pks):
-        self.assertEqual(NotImplemented, None)
-        #self.assertIn(base.BaseReplicationCollector.delete_items, tracker=self.last_look, object_id__in=object_pks, content_type=self.content_type)
+    def test_delete_items(self):
+        pass

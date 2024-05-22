@@ -57,7 +57,7 @@ class BaseReplicationCollector(object):
                                  "`model` or redefine `get_model()`")
         if not self.change_keys:
             raise AttributeError(
-                "You must provide a a date to reference changes by setting the attribute `change_keys`")
+                "You must provide a date to reference changes by setting the attribute `change_keys`")
 
     def get_model(self):
         return self.model
