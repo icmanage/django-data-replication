@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc4c6fdf-bcad-4a5e-ad70-e7b610787414" name="Changes" comment="Fixed stuff up with Steve">
+    <list default="true" id="dc4c6fdf-bcad-4a5e-ad70-e7b610787414" name="Changes" comment="Finally used a bit of ChatGPT and I find it both very helpful but also a bit intimidating. Probably just gonne spend more time in the future reading into it.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/backends/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/backends/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tasks.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/tests/test_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tests/test_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/tests/test_tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tests/test_tasks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,7 +254,7 @@
       <option name="presentableId" value="Default" />
       <updated>1714528576428</updated>
       <workItem from="1714528578280" duration="19686000" />
-      <workItem from="1715048384874" duration="49808000" />
+      <workItem from="1715048384874" duration="50026000" />
     </task>
     <task id="LOCAL-00001" summary="Got the demo_app in the virtual machine and added its subdirectories.">
       <option name="closed" value="true" />
@@ -412,7 +408,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716247044756</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Finally used a bit of ChatGPT and I find it both very helpful but also a bit intimidating. Probably just gonne spend more time in the future reading into it.">
+      <option name="closed" value="true" />
+      <created>1716406631381</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1716406631381</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -435,10 +439,11 @@
     <MESSAGE value="Still hitting walls. What I'm finding online to help me out seems too simple and direct compared to what I'm doing here." />
     <MESSAGE value="Working on new factories, and learning/making progress in base(I think)" />
     <MESSAGE value="Fixed stuff up with Steve" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed stuff up with Steve" />
+    <MESSAGE value="Finally used a bit of ChatGPT and I find it both very helpful but also a bit intimidating. Probably just gonne spend more time in the future reading into it." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finally used a bit of ChatGPT and I find it both very helpful but also a bit intimidating. Probably just gonne spend more time in the future reading into it." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_content_type.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_content_type Coverage Results" MODIFIED="1716406403717" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_content_type.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_content_type Coverage Results" MODIFIED="1716406496650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TasksTest.coverage" NAME="Test: data_replication.tests.test_tasks.TasksTest Coverage Results" MODIFIED="1715643486707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests Coverage Results" MODIFIED="1716058258959" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_tostring.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_tostring Coverage Results" MODIFIED="1715461445280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

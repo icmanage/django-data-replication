@@ -51,8 +51,8 @@ class TestBase(TestCase):
     #confused about this
     def test_get_model(self):
         self.instance = BaseReplicationCollector()
-        self.instance.model = 'base'
-        self.assertEqual(self.instance.get_model(), 'base')
+        self.instance.model = ''
+        self.assertEqual(self.instance.get_model(), '')
 
     #ends here
 
@@ -67,7 +67,9 @@ class TestBase(TestCase):
         expected_content_type = ContentType.objects.get_for_model('BaseReplicationCollector')
         actual_content_type = self.instance.content_type()
         self.assertEqual(actual_content_type, expected_content_type)
-        pass
+
+    def test_verbose_name(self):
+        instance = BaseReplicationCollector
 
     def test_mysql_usable(self):
         self.assertEqual(connection, connection, 'default to delete connections._connections.default')

@@ -11,6 +11,7 @@ import data_replication.tasks as tasks
 from data_replication.tests import factories
 from data_replication.tests.factories import replication_tracker_factory, test_result_link_factory, \
     tasks_mongo_factory
+#from data_replication.tasks import tasks
 
 
 class TestTasks(TestCase):
@@ -40,11 +41,12 @@ class TestTasks(TestCase):
         self.assertEqual(factories.tasks_splunk_factory(tracker_id='tracker_id'))
 
         #if factories.tasks_splunk_factory(tracker_id=not None):
-            #assert "You failed to include object ids"
+        #assert "You failed to include object ids"
 
         #now to do the same for the similar function
 
     def test_mongo_objects(self, **kwargs):
+        instance = tasks
         ct = ContentType.objects.get_for_model(ReplicationTracker)
         rt = replication_tracker_factory()
         self.assertEqual(ReplicationTracker.objects.count(), 1)
@@ -59,4 +61,17 @@ class TestTasks(TestCase):
         # if factories.tasks_mongo_factory(tracker_id=tf.tracker_id):
         #    pass
 
-        self.assertEqual(tasks.push_mongo_objects(tracker_id='tracker_id'), 'tracker_id')
+        self.assertEqual(tasks.push_mongo_objects(content_type_id='content_type_id'))
+        self.assertEqual(tasks.push_mongo_objects(tracker_id='tracker_id'))
+        self.assertEqual(tasks.push_mongo_objects(model_name='model_name'))
+        self.assertEqual(tasks.push_mongo_objects(object_ids='object_ids'))
+        #self.assertEqual(tasks.push_mongo_objects(instance.tracker_id, 'tracker_id'))
+
+    def test_assert_errors(self):
+        instance = tasks
+        with self.assertRaises(AssertionError):
+            tasks.push_splunk_objects(object_id=not None, tracker_id=not None,
+                                      content_type_id=not None, model_name=not None)
+
+            tasks.push_mongo_objects(object_id=not None, tracker_id=not None,
+                                     content_type_id=not None, model_name=not None)
