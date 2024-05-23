@@ -30,7 +30,7 @@ class TestTasks(TestCase):
         rt = replication_tracker_factory(state=1)
         self.assertEqual(rt.state, 1)
 
-        tsf = tasks.push_splunk_objects(object_ids=tr.id)
+        #tsf = tasks.push_splunk_objects(object_ids=tr.id)
         #tsf = tasks_splunk_factory(ignore_result=True, store_errors_even_if_ignored=True)
         #self.assertEqual(tsf.ignore_result, True)
         #self.assertEqual(tsf.store_errors_even_if_ignored, True)

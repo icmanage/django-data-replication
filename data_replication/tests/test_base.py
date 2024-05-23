@@ -1,14 +1,21 @@
 from collections import OrderedDict
+
 from django.test import TestCase
 import data_replication.backends.base as base
 from django.db import connection, connections
 from django.contrib.contenttypes.models import ContentType
 from data_replication.models import Replication, ReplicationTracker
 from data_replication.backends.base import BaseReplicationCollector
+from data_replication.backends.base import ImproperlyConfiguredException
 
 
 class TestBase(TestCase):
-    #breaking into chatGPT here and woah.
+    #not sure what is going on with this test failing
+    def test_mysql_usable(self):
+        connection.connection = None
+        base.make_sure_mysql_usable()
+
+    #breaking into chatGPT here.
     def test_default_values(self):
         instance = BaseReplicationCollector()
         self.assertIsNone(instance.last_look)
@@ -49,10 +56,11 @@ class TestBase(TestCase):
             YourModelWithoutChangeKeys()
 
     #confused about this
-    def test_get_model(self):
+    def test_get_model(self, **kwargs):
         self.instance = BaseReplicationCollector()
         self.instance.model = ''
         self.assertEqual(self.instance.get_model(), '')
+        return not None
 
     #ends here
 
@@ -63,16 +71,13 @@ class TestBase(TestCase):
         pass
 
     def test_content_type(self):
-        instance = BaseReplicationCollector
+        instance = BaseReplicationCollector()
         expected_content_type = ContentType.objects.get_for_model('BaseReplicationCollector')
         actual_content_type = self.instance.content_type()
         self.assertEqual(actual_content_type, expected_content_type)
 
     def test_verbose_name(self):
-        instance = BaseReplicationCollector
-
-    def test_mysql_usable(self):
-        self.assertEqual(connection, connection, 'default to delete connections._connections.default')
+        instance = BaseReplicationCollector()
 
     def test_get_models(self):
         pass
@@ -80,5 +85,15 @@ class TestBase(TestCase):
     def test_accounted_pks(self):
         pass
 
-    def test_delete_items(self):
+    def test__delete_items(self, object_pks):
         pass
+
+    def test_delete_items(self):
+        instance = BaseReplicationCollector()
+        object_pks = [1, 2, 3]
+        with self.assertRaises(NotImplemented):
+            instance.delete_items(object_pks)
+
+    def test_task_name(self):
+        instance = BaseReplicationCollector()
+        self.assertRaises(instance.task_name, NotImplemented)
