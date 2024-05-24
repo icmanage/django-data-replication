@@ -1,7 +1,7 @@
 import logging
 #import parser
 
-from django.core.management import base
+from django.core.management import base, CommandParser
 
 from data_replication.management.commands import replicate
 from data_replication.management.commands.replicate import Command
@@ -17,8 +17,50 @@ class TestReplicate(TestCase):
 
     def test_add_arguments(self):
         instance = Command()
-        parser = instance.add_arguments()
-        parser.add_argument()
+        parser = CommandParser(cmd='test_command')
+        instance.add_arguments(parser)
+
+        # Argument '-f' or '--no-confirm'
+        self.assertTrue(any(arg.option_strings == ['-f', '--no-confirm'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-f', '--no-confirm']][0]
+        self.assertEqual(no_confirm_action.dest, 'no_confirm')
+        self.assertEqual(no_confirm_action.help, 'Do not prompt for confirmation')
+
+        # -a or --app-name
+        self.assertTrue(any(arg.option_strings == ['-a', '--app-name'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-a', '--app-name']][0]
+        self.assertEqual(no_confirm_action.dest, 'app')
+        self.assertEqual(no_confirm_action.help, 'Provide the app to work on to replication')
+
+        # -t or --replication-type
+        self.assertTrue(any(arg.option_strings == ['-t', '--replication-type'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-t', '--replication-type']][0]
+        self.assertEqual(no_confirm_action.dest, 'replication_type')
+        self.assertEqual(no_confirm_action.help, 'Provide the type of replication')
+
+        # -R or --replication_class_name
+        self.assertTrue(any(arg.option_strings == ['-R', '--replication_class_name'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-R', '--replication_class_name']][0]
+        self.assertEqual(no_confirm_action.dest, 'replication_class_name')
+        self.assertEqual(no_confirm_action.help, 'Replication Class Name')
+
+        # -T or --no_subtasks
+        self.assertTrue(any(arg.option_strings == ['-T', '--no_subtasks'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-T', '--no_subtasks']][0]
+        self.assertEqual(no_confirm_action.dest, 'no_subtasks')
+        self.assertEqual(no_confirm_action.help, 'Sub Tasks')
+
+        # -m or --max_count
+        self.assertTrue(any(arg.option_strings == ['-m', '--max_count'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-m', '--max_count']][0]
+        self.assertEqual(no_confirm_action.dest, 'max_count')
+        self.assertEqual(no_confirm_action.help, 'Max count -- DEV ONLY FOR TESTING')
+
+        # --reset
+        self.assertTrue(any(arg.option_strings == ['--reset'] for arg in parser._actions))
+        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['--no-confirm']][0]
+        self.assertEqual(no_confirm_action.dest, 'reset')
+        self.assertEqual(no_confirm_action.help, 'Reset -- DEV ONLY FOR TESTING')
         self.assertTrue(instance.requires_system_checks)
 
     def test_set_options(self, **options):

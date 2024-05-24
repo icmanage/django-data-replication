@@ -20,7 +20,6 @@ log = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = 'Replicate data to the different engines'
 
-    # think I  may come to this with chatGPT later. I can't figure out the parser.add_argument
     def add_arguments(self, parser):
         parser.add_argument('-f', '--no-confirm', action='store_true', dest='no_confirm',
                             help='Do not prompt for confirmation'),
