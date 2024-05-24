@@ -1,5 +1,6 @@
 from django import test
 from django.contrib.contenttypes.models import ContentType
+from django.test import TestCase
 from django.utils.timezone import now
 
 from data_replication import apps
@@ -8,7 +9,7 @@ from data_replication.tests.factories import replication_tracker_factory
 import data_replication.models as models
 
 
-class DataReplicationTests(test.TestCase):
+class DataReplicationTests(TestCase):
     def test_tostring(self):
         ct = ContentType.objects.get_for_model(ReplicationTracker)
         obj = ReplicationTracker.objects.create(replication_type=1, state=1, last_updated=now(), content_type=ct)

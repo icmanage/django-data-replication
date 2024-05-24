@@ -19,16 +19,24 @@ log = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Replicate data to the different engines'
-    
+
+    # think I  may come to this with chatGPT later. I can't figure out the parser.add_argument
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--no-confirm', action='store_true', dest='no_confirm', help='Do not prompt for confirmation'),
-        parser.add_argument('-a', '--app-name', action='store', dest='app', help='Provide the app to work on to replication'),
-        parser.add_argument('-t', '--replication-type', action='store', dest='replication_type', choices=["mongo", "splunk"],
-                    help='Provide the type of replication'),
-        parser.add_argument('-R', '--replication_class_name', action='store', dest='replication_class_name', help='Replication Class Name'),
-        parser.add_argument('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks', help='Sub Tasks'),
-        parser.add_argument('-m', '--max_count', action='store', dest='max_count', default=None, help='Max count -- DEV ONLY FOR TESTING'),
-        parser.add_argument('--reset', action='store_true', dest='reset', default=None, help='Reset -- DEV ONLY FOR TESTING'),
+        parser.add_argument('-f', '--no-confirm', action='store_true', dest='no_confirm',
+                            help='Do not prompt for confirmation'),
+        parser.add_argument('-a', '--app-name', action='store', dest='app',
+                            help='Provide the app to work on to replication'),
+        parser.add_argument('-t', '--replication-type', action='store', dest='replication_type',
+                            choices=["mongo", "splunk"],
+                            help='Provide the type of replication'),
+        parser.add_argument('-R', '--replication_class_name', action='store', dest='replication_class_name',
+                            help='Replication Class Name'),
+        parser.add_argument('-T', '--no_subtasks', default=False, action='store_true', dest='no_subtasks',
+                            help='Sub Tasks'),
+        parser.add_argument('-m', '--max_count', action='store', dest='max_count', default=None,
+                            help='Max count -- DEV ONLY FOR TESTING'),
+        parser.add_argument('--reset', action='store_true', dest='reset', default=None,
+                            help='Reset -- DEV ONLY FOR TESTING'),
 
     requires_system_checks = True
 
