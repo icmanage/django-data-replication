@@ -51,7 +51,7 @@ class BaseReplicationCollector(object):
         self.log_level = kwargs.get('log_level')
         if self.log_level:
             log.setLevel(self.log_level)
-        #is this a bug? model is always gonna be none
+        # is this a bug? model is always gonna be none
         if self.get_model() is None:
             raise AttributeError("You must provide a reference model by defining the attribute "
                                  "`model` or redefine `get_model()`")

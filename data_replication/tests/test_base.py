@@ -1,8 +1,6 @@
-from collections import OrderedDict
-
 from django.test import TestCase
 import data_replication.backends.base as base
-from django.db import connection, connections
+from django.db import connection
 from django.contrib.contenttypes.models import ContentType
 from data_replication.models import Replication, ReplicationTracker
 from data_replication.backends.base import BaseReplicationCollector
@@ -10,12 +8,12 @@ from data_replication.backends.base import ImproperlyConfiguredException
 
 
 class TestBase(TestCase):
-    #not sure what is going on with this test failing
+    # not sure what is going on with this test failing
     def test_mysql_usable(self):
         connection.connection = None
         base.make_sure_mysql_usable()
 
-    #breaking into chatGPT here.
+    # breaking into chatGPT here.
     def test_default_values(self):
         instance = BaseReplicationCollector()
         self.assertIsNone(instance.last_look)
@@ -32,7 +30,7 @@ class TestBase(TestCase):
         self.assertTrue(instance.use_subtasks)
         self.assertIsNone(instance.log_level)
 
-    #specific question I want to ask here:
+    # specific question I want to ask here:
     # How do you know to take those exact parameters into your argument? Reset, max_count, etc.
     def test_custom_values(self):
         instance = BaseReplicationCollector(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
@@ -55,14 +53,14 @@ class TestBase(TestCase):
 
             YourModelWithoutChangeKeys()
 
-    #confused about this
+    # confused about this
     def test_get_model(self, **kwargs):
         self.instance = BaseReplicationCollector()
         self.instance.model = ''
         self.assertEqual(self.instance.get_model(), '')
         return not None
 
-    #ends here
+    # ends here
 
     def test_get_queryset(self):
         pass
@@ -79,10 +77,22 @@ class TestBase(TestCase):
     def test_verbose_name(self):
         instance = BaseReplicationCollector()
 
-    def test_get_models(self):
+    def test_lock(self):
+        pass
+
+    def test_unlock(self):
         pass
 
     def test_accounted_pks(self):
+        pass
+
+    def test_changed_queryset_pks(self):
+        pass
+
+    def test_get_actions(self):
+        pass
+
+    def test_analyze(self):
         pass
 
     def test__delete_items(self, object_pks):
@@ -97,3 +107,15 @@ class TestBase(TestCase):
     def test_task_name(self):
         instance = BaseReplicationCollector()
         self.assertRaises(instance.task_name, NotImplemented)
+
+    def test_get_task_kwargs(self):
+        pass
+
+    def test_add_items(self):
+        pass
+
+    def test__add_items(self):
+        pass
+
+    def test_chunks(self):
+        pass

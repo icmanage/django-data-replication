@@ -40,7 +40,8 @@ class TestReplicate(TestCase):
 
         # -R or --replication_class_name
         self.assertTrue(any(arg.option_strings == ['-R', '--replication_class_name'] for arg in parser._actions))
-        no_confirm_action = [arg for arg in parser._actions if arg.option_strings == ['-R', '--replication_class_name']][0]
+        no_confirm_action = \
+        [arg for arg in parser._actions if arg.option_strings == ['-R', '--replication_class_name']][0]
         self.assertEqual(no_confirm_action.dest, 'replication_class_name')
         self.assertEqual(no_confirm_action.help, 'Replication Class Name')
 
@@ -85,8 +86,16 @@ class TestReplicate(TestCase):
             self.assertEqual(instance.max_count, int(options.get('max_count')) if options.get('max_count') else None)
             self.assertEqual(instance.reset, options.get('reset', False))
 
+    # I don't want to use GPT to finish this at least for now. I'll come back to it
     def test_handle(self, **options):
         instance = Command()
-        so = instance.set_options(**options)
-        total = instance.replications.count()
+        # total = instance.replications.count()
 
+        options = {'replication_class_name': 'replication_class',
+                   'use_subtasks': False,
+                   'max_count': 100,
+                   'reset': False,
+                   'log_level': 0}
+        instance.handle()
+
+        self.assertIn("Done!!", instance.stdout.getvalue())
