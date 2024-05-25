@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.contrib.admin.options import get_content_type_for_model
 from django.utils.timezone import now
 from kombu.exceptions import OperationalError
+# import unittest.mock
 
 __author__ = 'Steven Klass'
 __date__ = '9/25/17 16:15'
@@ -80,6 +81,8 @@ class BaseReplicationCollector(object):
     @property
     def verbose_name(self):
         return self.get_model()._meta.verbose_name.title()
+
+    # I think this and unlock will need mocked
 
     def lock(self):
         from data_replication.models import Replication, ReplicationTracker
