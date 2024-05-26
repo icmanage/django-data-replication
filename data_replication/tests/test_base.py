@@ -124,7 +124,9 @@ class TestBase(TestCase):
         self.assertEqual(result, {})
 
     def test_add_items(self):
-        pass
+        instance = BaseReplicationCollector()
+        with self.assertRaises(NotImplementedError):
+            instance.delete_items([1, 2, 3])
 
     def test__add_items(self):
         pass

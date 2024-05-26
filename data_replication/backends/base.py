@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.contrib.admin.options import get_content_type_for_model
 from django.utils.timezone import now
 from kombu.exceptions import OperationalError
+# from unittest import mock
 # import unittest.mock
 
 __author__ = 'Steven Klass'
@@ -52,7 +53,7 @@ class BaseReplicationCollector(object):
         self.log_level = kwargs.get('log_level')
         if self.log_level:
             log.setLevel(self.log_level)
-        # is this a bug? model is always gonna be none
+        # is this a bug? model is always going to be none
         if self.get_model() is None:
             raise AttributeError("You must provide a reference model by defining the attribute "
                                  "`model` or redefine `get_model()`")

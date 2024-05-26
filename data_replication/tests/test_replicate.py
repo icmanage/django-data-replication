@@ -10,6 +10,8 @@ from django.test import TestCase
 from data_replication.models import ReplicationTracker
 
 
+# I had a question here for why the instance attributes are seemingly created outside __init__
+# this makes the attributes "exist outside of Command"
 class TestReplicate(TestCase):
     def test_basic(self):
         instance = Command()
@@ -41,7 +43,7 @@ class TestReplicate(TestCase):
         # -R or --replication_class_name
         self.assertTrue(any(arg.option_strings == ['-R', '--replication_class_name'] for arg in parser._actions))
         no_confirm_action = \
-        [arg for arg in parser._actions if arg.option_strings == ['-R', '--replication_class_name']][0]
+            [arg for arg in parser._actions if arg.option_strings == ['-R', '--replication_class_name']][0]
         self.assertEqual(no_confirm_action.dest, 'replication_class_name')
         self.assertEqual(no_confirm_action.help, 'Replication Class Name')
 
