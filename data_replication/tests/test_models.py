@@ -1,4 +1,5 @@
 # from unittest.mock import Mock
+from lib2to3.fixes.fix_input import context
 
 from django import test
 from django.contrib.contenttypes.models import ContentType
@@ -10,6 +11,8 @@ from data_replication.management.commands import replicate
 from data_replication.models import ReplicationTracker
 from data_replication.tests.factories import replication_tracker_factory
 import data_replication.models as models
+from django.contrib.contenttypes.models import ContentType
+from mock import Mock
 
 
 class DataReplicationTests(TestCase):
@@ -24,6 +27,8 @@ class DataReplicationTests(TestCase):
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         rt = replication_tracker_factory(state=1)
         self.assertEqual(rt.state, 1)
+
+        # testing line 48
         with self.assertRaises(ImportError):
             self.assertIsInstance(not ct, ReplicationTracker)
         # rt2 = ReplicationTracker.objects.create(state=10)
@@ -40,17 +45,56 @@ class DataReplicationTests(TestCase):
         replicator = rt.get_replicator()
         self.assertIn("TestResultSplunkReplicator", str(replicator))
 
-    def test_replication_combo(self):
-        self.mt = ContentType.objects.get_for_model(ReplicationTracker)
-        obj = ReplicationTracker.objects.create(replication_type=1, content_type=self.mt)
+    # def test_replication_combo(self):
+        mt = ContentType.objects.get_for_model(ReplicationTracker)
+        # obj = ReplicationTracker.objects.create(replication_type=1, content_type=self.mt)
         # self.mt = replicate.Command()
         # Mock the content_type attribute with a dummy object
-        self.mt.content_type = MockClass()
+        # self.mt.content_type = MockClass()
         mock_options = [1, 2, 3]
-        with self.assertRaises(IOError) as context:
-            self.mt.get_replicator(mock_options)
-        self.assertIn('replication module', str(context.exception))
+        # with self.assertRaises(IOError) as context:
+        #     self.mt.get_replicator(mock_options)
+        # self.assertIn('replication module', str(context.exception))
+        # pass
 
+    def test_one_option(self):
+        instance = ReplicationTracker()
+        self.content_type = 'app'
+        mock_options = [1]
+        # instance.get_replicator()
 
-class MockClass():
-    app_label = 'app'
+    def test_multiple_option(self):
+        instance = ReplicationTracker()
+        self.content_type = 'app'
+        mock_options = [1, 2, 3]
+        # instance.get_replicator()
+
+    def test__no_option(self):
+        # instance = ReplicationTracker()
+
+        # with self.assertRaises(IOError):
+            # ContentType.objects = []
+            # instance.get_replicator()
+
+        pass
+
+    # chat GPTs version
+    def test_chat_no_option(self):
+        # Create a mock content type object
+        content_type = ContentType.objects.create(app_label='data_replication', model='model')
+        instance = ReplicationTracker(content_type=content_type)
+
+        content_type_mock = Mock()
+        content_type_mock.app_label = "app"
+
+        # instance = ReplicationTracker(content_type_mock)
+
+        # Mock the behavior of ContentType.objects.all()
+        content_type_mock.objects.all.return_value = []
+
+        # Now call the method under test
+        with self.assertRaises(IOError) as cm:
+            instance.get_replicator()
+
+        # Assert that the expected exception was raised
+        self.assertIn("Unable to identify", str(cm.exception))

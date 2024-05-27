@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc4c6fdf-bcad-4a5e-ad70-e7b610787414" name="Changes" comment="Working in base and hitting walls. I am kind of at a stand still in writing code myself until I can get a bit of a push.">
+    <list default="true" id="dc4c6fdf-bcad-4a5e-ad70-e7b610787414" name="Changes" comment="Trying to figure out mock and learned it probably won't work for this early version of python.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/backends/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/backends/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/tests/test_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tests/test_base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_replication/tests/test_replicate.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tests/test_replicate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_replication/tests/test_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_replication/tests/test_models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,9 +78,13 @@
     "Django tests.Test: data_replication.tests.test_base.YourModelInitTest.test_default_values.executor": "Run",
     "Django tests.Test: data_replication.tests.test_forms.FormsTest.executor": "Coverage",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.executor": "Coverage",
+    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_chat_no_option.executor": "Run",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator.executor": "Run",
-    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_mongo.executor": "Coverage",
+    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_mongo.executor": "Run",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk.executor": "Run",
+    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_multiple_option.executor": "Run",
+    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_no_option.executor": "Run",
+    "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_one_option.executor": "Run",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_replication_combo.executor": "Run",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_replicator_factory.executor": "Run",
     "Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_tostring.executor": "Coverage",
@@ -141,8 +143,8 @@
       <recent name="C:\Users\Phoenix Yoder\PycharmProjects\django-data-replication\data_replication" />
     </key>
   </component>
-  <component name="RunManager" selected="Django tests.Test: data_replication.tests.test_replicate.TestReplicate.test_handle">
-    <configuration name="Test: data_replication.tests.test_base.TestBase.test_default_values" type="DjangoTestsConfigurationType" temporary="true">
+  <component name="RunManager" selected="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_chat_no_option">
+    <configuration name="Test: data_replication.tests.test_models.DataReplicationTests.test_chat_no_option" type="DjangoTestsConfigurationType" temporary="true">
       <module name="django-data-replication" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,14 +158,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="data_replication.tests.test_base.TestBase.test_default_values" />
+      <option name="TARGET" value="data_replication.tests.test_models.DataReplicationTests.test_chat_no_option" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: data_replication.tests.test_base.TestBase.test_delete_items" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk" type="DjangoTestsConfigurationType" temporary="true">
       <module name="django-data-replication" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -177,14 +179,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="data_replication.tests.test_base.TestBase.test_delete_items" />
+      <option name="TARGET" value="data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: data_replication.tests.test_base.TestBase.test_get_task_kwargs" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: data_replication.tests.test_models.DataReplicationTests.test_multiple_option" type="DjangoTestsConfigurationType" temporary="true">
       <module name="django-data-replication" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -198,14 +200,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="data_replication.tests.test_base.TestBase.test_get_task_kwargs" />
+      <option name="TARGET" value="data_replication.tests.test_models.DataReplicationTests.test_multiple_option" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: data_replication.tests.test_replicate.TestReplicate" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: data_replication.tests.test_models.DataReplicationTests.test_no_option" type="DjangoTestsConfigurationType" temporary="true">
       <module name="django-data-replication" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -219,14 +221,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="data_replication.tests.test_replicate.TestReplicate" />
+      <option name="TARGET" value="data_replication.tests.test_models.DataReplicationTests.test_no_option" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: data_replication.tests.test_replicate.TestReplicate.test_handle" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: data_replication.tests.test_models.DataReplicationTests.test_one_option" type="DjangoTestsConfigurationType" temporary="true">
       <module name="django-data-replication" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -240,7 +242,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="data_replication.tests.test_replicate.TestReplicate.test_handle" />
+      <option name="TARGET" value="data_replication.tests.test_models.DataReplicationTests.test_one_option" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
@@ -249,11 +251,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Django tests.Test: data_replication.tests.test_replicate.TestReplicate.test_handle" />
-        <item itemvalue="Django tests.Test: data_replication.tests.test_replicate.TestReplicate" />
-        <item itemvalue="Django tests.Test: data_replication.tests.test_base.TestBase.test_get_task_kwargs" />
-        <item itemvalue="Django tests.Test: data_replication.tests.test_base.TestBase.test_delete_items" />
-        <item itemvalue="Django tests.Test: data_replication.tests.test_base.TestBase.test_default_values" />
+        <item itemvalue="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_chat_no_option" />
+        <item itemvalue="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_no_option" />
+        <item itemvalue="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_multiple_option" />
+        <item itemvalue="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_one_option" />
+        <item itemvalue="Django tests.Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk" />
       </list>
     </recent_temporary>
   </component>
@@ -275,7 +277,7 @@
       <updated>1714528576428</updated>
       <workItem from="1714528578280" duration="19686000" />
       <workItem from="1715048384874" duration="61556000" />
-      <workItem from="1716582366595" duration="15271000" />
+      <workItem from="1716582366595" duration="18885000" />
     </task>
     <task id="LOCAL-00001" summary="Got the demo_app in the virtual machine and added its subdirectories.">
       <option name="closed" value="true" />
@@ -477,7 +479,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716601879949</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Trying to figure out mock and learned it probably won't work for this early version of python.">
+      <option name="closed" value="true" />
+      <created>1716752427940</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1716752427940</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -506,35 +516,40 @@
     <MESSAGE value="lots of progress in the replicate class" />
     <MESSAGE value="Moved from replicate and failed to make progress in models. Seeing what I can do in base now." />
     <MESSAGE value="Working in base and hitting walls. I am kind of at a stand still in writing code myself until I can get a bit of a push." />
-    <option name="LAST_COMMIT_MESSAGE" value="Working in base and hitting walls. I am kind of at a stand still in writing code myself until I can get a bit of a push." />
+    <MESSAGE value="Trying to figure out mock and learned it probably won't work for this early version of python." />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to figure out mock and learned it probably won't work for this early version of python." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_replicate_TestReplicate.coverage" NAME="Test: data_replication.tests.test_replicate.TestReplicate Coverage Results" MODIFIED="1716751400238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests Coverage Results" MODIFIED="1716593157874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests Coverage Results" MODIFIED="1716772655392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_delete_items.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_delete_items Coverage Results" MODIFIED="1716596073540" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_mysql_usable.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_mysql_usable Coverage Results" MODIFIED="1716595674408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Unittests_in_test_advanced_py.coverage" NAME="Unittests in test_advanced.py Coverage Results" MODIFIED="1714530827932" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_replication/tests" />
     <SUITE FILE_PATH="coverage/django_data_replication$Unittests_for_test_base_TestBase_test_base.coverage" NAME="Unittests for test_base.TestBase.test_base Coverage Results" MODIFIED="1716057257245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_replication/tests" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_one_option.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_one_option Coverage Results" MODIFIED="1716774120785" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TasksTest_test_mongo_objects.coverage" NAME="Test: data_replication.tests.test_tasks.TasksTest.test_mongo_objects Coverage Results" MODIFIED="1715643432085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_splunk_TestSplunk_test_init.coverage" NAME="Test: data_replication.tests.test_splunk.TestSplunk.test_init Coverage Results" MODIFIED="1715461964317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_YourModelInitTest_test_custom_values.coverage" NAME="Test: data_replication.tests.test_base.YourModelInitTest.test_custom_values Coverage Results" MODIFIED="1716403889692" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_default_values.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_default_values Coverage Results" MODIFIED="1716595729747" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_multiple_option.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_multiple_option Coverage Results" MODIFIED="1716775199549" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TestTasks.coverage" NAME="Test: data_replication.tests.test_tasks.TestTasks Coverage Results" MODIFIED="1716501523094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase.coverage" NAME="Test: data_replication.tests.test_base.TestBase Coverage Results" MODIFIED="1716594019826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_views_ViewsTest_test_views.coverage" NAME="Test: data_replication.tests.test_views.ViewsTest.test_views Coverage Results" MODIFIED="1715458482413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_get_replicator_splunk.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk Coverage Results" MODIFIED="1715379570039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TasksTest_test_tasks.coverage" NAME="Test: data_replication.tests.test_tasks.TasksTest.test_tasks Coverage Results" MODIFIED="1715458074819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_replicator_factory_lock.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_replicator_factory_lock Coverage Results" MODIFIED="1716224351119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_get_replicator_splunk.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_splunk Coverage Results" MODIFIED="1716773895705" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_get_task_kwargs.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_get_task_kwargs Coverage Results" MODIFIED="1716596299421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_task_name.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_task_name Coverage Results" MODIFIED="1716504357802" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_replicate_TestReplicate_test_handle.coverage" NAME="Test: data_replication.tests.test_replicate.TestReplicate.test_handle Coverage Results" MODIFIED="1716751544132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestMysql_test_mysql_usable.coverage" NAME="Test: data_replication.tests.test_base.TestMysql.test_mysql_usable Coverage Results" MODIFIED="1716505386266" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_ViewsTest.coverage" NAME="Test: data_replication.tests.test_tasks.ViewsTest Coverage Results" MODIFIED="1714851560927" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_no_option.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_no_option Coverage Results" MODIFIED="1716775293107" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_chat_no_option.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_chat_no_option Coverage Results" MODIFIED="1716775718854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_urls_UrlsTest_test_urls.coverage" NAME="Test: data_replication.tests.test_urls.UrlsTest.test_urls Coverage Results" MODIFIED="1715458431493" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TestTasks_test_assert_errors.coverage" NAME="Test: data_replication.tests.test_tasks.TestTasks.test_assert_errors Coverage Results" MODIFIED="1716417196233" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Unittests_for_test_splunk_TestSplunk_test_splunk.coverage" NAME="Unittests for test_splunk.TestSplunk.test_splunk Coverage Results" MODIFIED="1715460971334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/data_replication/tests" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_init.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_init Coverage Results" MODIFIED="1716227597524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_get_replicator_mongo.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_mongo Coverage Results" MODIFIED="1716590805231" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_get_replicator_mongo.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_get_replicator_mongo Coverage Results" MODIFIED="1716773888548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_splunk_TestSplunk_test_tostring.coverage" NAME="Test: data_replication.tests.test_splunk.TestSplunk.test_tostring Coverage Results" MODIFIED="1715461750041" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_content_type.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_content_type Coverage Results" MODIFIED="1716416228774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TasksTest.coverage" NAME="Test: data_replication.tests.test_tasks.TasksTest Coverage Results" MODIFIED="1715643486707" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
@@ -546,11 +561,11 @@
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_mongo_MongoTestCase_test_delete_items.coverage" NAME="Test: data_replication.tests.test_mongo.MongoTestCase.test_delete_items Coverage Results" MODIFIED="1716160647249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_splunk_TestSplunk.coverage" NAME="Test: data_replication.tests.test_splunk.TestSplunk Coverage Results" MODIFIED="1715461035136" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_tasks_TasksTest_test_task.coverage" NAME="Test: data_replication.tests.test_tasks.TasksTest.test_task Coverage Results" MODIFIED="1715372736192" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_replicator_factory.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_replicator_factory Coverage Results" MODIFIED="1716591235598" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_replicator_factory.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_replicator_factory Coverage Results" MODIFIED="1716773805121" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_views_ViewsTest.coverage" NAME="Test: data_replication.tests.test_views.ViewsTest Coverage Results" MODIFIED="1716506006947" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests.coverage" NAME="Test: data_replication.tests Coverage Results" MODIFIED="1714531268001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_getReplicatorTests.coverage" NAME="Test: data_replication.tests.test_models.getReplicatorTests Coverage Results" MODIFIED="1714767950184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_replication_combo.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_replication_combo Coverage Results" MODIFIED="1716593091101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_models_DataReplicationTests_test_replication_combo.coverage" NAME="Test: data_replication.tests.test_models.DataReplicationTests.test_replication_combo Coverage Results" MODIFIED="1716773399061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_get_model.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_get_model Coverage Results" MODIFIED="1716502129267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_TestBase_test_verbose_name.coverage" NAME="Test: data_replication.tests.test_base.TestBase.test_verbose_name Coverage Results" MODIFIED="1716595396037" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/django_data_replication$Test__data_replication_tests_test_base_YourModelInitTest_test_default_values.coverage" NAME="Test: data_replication.tests.test_base.YourModelInitTest.test_default_values Coverage Results" MODIFIED="1716403759654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
