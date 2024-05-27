@@ -1,42 +1,45 @@
 import random
 from collections import OrderedDict
-#from celery.result.AsyncResult import kwargs
-from celery.worker.consumer import Tasks
-import data
+
 from django.apps import apps
-from django.contrib.contenttypes.models import ContentType, ContentTypeManager
+from django.contrib.contenttypes.models import ContentType
 from django.utils.timezone import now
-#from pip._vendor.pyparsing.ParseResults import pop
 
 from data_replication import tasks
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.models import REPLICATION_TYPES, ReplicationTracker, Replication
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
-RegressionTagSummary = apps.get_model('ip_verification', 'RegressionTagSummary')
+ip_verification_app = apps.get_app_config('ip_verification')
 
 
-def replication_tracker_factory(**kwargs):
-    data = dict(replication_type=random.choice([x[0] for x in REPLICATION_TYPES]),
-                content_type=ContentType.objects.get_for_model(TestResultLink),
-                state=1,
-                last_updated=now())
+def replication_tracker_factory(model=None, replication_type=None, **kwargs):
+
+    ct = None
+    if model:
+        ct=ContentType.objects.get_for_model(TestResultLink)
+
+    if replication_type:
+        assert replication_type in [1, 2, "splunk", "mongo"]
+        replication_type = 2 if replication_type == "splunk" else replication_type
+        replication_type = 1 if replication_type == "1" else replication_type
+    else:
+        replication_type = random.choice([x[0] for x in REPLICATION_TYPES])
+
+    data = dict(
+        replication_type=replication_type,
+        content_type=ct,
+        state=1,
+        last_updated=now()
+    )
 
     data.update(**kwargs)
     return ReplicationTracker.objects.create(**data)
 
 
-def test_result_link_factory(summary=None, **kwargs):
-    if summary is None:
-        summary = RegressionTagSummary.objects.create()
-    data = dict(summary=summary, test_result_id=random.randint(1, 1000000), last_used=now())
-    data.update(**kwargs)
-    return TestResultLink.objects.create(**data)
-
-
 def replication_factory(tracker=None, content_object=None, **kwargs):
     if content_object is None:
-        content_object = test_result_link_factory(**kwargs)
+        content_object = ip_verification_app.test_result_link_factory(**kwargs)
 
     ct = ContentType.objects.get_for_model(content_object)
 

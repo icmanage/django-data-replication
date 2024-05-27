@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'data_replication',
     'ip_verification.apps.IpVerificationConfig',
+    'data_replication',
 ]
 
 MIDDLEWARE = [

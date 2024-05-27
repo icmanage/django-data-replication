@@ -64,6 +64,7 @@ class ReplicationTracker(models.Model):
                                 return Replcate(**kwargs)
                         else:
                             options.append(Replcate)
+
         if len(options) == 1:
             return options[0]
         elif len(options) > 1:

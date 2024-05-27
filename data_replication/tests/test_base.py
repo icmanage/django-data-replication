@@ -1,15 +1,11 @@
-from datetime import datetime
-
+from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.utils.timezone import now
 
-import data_replication.backends.base as base
 from django.db import connection
 from django.contrib.contenttypes.models import ContentType
-from data_replication.models import Replication, ReplicationTracker
 from data_replication.backends.base import BaseReplicationCollector
-from data_replication.backends.base import ImproperlyConfiguredException
 
+Usr = get_user_model()
 
 def make_sure_mysql_usable():
     from django.db import connection, connections
@@ -133,3 +129,5 @@ class TestBase(TestCase):
 
     def test_chunks(self):
         pass
+
+
