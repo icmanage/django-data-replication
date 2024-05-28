@@ -60,6 +60,8 @@ class TestResultReplicatorMixin(object):
         model_pk_date_dict = dict(self.get_queryset().values_list('pk', 'last_used'))
 
         # The ones we know about.
+
+
         # TODO It is somewhere in
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
@@ -70,6 +72,7 @@ class TestResultReplicatorMixin(object):
             # Same date ignore
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
+            # not understanding this statement
             if _date and _date > self.query_time:
                 self.query_time = _date
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
