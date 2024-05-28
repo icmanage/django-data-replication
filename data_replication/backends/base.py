@@ -147,7 +147,6 @@ class BaseReplicationCollector(object):
 
         make_sure_mysql_usable()
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
-        print('HERE', kwargs)
         self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
 
         return self._queryset_pks
@@ -167,8 +166,8 @@ class BaseReplicationCollector(object):
         print(change_pks, accounted_pks)
         self.update_pks = list(set(accounted_pks).intersection(set(change_pks) - set(self.add_pks)))
 
-        print("%s identified a potential of %d add actions, %d update actions and %d delete actions",
-              self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
+        log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
+                 self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
         return (self.add_pks, self.update_pks, self.delete_pks)
 
@@ -177,15 +176,15 @@ class BaseReplicationCollector(object):
         try:
             self.lock()
         except RuntimeError as err:
-            print("Unable to lock! - %r", err)
+            log.info("Unable to lock! - %r", err)
             return err
 
-        print("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
+        log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         msg = "Analyzed %s replication of %s" % (
             self.last_look.get_replication_type_display(), self.verbose_name)
-        print(msg)
+
         delete_pks = update_pks + delete_pks
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         if len(delete_pks):
@@ -199,11 +198,10 @@ class BaseReplicationCollector(object):
             msg += " added %d items" % len(add_pks)
 
         if self.max_count:
-            print("%s reduced a max of %d add actions and %d delete actions",
-                  self.verbose_name, len(add_pks), len(delete_pks))
+            log.info("%s reduced a max of %d add actions and %d delete actions",
+                     self.verbose_name, len(add_pks), len(delete_pks))
 
         self.unlock()
-        print(msg)
         return msg
 
     def _delete_items(self, object_pks):
@@ -213,7 +211,7 @@ class BaseReplicationCollector(object):
         Replication.objects.filter(
             tracker=self.last_look,
             object_id__in=object_pks,
-            content_type=self.content_type, ).delete()
+            content_type=self.content_type,).delete()
 
     def delete_items(self, object_pks):
         raise NotImplemented
@@ -233,7 +231,6 @@ class BaseReplicationCollector(object):
     def _add_items(self, object_pks, chunk_size=1000):
         from data_replication.models import Replication
         bulk_inserts = []
-        print("Adding %d items..." % len(object_pks))
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
             item = list(item)
             pk = item.pop(0)
@@ -241,7 +238,6 @@ class BaseReplicationCollector(object):
             bulk_inserts.append(
                 dict(content_type=self.content_type, tracker=self.last_look,
                      object_id=pk, defaults=dict(state=0, last_updated=last_updated)))
-        print(bulk_inserts)
         if not len(bulk_inserts):
             return
 
@@ -249,7 +245,6 @@ class BaseReplicationCollector(object):
             make_sure_mysql_usable()
             try:
                 Replication.objects.get_or_create(**replication_data)
-                print(replication_data)
             except:
                 log.error("Issue with creating %r".format(replication_data))
 

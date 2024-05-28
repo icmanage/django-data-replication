@@ -50,7 +50,6 @@ class Command(BaseCommand):
 
         self.replication_class_name = options.get('replication_class_name')
 
-
         self.replication_type = options.get('replication_type')
         if options.get('replication_type') is not None:
             kwargs['replication_type'] = next(
@@ -76,7 +75,7 @@ class Command(BaseCommand):
 
         total = self.replications.count()
         for idx, replication in enumerate(self.replications, start=1):
-            print("Working on %d/%d %s", idx, total, replication)
+            log.info("Working on %d/%d %s", idx, total, replication)
             replicator = replication.get_replicator(
                 replication_class_name=self.replication_class_name,
                 use_subtasks=not self.no_subtasks,
