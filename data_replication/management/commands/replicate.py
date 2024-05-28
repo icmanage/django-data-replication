@@ -84,6 +84,5 @@ class Command(BaseCommand):
                 log_level=self.log_level,
             )
             replicator.analyze()
-            print(replicator)
         print("Done!!")
         pass

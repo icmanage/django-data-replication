@@ -163,7 +163,6 @@ class BaseReplicationCollector(object):
         make_sure_mysql_usable()
         self.delete_pks = list(set(accounted_pks) - set(list(self.get_queryset().values_list('pk', flat=True))))
         self.add_pks = list(set(change_pks) - set(accounted_pks))
-        print(change_pks, accounted_pks)
         self.update_pks = list(set(accounted_pks).intersection(set(change_pks) - set(self.add_pks)))
 
         log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
