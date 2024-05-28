@@ -60,6 +60,7 @@ class TestResultReplicatorMixin(object):
         model_pk_date_dict = dict(self.get_queryset().values_list('pk', 'last_used'))
 
         # The ones we know about.
+        # TODO It is somewhere in
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
@@ -68,31 +69,34 @@ class TestResultReplicatorMixin(object):
         for pk, _date in replication_pk_date_dict.items():
             # Same date ignore
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
+                print('changed_query_set_pks pop', pk)
                 model_pk_date_dict.pop(pk)
             if _date and _date > self.query_time:
                 self.query_time = _date
-
+        print('changed_query_set_pks', model_pk_date_dict)
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
         return self._queryset_pks
-
+        # TODO Here most likely
     @property
     def accounted_pks(self):
 
         from data_replication.models import Replication
 
         if len(self._accounted_pks):
+            print(self._accounted_pks, 'fart')
             return self._accounted_pks
 
+        print('looking', self.last_look)
         self._accounted_pks = Replication.objects.filter(
             tracker=self.last_look,
             object_id__in=self.get_queryset().values_list('pk', flat=True),
         ).values_list('object_id', flat=True)
-
+        print('looooking', list(self._accounted_pks))
         return self._accounted_pks
 
     @classmethod
     def add_items(cls, chunk_ids):
-        log.info("Pulling JSON data for %d ids", len(chunk_ids))
+        print("Pulling JSON data for %d ids", len(chunk_ids))
         return TestResultLink.objects.filter(id__in=chunk_ids).as_json(as_list=True)
 
 

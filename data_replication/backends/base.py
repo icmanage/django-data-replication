@@ -8,6 +8,7 @@ from collections import OrderedDict
 from django.contrib.admin.options import get_content_type_for_model
 from django.utils.timezone import now
 from kombu.exceptions import OperationalError
+
 # from unittest import mock
 # import unittest.mock
 
@@ -53,7 +54,6 @@ class BaseReplicationCollector(object):
         self.log_level = kwargs.get('log_level')
         if self.log_level:
             log.setLevel(self.log_level)
-        # is this a bug? model is always going to be none
         if self.get_model() is None:
             raise AttributeError("You must provide a reference model by defining the attribute "
                                  "`model` or redefine `get_model()`")
@@ -82,8 +82,6 @@ class BaseReplicationCollector(object):
     @property
     def verbose_name(self):
         return self.get_model()._meta.verbose_name.title()
-
-    # I think this and unlock will need mocked
 
     def lock(self):
         from data_replication.models import Replication, ReplicationTracker
@@ -149,6 +147,7 @@ class BaseReplicationCollector(object):
 
         make_sure_mysql_usable()
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
+        print('HERE', kwargs)
         self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
 
         return self._queryset_pks
@@ -165,10 +164,11 @@ class BaseReplicationCollector(object):
         make_sure_mysql_usable()
         self.delete_pks = list(set(accounted_pks) - set(list(self.get_queryset().values_list('pk', flat=True))))
         self.add_pks = list(set(change_pks) - set(accounted_pks))
+        print(change_pks, accounted_pks)
         self.update_pks = list(set(accounted_pks).intersection(set(change_pks) - set(self.add_pks)))
 
-        log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
-                 self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
+        print("%s identified a potential of %d add actions, %d update actions and %d delete actions",
+              self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
         return (self.add_pks, self.update_pks, self.delete_pks)
 
@@ -177,15 +177,15 @@ class BaseReplicationCollector(object):
         try:
             self.lock()
         except RuntimeError as err:
-            log.info("Unable to lock! - %r", err)
+            print("Unable to lock! - %r", err)
             return err
 
-        log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
+        print("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         msg = "Analyzed %s replication of %s" % (
             self.last_look.get_replication_type_display(), self.verbose_name)
-
+        print(msg)
         delete_pks = update_pks + delete_pks
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         if len(delete_pks):
@@ -199,10 +199,11 @@ class BaseReplicationCollector(object):
             msg += " added %d items" % len(add_pks)
 
         if self.max_count:
-            log.info("%s reduced a max of %d add actions and %d delete actions",
-                     self.verbose_name, len(add_pks), len(delete_pks))
+            print("%s reduced a max of %d add actions and %d delete actions",
+                  self.verbose_name, len(add_pks), len(delete_pks))
 
         self.unlock()
+        print(msg)
         return msg
 
     def _delete_items(self, object_pks):
@@ -232,6 +233,7 @@ class BaseReplicationCollector(object):
     def _add_items(self, object_pks, chunk_size=1000):
         from data_replication.models import Replication
         bulk_inserts = []
+        print("Adding %d items..." % len(object_pks))
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
             item = list(item)
             pk = item.pop(0)
@@ -239,6 +241,7 @@ class BaseReplicationCollector(object):
             bulk_inserts.append(
                 dict(content_type=self.content_type, tracker=self.last_look,
                      object_id=pk, defaults=dict(state=0, last_updated=last_updated)))
+        print(bulk_inserts)
         if not len(bulk_inserts):
             return
 
@@ -246,6 +249,7 @@ class BaseReplicationCollector(object):
             make_sure_mysql_usable()
             try:
                 Replication.objects.get_or_create(**replication_data)
+                print(replication_data)
             except:
                 log.error("Issue with creating %r".format(replication_data))
 
