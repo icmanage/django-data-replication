@@ -66,24 +66,17 @@ class TestResultReplicatorMixin(object):
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
-
+        # TODO Look more into this to see if the naive and timezone data is interfering causing error
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
-
-        # new:
-        keys_to_remove = []
+        # P: here it is getting the replication data values
         for pk, _date in replication_pk_date_dict.items():
-            # Same date ignore
+            # Same date ignore P: ?
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
-            # new:
-            keys_to_remove.append(pk)
             if _date and _date > self.query_time:
                 self.query_time = _date
-        # If I had to guess I think this might be bug causation.
-        # This is where it is actually filtering in anfd out the data and updating it
-        # new:
-        for pk in keys_to_remove:
-            model_pk_date_dict.pop(pk)
+        # TODO If I had to guess I think this might be bug causation.
+        # This is where it is actually filtering in and out the data and updating it
 
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
         return self._queryset_pks
