@@ -53,6 +53,7 @@ class TestResultReplicatorMixin(object):
         # We don't really look at the changed date for this
         from data_replication.models import Replication
 
+        # P: Where getting this from?
         if len(self._queryset_pks):
             return self._queryset_pks
 
@@ -72,9 +73,10 @@ class TestResultReplicatorMixin(object):
             # Same date ignore
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
-            # not understanding this statement
             if _date and _date > self.query_time:
                 self.query_time = _date
+        # If I had to guess I think this might be bug causation.
+        # This is where it is actually filtering in anfd out the data and updating it
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
         return self._queryset_pks
         # TODO Here most likely
