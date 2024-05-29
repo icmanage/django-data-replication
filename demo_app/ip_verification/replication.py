@@ -62,24 +62,33 @@ class TestResultReplicatorMixin(object):
 
         # The ones we know about.
 
-
         # TODO It is somewhere in
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
 
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
+
+        # new:
+        keys_to_remove = []
         for pk, _date in replication_pk_date_dict.items():
             # Same date ignore
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
+            # new:
+            keys_to_remove.append(pk)
             if _date and _date > self.query_time:
                 self.query_time = _date
         # If I had to guess I think this might be bug causation.
         # This is where it is actually filtering in anfd out the data and updating it
+        # new:
+        for pk in keys_to_remove:
+            model_pk_date_dict.pop(pk)
+
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
         return self._queryset_pks
         # TODO Here most likely
+
     @property
     def accounted_pks(self):
 
