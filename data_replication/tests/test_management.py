@@ -29,7 +29,7 @@ class ManagementCommmandTestCase(TestCase):
         for i in range(10):
             ip_verification = ip_verification_app.test_result_link_factory(summary=ip_verification.summary)
 
-        self.replication_tracker = replication_tracker_factory(replication_type="splunk", model = TestResultLink)
+        self.replication_tracker = replication_tracker_factory(replication_type="splunk", model=TestResultLink)
 
     def call_management_command(self, *args, **kwargs):
         """Wrap our management command with stdout dump to dev_null - we don't normally care about this"""

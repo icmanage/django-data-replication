@@ -70,7 +70,7 @@ class TestResultReplicatorMixin(object):
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
         # P: here it is getting the replication data values
         for pk, _date in replication_pk_date_dict.items():
-            # Same date ignore P: ?
+            # Same date ignore (P: ?)
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
             if _date and _date > self.query_time:
