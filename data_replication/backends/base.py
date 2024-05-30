@@ -180,6 +180,7 @@ class BaseReplicationCollector(object):
             return err
 
         log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
+        print("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         msg = "Analyzed %s replication of %s" % (
@@ -189,6 +190,7 @@ class BaseReplicationCollector(object):
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         if len(delete_pks):
             self._delete_items(delete_pks)
+            print(" deleted %d items" % len(delete_pks))
             msg += " deleted %d items" % len(delete_pks)
 
         add_pks = add_pks + update_pks
