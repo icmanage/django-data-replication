@@ -40,6 +40,9 @@ class TestResultReplicatorMixin(object):
 
         super(TestResultReplicatorMixin, self).__init__(**kwargs)
 
+    # P: question: we concluded that the bug was likely in the changed query set function,
+    # but with the prints I put in, it does not even find/get the TestResultLinkQuerySet objects.
+    # Would that not maybe mean the issue is under the get transaction?
     def get_queryset(self):
         incomplete_jobs = list(RegressionTagSummary.objects.incomplete_jobs().values_list('id', flat=True))
         if self.summary_ids:
@@ -79,6 +82,7 @@ class TestResultReplicatorMixin(object):
         # This is where it is actually filtering in and out the data and updating it
 
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
+        print('query set pks:', self._queryset_pks)
         return self._queryset_pks
         # TODO Here most likely
 
@@ -99,6 +103,7 @@ class TestResultReplicatorMixin(object):
     @classmethod
     def add_items(cls, chunk_ids):
         log.info("Pulling JSON data for %d ids", len(chunk_ids))
+        print('replication add_items:', "Pulling JSON data for %d ids", len(chunk_ids))
         return TestResultLink.objects.filter(id__in=chunk_ids).as_json(as_list=True)
 
 

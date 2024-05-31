@@ -149,7 +149,6 @@ class BaseReplicationCollector(object):
         make_sure_mysql_usable()
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
         self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
-
         return self._queryset_pks
 
     def get_actions(self):
@@ -198,9 +197,8 @@ class BaseReplicationCollector(object):
         add_pks = add_pks + update_pks
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         if len(add_pks):
-            # P: should this add items always trigger?
             self._add_items(add_pks)
-            print(" added %d items" % len(add_pks))
+            print('analyze:', "added %d items" % len(add_pks))
             msg += " added %d items" % len(add_pks)
 
         if self.max_count:

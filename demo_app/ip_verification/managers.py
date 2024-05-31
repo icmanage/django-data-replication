@@ -145,6 +145,7 @@ def extract_time_from_json(date_str):
 
 class TestResultLinkQuerySet(models.query.QuerySet):
     # TODO go through this to search for connection and what it does
+    # P: I think this may also be where query set consistency falters
     def _as_json(self, pretty=False, as_list=False):
         data = []
         _data = self.filter().values_list('pk', 'options', 'summary_id', 'last_used',
@@ -162,6 +163,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                     _json = {}
             _json['pk'] = pk
             print('pk', pk)
+            # P: this tells me it is happening after data is acquired
             _json['summary_pk'] = summary_id
             _json['timestamp'] = last_used
             _json['updated_test_status'] = updated_status
