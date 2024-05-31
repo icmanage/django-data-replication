@@ -15,6 +15,7 @@ class TestStatusName(models.Model):
     status_id = models.PositiveIntegerField(null=True, db_index=True)
     last_used = models.DateTimeField(null=True)
 
+
 # Create your models here.
 class TestResultLink(models.Model):
     updated_status = models.ForeignKey('TestStatusName', null=True, blank=True, on_delete=models.SET_NULL)
@@ -25,8 +26,8 @@ class TestResultLink(models.Model):
     options = JSONField(default=dict)
     objects = TestResultLinkManager()
 
-class RegressionTagSummary(models.Model):
 
+class RegressionTagSummary(models.Model):
     first_requested = models.DateTimeField()
     last_updated = models.DateTimeField(db_index=True)
 

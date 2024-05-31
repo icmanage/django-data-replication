@@ -169,6 +169,9 @@ class BaseReplicationCollector(object):
         log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
                  self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
+        print("%s identified a potential of %d add actions, %d update actions and %d delete actions",
+                 self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
+
         return (self.add_pks, self.update_pks, self.delete_pks)
 
     def analyze(self):
@@ -180,7 +183,6 @@ class BaseReplicationCollector(object):
             return err
 
         log.debug("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
-        print("Analyzing %s replication of %s", self.last_look.get_replication_type_display(), self.verbose_name)
         (add_pks, update_pks, delete_pks) = self.get_actions()
 
         msg = "Analyzed %s replication of %s" % (
@@ -196,7 +198,9 @@ class BaseReplicationCollector(object):
         add_pks = add_pks + update_pks
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         if len(add_pks):
+            # P: should this add items always trigger?
             self._add_items(add_pks)
+            print(" added %d items" % len(add_pks))
             msg += " added %d items" % len(add_pks)
 
         if self.max_count:
@@ -231,6 +235,7 @@ class BaseReplicationCollector(object):
         raise NotImplemented("You need to figure this out..")
 
     def _add_items(self, object_pks, chunk_size=1000):
+        print('left off in add items')
         from data_replication.models import Replication
         bulk_inserts = []
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
