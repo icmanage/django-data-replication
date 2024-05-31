@@ -235,7 +235,6 @@ class BaseReplicationCollector(object):
         raise NotImplemented("You need to figure this out..")
 
     def _add_items(self, object_pks, chunk_size=1000):
-        print('left off in add items')
         from data_replication.models import Replication
         bulk_inserts = []
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
@@ -256,6 +255,7 @@ class BaseReplicationCollector(object):
                 log.error("Issue with creating %r".format(replication_data))
 
         log.debug("Added %d replication entries", len(bulk_inserts))
+        print("Added %d replication entries", len(bulk_inserts))
 
         def chunks(l, n):
             """Yield successive n-sized chunks from l."""

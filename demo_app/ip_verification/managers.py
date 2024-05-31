@@ -107,7 +107,7 @@ COVERAGE_KEY_NAMES = {
     'fsm': 'FSM'
 }
 
-
+# TODO observe the datetime related code and see why the naive date is an interference
 def extract_time_from_json(date_str):
     if isinstance(date_str, (list, tuple)) and len(date_str) == 1:
         date_str = date_str[0]
@@ -144,7 +144,7 @@ def extract_time_from_json(date_str):
 
 
 class TestResultLinkQuerySet(models.query.QuerySet):
-
+    # TODO go through this to search for connection and what it does
     def _as_json(self, pretty=False, as_list=False):
         data = []
         _data = self.filter().values_list('pk', 'options', 'summary_id', 'last_used',
@@ -161,6 +161,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                     log.exception("Unable to load %s %r", type(item), item)
                     _json = {}
             _json['pk'] = pk
+            print('pk', pk)
             _json['summary_pk'] = summary_id
             _json['timestamp'] = last_used
             _json['updated_test_status'] = updated_status
