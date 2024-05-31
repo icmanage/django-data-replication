@@ -8,6 +8,7 @@ from django.apps import apps
 
 from data_replication.models import ReplicationTracker, Replication
 from data_replication.tests.factories import replication_tracker_factory
+
 ip_verification_app = apps.get_app_config('ip_verification')
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
@@ -58,4 +59,3 @@ class ManagementCommmandTestCase(TestCase):
         )
 
         self.assertEqual(Replication.objects.count(), 2)
-

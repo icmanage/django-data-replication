@@ -168,6 +168,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
             _json['timestamp'] = last_used
             _json['updated_test_status'] = updated_status
 
+            # P: Error here!
             if _json.get('runtime') and _json.get('runtime_seconds') is None:
                 from ip_verification.utils import get_compute_secs
                 try:

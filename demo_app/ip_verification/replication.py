@@ -61,7 +61,9 @@ class TestResultReplicatorMixin(object):
             return self._queryset_pks
 
         # All of them
+        # P: At this point when the data acquisition fails it already has no pk values
         model_pk_date_dict = dict(self.get_queryset().values_list('pk', 'last_used'))
+        print('model pk dict:', model_pk_date_dict)
 
         # The ones we know about.
 
