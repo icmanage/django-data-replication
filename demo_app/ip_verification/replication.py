@@ -82,6 +82,7 @@ class TestResultReplicatorMixin(object):
                 model_pk_date_dict.pop(pk)
             if _date and _date > self.query_time:
                 self.query_time = _date
+
         # TODO If I had to guess I think this might be bug causation.
         # This is where it is actually filtering in and out the data and updating it
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)

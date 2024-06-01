@@ -133,6 +133,7 @@ def extract_time_from_json(date_str):
 
     if datetime_obj is None:
         log.error("Unable to extract date from %s", date_str)
+
         return now()
 
     if tz:
@@ -172,6 +173,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
             print('updated status:', updated_status)
 
             # P: Error here!
+            # P: I actually don't think this is affecting since it never is triggered when running the test
             if _json.get('runtime') and _json.get('runtime_seconds') is None:
                 from ip_verification.utils import get_compute_secs
                 try:
