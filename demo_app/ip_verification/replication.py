@@ -46,10 +46,11 @@ class TestResultReplicatorMixin(object):
     def get_queryset(self):
         incomplete_jobs = list(RegressionTagSummary.objects.incomplete_jobs().values_list('id', flat=True))
         if self.summary_ids:
+            # P: this does not get triggered
             kw = {'summary_id__in': self.summary_ids}
-
         else:
             kw = {'summary_id__isnull': False, 'last_used__gte': datetime.datetime(2017, 1, 1)}
+            # print('kw', kw)
         return self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
 
     @property
