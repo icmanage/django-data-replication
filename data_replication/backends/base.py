@@ -168,7 +168,7 @@ class BaseReplicationCollector(object):
         log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
                  self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
-        print("%s identified a potential of %d add actions, %d update actions and %d delete actions",
+        print('base get_actions', "%s identified a potential of %d add actions, %d update actions and %d delete actions",
                  self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
         return (self.add_pks, self.update_pks, self.delete_pks)

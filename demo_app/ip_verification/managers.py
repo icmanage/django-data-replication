@@ -108,7 +108,6 @@ COVERAGE_KEY_NAMES = {
 }
 
 
-# TODO observe the datetime related code and see why the naive date is an interference
 def extract_time_from_json(date_str):
     if isinstance(date_str, (list, tuple)) and len(date_str) == 1:
         date_str = date_str[0]

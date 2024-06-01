@@ -74,7 +74,6 @@ class TestResultReplicatorMixin(object):
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
         print('replication_pk_date_dict', replication_pk_date_dict)
-        # TODO Look more into this to see if the naive and timezone data is interfering causing error
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
         # P: here it is getting the replication data values
         for pk, _date in replication_pk_date_dict.items():
