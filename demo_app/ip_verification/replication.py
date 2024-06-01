@@ -72,6 +72,7 @@ class TestResultReplicatorMixin(object):
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
+        print('replication_pk_date_dict', replication_pk_date_dict)
         # TODO Look more into this to see if the naive and timezone data is interfering causing error
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
         # P: here it is getting the replication data values
@@ -83,7 +84,6 @@ class TestResultReplicatorMixin(object):
                 self.query_time = _date
         # TODO If I had to guess I think this might be bug causation.
         # This is where it is actually filtering in and out the data and updating it
-
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
         print('query set pks:', self._queryset_pks)
         return self._queryset_pks
