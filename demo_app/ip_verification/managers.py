@@ -107,6 +107,7 @@ COVERAGE_KEY_NAMES = {
     'fsm': 'FSM'
 }
 
+
 # TODO observe the datetime related code and see why the naive date is an interference
 def extract_time_from_json(date_str):
     if isinstance(date_str, (list, tuple)) and len(date_str) == 1:
@@ -166,7 +167,9 @@ class TestResultLinkQuerySet(models.query.QuerySet):
             # P: this tells me it is happening after data is acquired
             _json['summary_pk'] = summary_id
             _json['timestamp'] = last_used
+            print('last used', last_used)
             _json['updated_test_status'] = updated_status
+            print('updated status:', updated_status)
 
             # P: Error here!
             if _json.get('runtime') and _json.get('runtime_seconds') is None:
@@ -727,5 +730,3 @@ class RegressionTagSummaryManager(models.Manager):
 
     def incomplete_jobs(self):
         return self.get_queryset().incomplete_jobs()
-
-

@@ -42,11 +42,12 @@ class TestResultReplicatorMixin(object):
 
     # P: question: we concluded that the bug was likely in the changed query set function,
     # but with the prints I put in, it does not even find/get the TestResultLinkQuerySet objects.
-    # Would that not maybe mean the issue is under the get transaction?
+    # Would that not maybe mean the issue is under the get transaction? --I think I disproved this.
     def get_queryset(self):
         incomplete_jobs = list(RegressionTagSummary.objects.incomplete_jobs().values_list('id', flat=True))
         if self.summary_ids:
             kw = {'summary_id__in': self.summary_ids}
+
         else:
             kw = {'summary_id__isnull': False, 'last_used__gte': datetime.datetime(2017, 1, 1)}
         return self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
