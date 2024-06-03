@@ -27,7 +27,7 @@ class ManagementCommmandTestCase(TestCase):
 
         # Create us 10 tests all under the same summary ID
         ip_verification = ip_verification_app.test_result_link_factory()
-        for i in range(11):
+        for i in range(10):
             ip_verification = ip_verification_app.test_result_link_factory(summary=ip_verification.summary)
 
         self.replication_tracker = replication_tracker_factory(replication_type="splunk", model=TestResultLink)

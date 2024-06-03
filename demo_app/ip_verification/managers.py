@@ -161,6 +161,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                     _json = json.loads(item)
                 except:
                     log.exception("Unable to load %s %r", type(item), item)
+                    print("Unable to load %s %r", type(item), item)
                     _json = {}
             _json['pk'] = pk
             print('pk', pk)

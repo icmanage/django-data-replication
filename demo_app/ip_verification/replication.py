@@ -40,17 +40,26 @@ class TestResultReplicatorMixin(object):
 
         super(TestResultReplicatorMixin, self).__init__(**kwargs)
 
-    # P: question: we concluded that the bug was likely in the changed query set function,
-    # but with the prints I put in, it does not even find/get the TestResultLinkQuerySet objects.
-    # Would that not maybe mean the issue is under the get transaction? --I think I disproved this.
+    # P: We concluded that the bug was likely in the changed query set function, but I think it may actually be here
     def get_queryset(self):
         incomplete_jobs = list(RegressionTagSummary.objects.incomplete_jobs().values_list('id', flat=True))
+        print('incomplete jobs:', incomplete_jobs)
         if self.summary_ids:
             # P: this does not get triggered
             kw = {'summary_id__in': self.summary_ids}
         else:
             kw = {'summary_id__isnull': False, 'last_used__gte': datetime.datetime(2017, 1, 1)}
             # print('kw', kw)
+
+            queryset = self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
+
+            print('SQL Query:', str(queryset.query))
+            print('Queryset Count:', queryset.count())
+
+            for item in queryset:
+                # print('Queryset Item:', item)
+                pass
+
         return self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
 
     @property
@@ -67,13 +76,17 @@ class TestResultReplicatorMixin(object):
         model_pk_date_dict = dict(self.get_queryset().values_list('pk', 'last_used'))
         print('model pk dict:', model_pk_date_dict)
 
+        # P: getting something here!
+        if model_pk_date_dict:
+            print('THERES DATA')
+        else:
+            print('NO DATA')
         # The ones we know about.
 
         # TODO It is somewhere in
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
-        print('replication_pk_date_dict', replication_pk_date_dict)
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
         # P: here it is getting the replication data values
         for pk, _date in replication_pk_date_dict.items():
@@ -83,9 +96,9 @@ class TestResultReplicatorMixin(object):
             if _date and _date > self.query_time:
                 self.query_time = _date
 
-        # TODO If I had to guess I think this might be bug causation.
-        # This is where it is actually filtering in and out the data and updating it
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
+        # self._queryset_pks = self.get_model().objects.filter(pk__in=model_pk_date_dict.keys()).values_list('pk',
+                                                                                                           # flat=True)
         print('query set pks:', self._queryset_pks)
         return self._queryset_pks
         # TODO Here most likely
