@@ -7,10 +7,12 @@ import logging
 from pymongo.errors import ConnectionFailure, OperationFailure
 from data_replication.models import ReplicationTracker
 
+from django.apps import apps
+ip_verification_app = apps.get_app_config('ip_verification')
+
 import data_replication.tasks as tasks
 from data_replication.tests import factories
-from data_replication.tests.factories import replication_tracker_factory, test_result_link_factory, \
-    tasks_mongo_factory
+from data_replication.tests.factories import replication_tracker_factory, tasks_mongo_factory
 #from data_replication.tasks import tasks
 
 
@@ -24,7 +26,7 @@ class TestTasks(TestCase):
 
     def test_push_splunk_objects(self, **kwargs):
         ct = ContentType.objects.get_for_model(ReplicationTracker)
-        tr = test_result_link_factory()
+        tr = ip_verification_app.test_result_link_factory()
         rt = replication_tracker_factory()
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         rt = replication_tracker_factory(state=1)
