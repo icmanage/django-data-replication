@@ -12,7 +12,7 @@ from data_replication.tests.factories import replication_tracker_factory
 ip_verification_app = apps.get_app_config('ip_verification')
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
-
+RegressionTagSummary = apps.get_model('ip_verification', 'RegressionTagSummary')
 
 class DevNull:
     pass
@@ -27,10 +27,12 @@ class ManagementCommmandTestCase(TestCase):
 
         # Create us 10 tests all under the same summary ID
         ip_verification = ip_verification_app.test_result_link_factory()
+        self.summary = ip_verification.summary
         for i in range(10):
-            ip_verification = ip_verification_app.test_result_link_factory(summary=ip_verification.summary)
-
+            ip_verification = ip_verification_app.test_result_link_factory(summary=self.summary)
         self.replication_tracker = replication_tracker_factory(replication_type="splunk", model=TestResultLink)
+        self.summary.finalized = True
+        self.summary.save()
 
     def call_management_command(self, *args, **kwargs):
         """Wrap our management command with stdout dump to dev_null - we don't normally care about this"""
@@ -44,7 +46,7 @@ class ManagementCommmandTestCase(TestCase):
         # We shouldn't have anything when we start
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         self.assertEqual(Replication.objects.count(), 0)
-
+        self.assertTrue(RegressionTagSummary.objects.get(pk=self.summary.id).finalized)
         self.call_management_command(
             "replicate",
             "--app-name",

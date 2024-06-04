@@ -26,13 +26,22 @@ def regression_tag_summary_factory(**kwargs):
     total = random.randint(1, 1000)
 
     finalized = random.choice([True, False])
+    try:
+        passing = random.randint(1, total)
+    except ValueError:
+        passing = 0
 
-    passing = random.randint(1, total)
-    failing = random.randint(1, total - passing)
+    try:
+        failing = random.randint(1, total - passing)
+    except ValueError:
+        failing = 0
+
     untested_count = 0
     if not finalized:
-        untested_count = random.randint(1, total - passing-failing)
-
+        try:
+            untested_count = random.randint(1, total - passing-failing)
+        except ValueError:
+            untested_count = 1
     kw = {
         'last_updated': now(),
         'first_requested': now()- datetime.timedelta(

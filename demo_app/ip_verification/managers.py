@@ -14,6 +14,8 @@ from django.db import models
 from django.db.models import Q
 from django.utils import formats
 from django.utils.timezone import now
+from django.apps import apps
+ip_verification_app = apps.get_app_config('ip_verification')
 
 __author__ = 'Steven Klass'
 __date__ = '11/30/16 07:32'
@@ -145,8 +147,6 @@ def extract_time_from_json(date_str):
 
 
 class TestResultLinkQuerySet(models.query.QuerySet):
-    # TODO go through this to search for connection and what it does
-    # P: I think this may also be where query set consistency falters
     def _as_json(self, pretty=False, as_list=False):
         data = []
         _data = self.filter().values_list('pk', 'options', 'summary_id', 'last_used',
@@ -161,23 +161,15 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                     _json = json.loads(item)
                 except:
                     log.exception("Unable to load %s %r", type(item), item)
-                    print("Unable to load %s %r", type(item), item)
                     _json = {}
             _json['pk'] = pk
-            print('pk', pk)
-            # P: this tells me it is happening after data is acquired
             _json['summary_pk'] = summary_id
             _json['timestamp'] = last_used
-            print('last used', last_used)
             _json['updated_test_status'] = updated_status
-            print('updated status:', updated_status)
 
-            # P: Error here!
-            # P: I actually don't think this is affecting since it never is triggered when running the test
             if _json.get('runtime') and _json.get('runtime_seconds') is None:
-                from ip_verification.utils import get_compute_secs
                 try:
-                    _json['runtime_seconds'] = get_compute_secs(_json['runtime'], "0:0:0")
+                    _json['runtime_seconds'] = ip_verification_app.get_compute_secs(_json['runtime'], "0:0:0")
                 except:
                     pass
 
@@ -221,10 +213,10 @@ class TestResultLinkQuerySet(models.query.QuerySet):
             if not end_time.tzinfo:
                 end_time = pytz.utc.localize(end_time)
             result['elapsed_secs'] = (end_time - launch_time).total_seconds()
-            result['elapsed_secs_display'] = humanize_time((end_time - launch_time).total_seconds())
+            result['elapsed_secs_display'] = ip_verification_app.humanize_time((end_time - launch_time).total_seconds())
 
         result['runtime_secs'] = total_time
-        result['runtime_secs_display'] = humanize_time(total_time)
+        result['runtime_secs_display'] = ip_verification_app.humanize_time(total_time)
 
         result['total_instances'] = len([x for x in data if x.get('test_status') != "COVERAGE"])
 

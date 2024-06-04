@@ -19,3 +19,8 @@ class IpVerificationConfig(AppConfig):
     def test_result_link_factory(self):
         dotted_path = ".tests.factories.test_result_link_factory"
         return self._get_dotted_path_function(dotted_path)
+
+    @property
+    def get_compute_secs(self):
+        dotted_path = ".utils.get_compute_secs"
+        return self._get_dotted_path_function(dotted_path)

@@ -40,68 +40,39 @@ class TestResultReplicatorMixin(object):
 
         super(TestResultReplicatorMixin, self).__init__(**kwargs)
 
-    # P: We concluded that the bug was likely in the changed query set function, but I think it may actually be here
     def get_queryset(self):
         incomplete_jobs = list(RegressionTagSummary.objects.incomplete_jobs().values_list('id', flat=True))
-        print('incomplete jobs:', incomplete_jobs)
         if self.summary_ids:
-            # P: this does not get triggered
             kw = {'summary_id__in': self.summary_ids}
         else:
             kw = {'summary_id__isnull': False, 'last_used__gte': datetime.datetime(2017, 1, 1)}
-            # print('kw', kw)
 
             queryset = self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
-
-            print('SQL Query:', str(queryset.query))
-            print('Queryset Count:', queryset.count())
-
-            for item in queryset:
-                # print('Queryset Item:', item)
-                pass
 
         return self.get_model().objects.filter(**kw).exclude(summary_id__in=incomplete_jobs).order_by('-id')
 
     @property
     def changed_queryset_pks(self):
-        # We don't really look at the changed date for this
         from data_replication.models import Replication
 
-        # P: Where getting this from?
         if len(self._queryset_pks):
             return self._queryset_pks
 
-        # All of them
-        # P: At this point when the data acquisition fails it already has no pk values
         model_pk_date_dict = dict(self.get_queryset().values_list('pk', 'last_used'))
-        print('model pk dict:', model_pk_date_dict)
 
-        # P: getting something here!
-        if model_pk_date_dict:
-            print('THERES DATA')
-        else:
-            print('NO DATA')
-        # The ones we know about.
-
-        # TODO It is somewhere in
         replication_pk_date_dict = dict(Replication.objects.filter(
             tracker=self.last_look, object_id__in=model_pk_date_dict.keys()
         ).values_list('object_id', 'last_updated'))
         self.query_time = datetime.datetime(1970, 1, 1).replace(tzinfo=pytz.UTC)
-        # P: here it is getting the replication data values
         for pk, _date in replication_pk_date_dict.items():
-            # Same date ignore (P: ?)
+            # Same date ignore
             if model_pk_date_dict.get(pk) and model_pk_date_dict.get(pk) <= _date:
                 model_pk_date_dict.pop(pk)
             if _date and _date > self.query_time:
                 self.query_time = _date
 
         self._queryset_pks = self.get_queryset().filter(pk__in=model_pk_date_dict.keys()).values_list('pk', flat=True)
-        # self._queryset_pks = self.get_model().objects.filter(pk__in=model_pk_date_dict.keys()).values_list('pk',
-                                                                                                           # flat=True)
-        print('query set pks:', self._queryset_pks)
         return self._queryset_pks
-        # TODO Here most likely
 
     @property
     def accounted_pks(self):
@@ -120,7 +91,6 @@ class TestResultReplicatorMixin(object):
     @classmethod
     def add_items(cls, chunk_ids):
         log.info("Pulling JSON data for %d ids", len(chunk_ids))
-        print('replication add_items:', "Pulling JSON data for %d ids", len(chunk_ids))
         return TestResultLink.objects.filter(id__in=chunk_ids).as_json(as_list=True)
 
 

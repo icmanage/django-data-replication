@@ -168,9 +168,6 @@ class BaseReplicationCollector(object):
         log.info("%s identified a potential of %d add actions, %d update actions and %d delete actions",
                  self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
 
-        print('base get_actions', "%s identified a potential of %d add actions, %d update actions and %d delete actions",
-                 self.verbose_name, len(self.add_pks), len(self.update_pks), len(self.delete_pks))
-
         return (self.add_pks, self.update_pks, self.delete_pks)
 
     def analyze(self):
@@ -191,14 +188,12 @@ class BaseReplicationCollector(object):
         delete_pks = delete_pks[:self.max_count] if self.max_count is not None else delete_pks
         if len(delete_pks):
             self._delete_items(delete_pks)
-            print(" deleted %d items" % len(delete_pks))
             msg += " deleted %d items" % len(delete_pks)
 
         add_pks = add_pks + update_pks
         add_pks = add_pks[:self.max_count] if self.max_count is not None else add_pks
         if len(add_pks):
             self._add_items(add_pks)
-            print('analyze:', "added %d items" % len(add_pks))
             msg += " added %d items" % len(add_pks)
 
         if self.max_count:
@@ -253,7 +248,6 @@ class BaseReplicationCollector(object):
                 log.error("Issue with creating %r".format(replication_data))
 
         log.debug("Added %d replication entries", len(bulk_inserts))
-        print("Added %d replication entries", len(bulk_inserts))
 
         def chunks(l, n):
             """Yield successive n-sized chunks from l."""

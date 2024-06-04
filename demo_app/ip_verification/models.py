@@ -45,3 +45,20 @@ class RegressionAnalytic(models.Model):
     summary = models.OneToOneField('RegressionTagSummary', related_name="analytics", null=True, on_delete=SET_NULL)
     last_updated = models.DateTimeField(auto_now=True, db_index=True)
     replications = GenericRelation('data_replication.Replication')
+
+
+class PlannedTestCase(models.Model):
+    product = models.ForeignKey('TestProductName', related_name="planned_test_cases", on_delete=models.CASCADE)
+    family = models.ForeignKey('TestFamilyName', related_name="planned_test_cases", on_delete=models.CASCADE)
+    sub_family = models.ForeignKey('TestSubFamilyName', related_name="planned_test_cases", on_delete=models.CASCADE)
+    regression_tag = models.ForeignKey('TestRegressionName', on_delete=models.SET_NULL, null=True, blank=True)
+
+    plan_qty = models.PositiveIntegerField()
+    plan_date = models.DateField()
+
+    last_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        permissions = (('view_plannedtestcase', "View Planned Test Case"),)
+        unique_together = ('product', 'family', 'sub_family', 'regression_tag', 'plan_date')
+        ordering = ['plan_date']
