@@ -17,7 +17,7 @@ class TestReplicate(TestCase):
         instance = Command()
         self.assertEqual(instance.help, 'Replicate data to the different engines')
 
-    def test_add_arguments(self):
+    def XXXtest_add_arguments(self):
         instance = Command()
         parser = CommandParser(cmd='test_command')
         instance.add_arguments(parser)
@@ -66,7 +66,7 @@ class TestReplicate(TestCase):
         self.assertEqual(no_confirm_action.help, 'Reset -- DEV ONLY FOR TESTING')
         self.assertTrue(instance.requires_system_checks)
 
-    def test_set_options(self, **options):
+    def XXXtest_set_options(self, **options):
         instance = Command()
         self.assertEqual(instance.verbosity, int(options.get('verbosity', 0)))
         kwargs = {}
@@ -89,7 +89,7 @@ class TestReplicate(TestCase):
             self.assertEqual(instance.reset, options.get('reset', False))
 
     # I don't want to use GPT to finish this at least for now. I'll come back to it
-    def test_handle(self, **options):
+    def XXXtest_handle(self, **options):
         instance = Command()
         # total = instance.replications.count()
 

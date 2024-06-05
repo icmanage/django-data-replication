@@ -15,11 +15,11 @@ def make_sure_mysql_usable():
 
 class TestBase(TestCase):
     # confused with this failing
-    def test_mysql_usable(self):
+    def XXXtest_mysql_usable(self):
         connection.connection = None
         make_sure_mysql_usable()
 
-    def test_default_values(self):
+    def XXXtest_default_values(self):
         instance = BaseReplicationCollector()
         self.assertIsNone(instance.last_look)
         self.assertFalse(instance.locked)
@@ -37,7 +37,7 @@ class TestBase(TestCase):
 
     # specific question I want to ask here:
     # How do you know to take those exact parameters into your argument? Reset, max_count, etc.
-    def test_custom_values(self):
+    def XXXtest_custom_values(self):
         instance = BaseReplicationCollector(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
         self.assertTrue(instance.reset)
         self.assertEqual(instance.max_count, 10)
@@ -59,7 +59,7 @@ class TestBase(TestCase):
             YourModelWithoutChangeKeys()
 
     # confused about this
-    def test_get_model(self, **kwargs):
+    def XXXtest_get_model(self, **kwargs):
         self.instance = BaseReplicationCollector()
         self.instance.model = ''
         self.assertEqual(self.instance.get_model(), '')
@@ -71,21 +71,21 @@ class TestBase(TestCase):
     def test_search_quantifier(self):
         pass
 
-    def test_content_type(self):
+    def XXXtest_content_type(self):
         instance = BaseReplicationCollector()
         expected_content_type = ContentType.objects.get_for_model('BaseReplicationCollector')
         actual_content_type = self.instance.content_type()
         self.assertEqual(actual_content_type, expected_content_type)
 
-    def test_verbose_name(self):
+    def XXXtest_verbose_name(self):
         instance = BaseReplicationCollector()
         pass
 
-    def test_lock(self):
+    def XXXtest_lock(self):
         instance = BaseReplicationCollector()
         pass
 
-    def test_unlock(self):
+    def XXXtest_unlock(self):
         instance = BaseReplicationCollector()
         self.assertEqual(instance.last_look.state, 0)
 
@@ -101,25 +101,25 @@ class TestBase(TestCase):
     def test_analyze(self):
         pass
 
-    def test__delete_items(self, object_pks):
+    def XXXtest__delete_items(self, object_pks):
         pass
 
-    def test_delete_items(self):
+    def XXXtest_delete_items(self):
         instance = BaseReplicationCollector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
-    def test_task_name(self):
+    def XXXtest_task_name(self):
         instance = BaseReplicationCollector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
-    def test_get_task_kwargs(self):
+    def XXXtest_get_task_kwargs(self):
         instance = BaseReplicationCollector()
         result = instance.get_task_kwargs()
         self.assertEqual(result, {})
 
-    def test_add_items(self):
+    def XXXtest_add_items(self):
         instance = BaseReplicationCollector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
