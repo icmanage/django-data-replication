@@ -1,26 +1,18 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from django.db import connection
 from django.contrib.contenttypes.models import ContentType
 from data_replication.backends.base import BaseReplicationCollector
+from data_replication.backends.mongo import MongoReplicator
 
-Usr = get_user_model()
-
-def make_sure_mysql_usable():
-    from django.db import connection, connections
-    if connection.connection and not connection.is_usable():
-        del connections._connections.default
+User = get_user_model()
 
 
 class TestBase(TestCase):
     # confused with this failing
-    def XXXtest_mysql_usable(self):
-        connection.connection = None
-        make_sure_mysql_usable()
 
-    def XXXtest_default_values(self):
-        instance = BaseReplicationCollector()
+    def test_default_values(self):
+        instance = TestMongoReplicatorExample()
         self.assertIsNone(instance.last_look)
         self.assertFalse(instance.locked)
         self.assertIsNone(instance.query_time)
@@ -37,8 +29,8 @@ class TestBase(TestCase):
 
     # specific question I want to ask here:
     # How do you know to take those exact parameters into your argument? Reset, max_count, etc.
-    def XXXtest_custom_values(self):
-        instance = BaseReplicationCollector(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
+    def test_custom_values(self):
+        instance = TestMongoReplicatorExample(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
         self.assertTrue(instance.reset)
         self.assertEqual(instance.max_count, 10)
         self.assertFalse(instance.use_subtasks)
@@ -50,31 +42,26 @@ class TestBase(TestCase):
             BaseReplicationCollector()
 
     def test_missing_change_keys_attribute(self):
+        class YourModelWithoutChangeKeys(BaseReplicationCollector):
+            model = User
         with self.assertRaises(AttributeError):
-            # Test case where change_keys are not provided
-            class YourModelWithoutChangeKeys(BaseReplicationCollector):
-                def get_model(self):
-                    return BaseReplicationCollector
-
             YourModelWithoutChangeKeys()
 
     # confused about this
-    def XXXtest_get_model(self, **kwargs):
-        self.instance = BaseReplicationCollector()
-        self.instance.model = ''
-        self.assertEqual(self.instance.get_model(), '')
-        return not None
+    def test_get_model(self, **kwargs):
+        self.instance = TestMongoReplicatorExample()
+        self.assertEqual(self.instance.get_model(), User)
 
-    def test_get_queryset(self):
+    def XXXtest_get_queryset(self):
         pass
 
-    def test_search_quantifier(self):
+    def XXXtest_search_quantifier(self):
         pass
 
-    def XXXtest_content_type(self):
-        instance = BaseReplicationCollector()
-        expected_content_type = ContentType.objects.get_for_model('BaseReplicationCollector')
-        actual_content_type = self.instance.content_type()
+    def test_content_type(self):
+        instance = TestMongoReplicatorExample()
+        expected_content_type = ContentType.objects.get_for_model(User)
+        actual_content_type = instance.content_type
         self.assertEqual(actual_content_type, expected_content_type)
 
     def XXXtest_verbose_name(self):
@@ -86,7 +73,7 @@ class TestBase(TestCase):
         pass
 
     def XXXtest_unlock(self):
-        instance = BaseReplicationCollector()
+        instance = TestMongoReplicatorExample()
         self.assertEqual(instance.last_look.state, 0)
 
     def test_accounted_pks(self):
@@ -105,7 +92,7 @@ class TestBase(TestCase):
         pass
 
     def XXXtest_delete_items(self):
-        instance = BaseReplicationCollector()
+        instance = TestMongoReplicatorExample()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
@@ -124,10 +111,13 @@ class TestBase(TestCase):
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
-    def test__add_items(self):
+    def XXXtest__add_items(self):
         pass
 
-    def test_chunks(self):
+    def XXXtest_chunks(self):
         pass
 
 
+class TestMongoReplicatorExample(MongoReplicator):
+    model = User
+    change_keys = ['last_used']
