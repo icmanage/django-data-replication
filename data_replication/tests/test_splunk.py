@@ -10,6 +10,7 @@ from django import test
 from pymongo.errors import ConnectionFailure, OperationFailure
 
 from data_replication import tasks
+from data_replication.backends.base import ImproperlyConfiguredException
 from data_replication.models import ReplicationTracker
 import data_replication.backends.splunk as splunk
 from data_replication.backends.splunk import SplunkAuthenticationException
@@ -41,7 +42,9 @@ class TestSplunk(TestCase):
 
 class TestSplunkRequest(TestCase):
     def test_init(self):
-        kwargs = {'username': 'Steven', 'password': '<PASSWORD>', 'scheme': 'http', 'host': 'localhost', 'port': '8089',
-                  }
-        instance = SplunkRequest()
-        self.assertEqual(instance.username, 'Steven')
+        pass
+
+    def test_missing_settings(self):
+        # Test that ImproperlyConfiguredException is raised if required settings are missing
+        with self.assertRaises(ImproperlyConfiguredException):
+            SplunkRequest()

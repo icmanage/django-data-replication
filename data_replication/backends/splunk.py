@@ -93,7 +93,6 @@ class SplunkRequest(object):
             raise
         log.debug("Successfully logged in and have session key %(session_key)s", self.__dict__)
 
-
     def create_search(self, search_query):
         """Create a basic search"""
         self.connect()
@@ -151,7 +150,6 @@ class SplunkRequest(object):
 
         data = OrderedDict()
         keys = content.keys()
-
 
         for date_key in ['host', 'hostname']:
             if date_key in keys:

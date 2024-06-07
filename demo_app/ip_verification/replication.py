@@ -101,7 +101,9 @@ class TestResultSplunkReplicator(TestResultReplicatorMixin, SplunkReplicator):
 
 
 class TestResultMongoReplicator(TestResultReplicatorMixin, MongoReplicator):
-    pass
+    source_type = "verification"
+    source = "tcp://envision"
+    host = socket.gethostname()
 
 
 class RegressionAnalyticSplunkReplicator(SplunkReplicator):
