@@ -14,7 +14,6 @@ from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
 from data_replication.backends.splunk import SplunkReplicator
 
-#from .config import AppConfig
 
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 07:56'

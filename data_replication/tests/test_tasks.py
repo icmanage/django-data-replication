@@ -1,4 +1,3 @@
-import mock
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -17,10 +16,7 @@ User = get_user_model()
 Example = apps.get_model('example', 'Example')
 
 
-
-
 class TestTasks(TestCase):
-
 
     def test_push_splunk_objects(self, **kwargs):
         object_ids = []
@@ -39,12 +35,18 @@ class TestTasks(TestCase):
             replication_class_name='TestSplunkReplicatorExample'
         )
 
-        #if factories.tasks_splunk_factory(tracker_id=not None):
-        #assert "You failed to include object ids"
+    def test_push_mongo_objects(self, **kwargs):
+        object_ids = []
+        for i in range(3):
+            example = Example.objects.create(name='User' + str(i))
+            object_ids.append(example.id)
+        rt = replication_tracker_factory(model=Example, replication_type=1)
+        self.assertEqual(ReplicationTracker.objects.count(), 1)
 
-        #now to do the same for the similar function
-
-    def XXXtest_mongo_objects(self, **kwargs):
-        pass
-
-
+        push_mongo_objects(
+            tracker_id=rt.id,
+            object_ids=object_ids,
+            content_type_id=rt.content_type_id,
+            model_name='Example',
+            replication_class_name='TestMongoReplicatorExample'
+        )
