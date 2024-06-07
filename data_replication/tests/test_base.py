@@ -9,7 +9,6 @@ User = get_user_model()
 
 
 class TestBase(TestCase):
-    # confused with this failing
 
     def test_default_values(self):
         instance = TestMongoReplicatorExample()

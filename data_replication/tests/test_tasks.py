@@ -23,7 +23,6 @@ class TestTasks(TestCase):
         for i in range(3):
             example = Example.objects.create(name='User' + str(i))
             object_ids.append(example.id)
-        # change rtype
         rt = replication_tracker_factory(model=Example, replication_type=2)
         self.assertEqual(ReplicationTracker.objects.count(), 1)
 
