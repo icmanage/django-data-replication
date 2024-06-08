@@ -34,6 +34,7 @@ class TestTasks(TestCase):
             replication_class_name='TestSplunkReplicatorExample'
         )
 
+    # TODO Fix this regarding the configuration and provided arguments
     def test_push_mongo_objects(self, **kwargs):
         object_ids = []
         for i in range(3):

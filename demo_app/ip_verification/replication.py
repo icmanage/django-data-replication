@@ -101,9 +101,9 @@ class TestResultSplunkReplicator(TestResultReplicatorMixin, SplunkReplicator):
 
 
 class TestResultMongoReplicator(TestResultReplicatorMixin, MongoReplicator):
-    source_type = "verification"
-    source = "tcp://envision"
-    host = socket.gethostname()
+    app_module = 'django.contrib.admin'
+    app_name = 'data_replication'
+    path = '/path/to/django/contrib/admin'
 
 
 class RegressionAnalyticSplunkReplicator(SplunkReplicator):

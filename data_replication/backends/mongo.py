@@ -20,8 +20,7 @@ log = logging.getLogger(__name__)
 class MongoRequest(object):
     def __init__(self, *args, **kwargs):
 
-        settings = DataMigrationConf(app_module='data_replication', app_name='data_replication')
-
+        settings = DataMigrationConf(app_name='data_replication', app_module='django.contrib.admin')
         try:
             self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
         except AttributeError:
