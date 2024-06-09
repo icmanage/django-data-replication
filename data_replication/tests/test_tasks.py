@@ -23,7 +23,7 @@ class MockResponse():
     def __init__(self, **kwargs):
         self.status_code = kwargs.get('status_code', self.status_code)
 
-    def json():
+    def json(self):
             # TODO test here but for push mongo now
             pass
 
