@@ -10,9 +10,9 @@ from collections import OrderedDict
 
 import datetime
 import requests
+from django.apps import apps
 
 from .base import BaseReplicationCollector, ImproperlyConfiguredException
-from ..apps import settings
 
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 08:11'
@@ -20,11 +20,11 @@ __copyright__ = 'Copyright 2017 IC Manage. All rights reserved.'
 __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
+from ..apps import DataMigrationSettings as settings
 
 SPLUNK_PREFERRED_DATETIME = "%Y-%m-%d %H:%M:%S:%f"
 INTS = re.compile(r"^-?[0-9]+$")
 NUMS = re.compile(r"^[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$")
-
 
 def splunk_default(obj):
     if isinstance(obj, decimal.Decimal):
@@ -51,22 +51,24 @@ class SplunkPostException(Exception):
 
 
 class SplunkRequest(object):
-    def __init__(self, *args, **kwargs):
+    session = None
 
-        try:
+    def __init__(self, *args, **kwargs):
+        print(settings.SPLUNK_USERNAME, settings.SPLUNK_PASSWORD)
+        try:   # no_pragma
             self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
         except AttributeError:
-            raise ImproperlyConfiguredException("Missing settings.SPLUNK_USERNAME")
+            raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
-        except AttributeError:
-            raise ImproperlyConfiguredException("Missing settings.SPLUNK_PASSWORD")
+        except AttributeError:  # no_pregma
+            raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_PASSWORD")
         self.scheme = kwargs.get('scheme', settings.SPLUNK_SCHEME)
         self.host = kwargs.get('host', settings.SPLUNK_HOST)
         self.port = kwargs.get('port', settings.SPLUNK_PORT)
         self.session_key = kwargs.get('splunk_session_key')
-        self.session = None
         self.base_url = '{scheme}://{host}:{port}'.format(scheme=self.scheme, host=self.host, port=self.port)
+        self.headers = dict()
 
     def connect(self, **kwargs):
         if self.session_key:

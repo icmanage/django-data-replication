@@ -17,6 +17,7 @@ class DataMigrationConf(AppConfig):
     """Settings for data replication."""
 
     name = "data_replication"
+class DataMigrationSettings():
 
     SPLUNK_HOST = getattr(settings, 'SPLUNK_HOST', 'localhost')
     """

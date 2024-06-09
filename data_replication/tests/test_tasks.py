@@ -1,3 +1,4 @@
+import mock
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
@@ -16,8 +17,36 @@ User = get_user_model()
 Example = apps.get_model('example', 'Example')
 
 
+
+class MockResponse():
+    status_code = 200
+    def __init__(self, **kwargs):
+        self.status_code = kwargs.get('status_code', self.status_code)
+
+    def json():
+            # TODO test here but for push mongo now
+            pass
+
+
+
+
+class MockSession():
+    def post(self, url, data=None, json=None, **kwargs):
+        pass
+        print(url)
+        if url == 'https://localhost:8089/services/receivers/stream':
+            return MockResponse(status_code=204)
+
+    def get(self, url, **kwargs):
+        pass
+        print(url)
+
+
+mock_session = MockSession()
+
 class TestTasks(TestCase):
 
+    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
     def test_push_splunk_objects(self, **kwargs):
         object_ids = []
         for i in range(3):

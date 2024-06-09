@@ -2,12 +2,12 @@
 """mongo: Django data_replication"""
 
 import logging
+
+from django.apps import apps
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 from .base import BaseReplicationCollector, ImproperlyConfiguredException
-from ..apps import DataMigrationConf
-
 
 __author__ = 'Steven Klass'
 __date__ = '9/21/17 08:11'
@@ -15,12 +15,13 @@ __copyright__ = 'Copyright 2017 IC Manage. All rights reserved.'
 __credits__ = ['Steven Klass', ]
 
 log = logging.getLogger(__name__)
+from ..apps import DataMigrationSettings as settings
 
 
 class MongoRequest(object):
+
     def __init__(self, *args, **kwargs):
 
-        settings = DataMigrationConf(app_name='data_replication', app_module='django.contrib.admin')
         try:
             self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
         except AttributeError:
