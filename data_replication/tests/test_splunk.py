@@ -53,6 +53,14 @@ class TestSplunk(TestCase):
         except SplunkPostException as error:
             self.assertIn('hello', str(error))
 
+    # TODO maybe take this out
+    def test_post_fail(self, url, data=None, json=None):
+        url_to_test = 'https://localhost:8089/services/receivers/stream'
+        with self.assertRaises(SplunkPostException):
+            if url == 'https://localhost:8089/services/receivers/stream':
+                return MockResponse(status_code=205)
+        self.test_post_fail(url_to_test)
+
     def XXXtest_missing_settings(self):
         # Test that ImproperlyConfiguredException is raised if required settings are missing
         with self.assertRaises(ImproperlyConfiguredException):

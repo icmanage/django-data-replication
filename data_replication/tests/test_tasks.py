@@ -17,32 +17,46 @@ User = get_user_model()
 Example = apps.get_model('example', 'Example')
 
 
-
 class MockResponse():
     status_code = 200
+
     def __init__(self, **kwargs):
         self.status_code = kwargs.get('status_code', self.status_code)
 
     def json(self):
-            # TODO test here but for push mongo now
-            pass
-
-
-
-
-class MockSession():
-    def post(self, url, data=None, json=None, **kwargs):
+        # TODO test here but for push mongo now
         pass
+
+
+class MockSession1():
+    def post(self, url, data=None, json=None, **kwargs):
         print(url)
         if url == 'https://localhost:8089/services/receivers/stream':
-            return MockResponse(status_code=204)
+            return MockResponse(status_code=205)
+
+    def post_fail(self, url, data=None, json=None):
+        print(url)
+        if url == 'https://localhost:8089/services/receivers/stream':
+            return MockResponse(status_code=205)
 
     def get(self, url, **kwargs):
         pass
         print(url)
 
 
-mock_session = MockSession()
+mock_session = MockSession1()
+
+
+class MockSession2():
+
+    def post_fail(self, url, data=None, json=None):
+        print(url)
+        if url == 'https://localhost:8089/services/receivers/stream':
+            return MockResponse(status_code=205)
+
+
+mock_session_fail = MockSession2()
+
 
 class TestTasks(TestCase):
 
@@ -63,7 +77,12 @@ class TestTasks(TestCase):
             replication_class_name='TestSplunkReplicatorExample'
         )
 
-    # TODO Fix this regarding the configuration and provided arguments
+    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session_fail)
+    def test_push_splunk_objects_fail(self, **kwargs):
+        self.assertEqual(MockSession2.status_code, 205)
+
+
+    @mock.patch('data_replication.backends.mongo.MongoRequest.session', mock_session)
     def test_push_mongo_objects(self, **kwargs):
         object_ids = []
         for i in range(3):
