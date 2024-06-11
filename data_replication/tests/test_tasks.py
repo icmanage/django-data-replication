@@ -91,8 +91,8 @@ class TestTasks(TestCase):
                 replication_class_name='TestSplunkReplicatorExample'
             )
 
-    # @mock.patch('data_replication.backends.mongo.MongoRequest.session', mock_session)
-    def XXXtest_push_mongo_objects(self, **kwargs):
+    @mock.patch('data_replication.backends.mongo.MongoRequest', mock_session)
+    def test_push_mongo_objects(self, **kwargs):
         object_ids = []
         for i in range(3):
             example = Example.objects.create(name='User' + str(i))

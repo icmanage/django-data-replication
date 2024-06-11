@@ -55,9 +55,9 @@ class SplunkRequest(object):
 
     def __init__(self, *args, **kwargs):
         print(settings.SPLUNK_USERNAME, settings.SPLUNK_PASSWORD)
-        try:   # no_pragma
+        try:
             self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
-        except AttributeError:
+        except AttributeError:   # no_pregma
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
@@ -204,7 +204,7 @@ class SplunkRequest(object):
             if response.status_code != 204:
                 log.error("Unable to push to {} - {}".format(url, content))
                 raise SplunkPostException("Unable to push to {} - {}".format(url, content))
-        else:   # no_pragma
+        else:   # no_pregma
             log.info(data)
 
         return None
