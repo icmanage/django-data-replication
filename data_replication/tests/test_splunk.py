@@ -1,9 +1,8 @@
 import re
-
 from django.conf import settings
 from django.test import TestCase
 import mock
-from mock import Mock
+from mock import Mock, patch
 from data_replication.backends.base import ImproperlyConfiguredException
 from data_replication.models import ReplicationTracker
 import data_replication.backends.splunk as splunk
@@ -68,7 +67,7 @@ class TestSplunk(TestCase):
         except SplunkPostException as error:
             self.assertIn('hello', str(error))
 
-    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
+    @patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
     def test_get_search_status(self):
         self.instance = SplunkRequest()
         result, status_code = self.instance.get_search_status(search_id='123')
