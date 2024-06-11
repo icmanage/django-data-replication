@@ -40,6 +40,11 @@ class MockSession():
         pass
         print(url)
 
+    def request(self, url, data=None, json=None, **kwargs):
+        print(url)
+        if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
+            return MockResponse(status_code=204)
+
 
 mock_session = MockSession()
 
