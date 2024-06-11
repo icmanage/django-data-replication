@@ -204,7 +204,7 @@ class SplunkRequest(object):
             if response.status_code != 204:
                 log.error("Unable to push to {} - {}".format(url, content))
                 raise SplunkPostException("Unable to push to {} - {}".format(url, content))
-        else:
+        else:   # no_pragma
             log.info(data)
 
         return None
