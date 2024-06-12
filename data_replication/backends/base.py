@@ -85,8 +85,6 @@ class BaseReplicationCollector(object):
 
     def lock(self):
         from data_replication.models import Replication, ReplicationTracker
-        # could this datetime/timezone being used interfere with replicate,
-        # since it is taking a naive time? Look into it more
         prior_date = now() - datetime.timedelta(days=365 * 100)
         try:
             self.last_look = ReplicationTracker.objects.get(

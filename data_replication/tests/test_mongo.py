@@ -10,6 +10,8 @@ from pymongo.errors import ConnectionFailure, OperationFailure
 from data_replication.models import ReplicationTracker
 from data_replication.tasks import push_mongo_objects
 import data_replication.backends.mongo as mongo
+import mock
+from mock import MagicMock, patch
 
 
 class MongoTestCase(test.TestCase):

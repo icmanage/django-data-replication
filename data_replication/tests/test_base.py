@@ -51,11 +51,11 @@ class TestBase(TestCase):
         self.instance = TestMongoReplicatorExample()
         self.assertEqual(self.instance.get_model(), User)
 
-    def XXXtest_get_queryset(self):
-        pass
+    def test_get_queryset(self):
+        instance = TestMongoReplicatorExample()
 
-    def XXXtest_search_quantifier(self):
-        pass
+    def test_search_quantifier(self):
+        instance = TestMongoReplicatorExample()
 
     def test_content_type(self):
         instance = TestMongoReplicatorExample()
@@ -63,17 +63,18 @@ class TestBase(TestCase):
         actual_content_type = instance.content_type
         self.assertEqual(actual_content_type, expected_content_type)
 
-    def XXXtest_verbose_name(self):
-        instance = BaseReplicationCollector()
-        pass
-
-    def XXXtest_lock(self):
-        instance = BaseReplicationCollector()
-        pass
-
-    def XXXtest_unlock(self):
+    def test_verbose_name(self):
         instance = TestMongoReplicatorExample()
-        self.assertEqual(instance.last_look.state, 0)
+        pass
+
+    def test_lock(self):
+        instance = TestMongoReplicatorExample()
+        pass
+
+    def test_unlock(self):
+        instance = TestMongoReplicatorExample()
+        self.assertEqual(instance.last_look, None)
+        self.assertFalse(instance.locked)
 
     def test_accounted_pks(self):
         pass
@@ -82,7 +83,9 @@ class TestBase(TestCase):
         pass
 
     def test_get_actions(self):
-        pass
+        instance = TestMongoReplicatorExample()
+        # self.assertIn("You need to lock the db first", instance.locked)
+        self.assertFalse(instance.locked)
 
     def test_analyze(self):
         pass
