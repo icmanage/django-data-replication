@@ -82,14 +82,13 @@ class TestTasks(TestCase):
         )
 
     # TODO test here for missing coverage in tasks
-    # @patch(tasks.push_splunk_objects)
+    # @patch(push_splunk_objects)
     def XXXtest_exception_handling(self, mock_logging_error):
         mock_da_push = MagicMock()
         mock_da_push.return_value = 'SOMETHING'
         expected_error_message = "Splunk Improperly configured - Your error message"
         with self.assertRaises(ImproperlyConfigured) as cm:
-            # tasks.push_splunk_objects()
-            pass
+            push_splunk_objects()
         mock_logging_error.assert_called_once_with(expected_error_message)
 
     @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session_fail)

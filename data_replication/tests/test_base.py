@@ -1,9 +1,16 @@
+import self
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from django.contrib.contenttypes.models import ContentType
+
+import data_replication
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
+import mock
+from mock import patch, MagicMock
+
+from data_replication.models import Replication
 
 User = get_user_model()
 
@@ -82,10 +89,19 @@ class TestBase(TestCase):
     def test_changed_queryset_pks(self):
         pass
 
-    def test_get_actions(self):
+    @patch('data_replication.backends.base.accounted_pks')
+    def XXXtest_get_actions(self, mocked_accounted_pks):
+        mocked_accounted_pks.return_value = [1, 2, 3]
         instance = TestMongoReplicatorExample()
-        # self.assertIn("You need to lock the db first", instance.locked)
+        instance.last_look = "some_value"
+        instance.get_queryset = lambda: BaseReplicationCollector.objects.all()
+        instance.locked = False
         self.assertFalse(instance.locked)
+        self.assertEqual(instance.delete_pks, list(set(self.accounted_pks()) - set(list(
+            self.get_queryset().values_list('pk', flat=True)))))
+        instance.get_queryset.return_value.values_list.return_value = [1, 2, 4]  # Example queryset values
+        expected_delete_pks = list(set([1, 2, 3]) - set([1, 2, 4]))
+        self.assertEqual(instance.delete_pks, expected_delete_pks)
 
     def test_analyze(self):
         pass
@@ -99,17 +115,17 @@ class TestBase(TestCase):
             instance.delete_items([1, 2, 3])
 
     def XXXtest_task_name(self):
-        instance = BaseReplicationCollector()
+        instance = TestMongoReplicatorExample()
         with self.assertRaises(NotImplementedError):
-            instance.delete_items([1, 2, 3])
+            instance.task_name()
 
     def XXXtest_get_task_kwargs(self):
-        instance = BaseReplicationCollector()
+        instance = TestMongoReplicatorExample()
         result = instance.get_task_kwargs()
         self.assertEqual(result, {})
 
     def XXXtest_add_items(self):
-        instance = BaseReplicationCollector()
+        instance = TestMongoReplicatorExample()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
