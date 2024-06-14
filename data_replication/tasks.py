@@ -40,12 +40,15 @@ def push_splunk_objects(**kwargs):
 
     Replicator = tracker.get_replicator(replication_class_name=replication_class_name)
     data = Replicator.add_items(object_ids)
-
     for item in data:
         if 'model' not in item.keys():
             item['model'] = model_name
+            print('model missing')
+
         else:
             log.warning("Model already exists?")
+            print("Model already exists?")
+
         assert 'pk' in item.keys(), "Missing pk in model"
 
     try:
@@ -53,13 +56,14 @@ def push_splunk_objects(**kwargs):
     except ImproperlyConfiguredException as err:
         log.error("Splunk Improperly configured - %s" % err)
         return
+    print('posting data')
     splunk.post_data(content=data, source=source, sourcetype=source_type, host=host, dry_run=dry_run)
 
     from data_replication.models import Replication
     Replication.objects.filter(
         content_type_id=content_type_id, tracker_id=tracker_id,
         object_id__in=object_ids).update(state=1)
-
+    print('added')
     return "Added %d %s models objects to splunk" % (len(data), model_name)
 
 

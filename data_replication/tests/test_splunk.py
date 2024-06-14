@@ -19,28 +19,6 @@ data_replication_app = apps.get_app_config('data_replication')
 Example = apps.get_model('example', 'Example')
 
 
-class MockResponse():
-    status_code = 200
-    json = Mock(return_value={'your': 'data'})
-
-    def __init__(self, **kwargs):
-        self.status_code = kwargs.get('status_code', self.status_code)
-
-
-class MockSession():
-    def request(self, url, data=None, json=None, **kwargs):
-        print(url)
-        if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
-            return MockResponse(status_code=204)
-
-    def get(self, url, **kwargs):
-        pass
-        print(url)
-
-
-mock_session = MockSession()
-
-
 class TestSplunk(TestCase):
     def test_splunk_basics(self):
         self.assertEqual(splunk.__author__, "Steven Klass", "author is incorrect")

@@ -10,7 +10,7 @@ from django.test import TestCase
 
 # from data_replication import tasks
 from data_replication.backends.splunk import SplunkPostException
-from data_replication.models import ReplicationTracker
+from data_replication.models import ReplicationTracker, Replication
 
 from data_replication.tasks import push_mongo_objects
 from data_replication.tasks import push_splunk_objects
@@ -62,6 +62,17 @@ class MockSession2():
 mock_session_fail = MockSession2()
 
 
+class MockMongoClient(dict):
+    def __init__(self, url):
+        pass
+
+    class admin:
+        def command(self, str):
+            return True
+    def get_database(self):
+        pass
+
+
 class TestTasks(TestCase):
 
     @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
@@ -72,6 +83,7 @@ class TestTasks(TestCase):
             object_ids.append(example.id)
         rt = replication_tracker_factory(model=Example, replication_type=2)
         self.assertEqual(ReplicationTracker.objects.count(), 1)
+        self.assertEqual(Replication.objects.count(), 0)
 
         push_splunk_objects(
             tracker_id=rt.id,
@@ -80,6 +92,9 @@ class TestTasks(TestCase):
             model_name='Example',
             replication_class_name='TestSplunkReplicatorExample'
         )
+        self.assertEqual(Replication.objects.count(), 3)
+        self.assertEqual(Replication.objects.filter(state=1).count(), 3)
+
 
     # TODO test here for missing coverage in tasks
     # @patch(push_splunk_objects)
@@ -96,6 +111,7 @@ class TestTasks(TestCase):
         with self.assertRaises(SplunkPostException):
             object_ids = []
             rt = replication_tracker_factory(model=Example, replication_type=2)
+            self.assertEqual(Replication.objects.count(), 0)
 
             push_splunk_objects(
                 tracker_id=rt.id,
@@ -104,6 +120,7 @@ class TestTasks(TestCase):
                 model_name='Example',
                 replication_class_name='TestSplunkReplicatorExample'
             )
+        self.assertEqual(Replication.objects.count(), 0)
 
     @mock.patch('data_replication.backends.mongo.MongoRequest', mock_session)
     def test_push_mongo_objects(self, **kwargs):
@@ -113,6 +130,7 @@ class TestTasks(TestCase):
             object_ids.append(example.id)
         rt = replication_tracker_factory(model=Example, replication_type=1)
         self.assertEqual(ReplicationTracker.objects.count(), 1)
+        self.assertEqual(Replication.objects.count(), 0)
 
         push_mongo_objects(
             tracker_id=rt.id,
@@ -121,3 +139,5 @@ class TestTasks(TestCase):
             model_name='Example',
             replication_class_name='TestMongoReplicatorExample'
         )
+        self.assertEqual(Replication.objects.count(), 3)
+        self.assertEqual(Replication.objects.filter(state=1).count(), 3)

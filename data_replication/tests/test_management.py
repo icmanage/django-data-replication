@@ -8,11 +8,14 @@ from django.apps import apps
 
 from data_replication.models import ReplicationTracker, Replication
 from data_replication.tests.factories import replication_tracker_factory
+from data_replication.tests.test_tasks import mock_session
 
 ip_verification_app = apps.get_app_config('ip_verification')
 
 TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
 RegressionTagSummary = apps.get_model('ip_verification', 'RegressionTagSummary')
+import mock
+from mock import patch
 
 class DevNull:
     pass
@@ -40,6 +43,7 @@ class ManagementCommmandTestCase(TestCase):
         # kwargs["stderr"] = DevNull()
         return management.call_command(*args, **kwargs)
 
+    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
     def test_basic(self):
         """This is how we call the management commands for testing"""
 

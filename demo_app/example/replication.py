@@ -15,6 +15,13 @@ class ExampleMixin():
             data.append(pt)
         return data
 
+    def _get_replication_object(self, replication_type):
+        ctype = ContentType.objects.get_for_model(self.__class__)
+        try:
+            obj = Replication.objects.get(content_type__pk=ctype.id, object_id=self.id, replicaion_type=replication_type)
+        except Replication.DoesNotExist:
+            return None
+        return obj
 
 class TestMongoReplicatorExample(ExampleMixin, MongoReplicator):
     model = Example
@@ -24,3 +31,4 @@ class TestMongoReplicatorExample(ExampleMixin, MongoReplicator):
 class TestSplunkReplicatorExample(ExampleMixin, SplunkReplicator):
     model = Example
     change_keys = ['last_used']
+

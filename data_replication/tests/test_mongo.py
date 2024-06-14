@@ -13,8 +13,15 @@ import data_replication.backends.mongo as mongo
 import mock
 from mock import MagicMock, patch
 
+from data_replication.tests.test_tasks import MockMongoClient
+
 
 class MongoTestCase(test.TestCase):
+
+    @patch('data_replication.backends.mongo.MongoRequest._client', MockMongoClient)
+    def test_client(self):
+        pass
+
 
     def test_task_name(self):
         #ct = ContentType.objects.get_for_model(mongo.MongoRequest)
