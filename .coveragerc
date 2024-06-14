@@ -1,4 +1,5 @@
 [run]
+source = data_replication
 branch = true
 omit =
  .venv/*

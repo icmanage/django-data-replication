@@ -18,7 +18,7 @@ def replication_tracker_factory(model=None, replication_type=None, **kwargs):
     if replication_type:
         assert replication_type in [1, 2, "splunk", "mongo"]
         replication_type = 2 if replication_type == "splunk" else replication_type
-        replication_type = 1 if replication_type == "1" else replication_type
+        replication_type = 1 if replication_type == "mongo" else replication_type
     else:
         replication_type = random.choice([x[0] for x in REPLICATION_TYPES])
 

@@ -26,7 +26,7 @@ class ImproperlyConfiguredException(Exception):
 
 def make_sure_mysql_usable():
     from django.db import connection, connections
-    if connection.connection and not connection.is_usable():
+    if connection.connection and not connection.is_usable():  # pragma: no cover
         del connections._connections.default
 
 
@@ -208,15 +208,15 @@ class BaseReplicationCollector(object):
         Replication.objects.filter(
             tracker=self.last_look,
             object_id__in=object_pks,
-            content_type=self.content_type,).delete()
+            content_type=self.content_type).delete()
 
     # TODO test these super basic functions for practice
     def delete_items(self, object_pks):
-        raise NotImplemented
+        raise NotImplementedError
 
     @property
     def task_name(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_task_kwargs(self):
         return {}
@@ -224,7 +224,7 @@ class BaseReplicationCollector(object):
     @classmethod
     def add_items(cls, chunk_ids):
         """Given a chuck of items get some information"""
-        raise NotImplemented("You need to figure this out..")
+        raise NotImplementedError("You need to figure this out..")
 
     def _add_items(self, object_pks, chunk_size=1000):
         from data_replication.models import Replication

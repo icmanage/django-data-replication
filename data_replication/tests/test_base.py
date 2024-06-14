@@ -1,4 +1,6 @@
-from mock import patch
+from django.apps import apps
+from django.utils.timezone import now
+from mock import patch, mock
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -7,11 +9,22 @@ from django.contrib.contenttypes.models import ContentType
 
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
+from data_replication.models import Replication
+from data_replication.tests.factories import replication_tracker_factory
+from data_replication.tests.test_tasks import mock_session
 
 User = get_user_model()
+Example = apps.get_model('example', 'Example')
 
 
 class TestBase(TestCase):
+
+    def setUp(self):
+        class FooBar(BaseReplicationCollector):
+            model = Example
+            change_keys = ['foo']
+
+        self.base_replication_collector = FooBar
 
     def test_default_values(self):
         instance = TestMongoReplicatorExample()
@@ -79,57 +92,47 @@ class TestBase(TestCase):
         self.assertEqual(instance.last_look, None)
         self.assertFalse(instance.locked)
 
-    def test_accounted_pks(self):
-        pass
+    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
+    def test__delete_items(self):
+        instance = self.base_replication_collector()
+        self.assertRaises(NotImplementedError, instance.delete_items, object_pks=[1, 2, 3])
 
-    def test_changed_queryset_pks(self):
-        pass
+        rt = replication_tracker_factory(Example, 'splunk')
+        oids = []
+        for i in range(3):
+            oids.append(Example.objects.create(name="test%d" % i).pk)
 
-    @patch('data_replication.backends.base.accounted_pks')
-    def XXXtest_get_actions(self, mocked_accounted_pks):
-        mocked_accounted_pks.return_value = [1, 2, 3]
-        instance = TestMongoReplicatorExample()
-        instance.last_look = "some_value"
-        instance.get_queryset = lambda: BaseReplicationCollector.objects.all()
-        instance.locked = False
-        self.assertFalse(instance.locked)
-        self.assertEqual(instance.delete_pks, list(set(self.accounted_pks()) - set(list(
-            self.get_queryset().values_list('pk', flat=True)))))
-        instance.get_queryset.return_value.values_list.return_value = [1, 2, 4]  # Example queryset values
-        expected_delete_pks = list(set([1, 2, 3]) - set([1, 2, 4]))
-        self.assertEqual(instance.delete_pks, expected_delete_pks)
+        Replication.objects.bulk_create([
+            Replication(tracker=rt, object_id=x, content_type=ContentType.objects.get_for_model(Example),
+                        state=1, last_updated=now()) for x in oids]
+        )
+        self.assertEqual(Replication.objects.count(), 3)
+        replicator = rt.get_replicator()
+        collector = replicator()
+        collector.last_look = rt  # Why did I use the variable last look in lieu of tracker????
+        collector._delete_items(oids)
+        self.assertEqual(Replication.objects.count(), 0)
 
-    def test_analyze(self):
-        pass
-
-    def XXXtest__delete_items(self, object_pks):
-        pass
-
-    def XXXtest_delete_items(self):
-        instance = TestMongoReplicatorExample()
+    def test_delete_items(self):
+        instance = self.base_replication_collector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
-    def XXXtest_task_name(self):
-        instance = TestMongoReplicatorExample()
+    def test_task_name(self):
+        instance = self.base_replication_collector()
         with self.assertRaises(NotImplementedError):
             instance.task_name()
 
-    def XXXtest_get_task_kwargs(self):
-        instance = TestMongoReplicatorExample()
+    def test_get_task_kwargs(self):
+        instance = self.base_replication_collector()
         result = instance.get_task_kwargs()
         self.assertEqual(result, {})
 
-    def XXXtest_add_items(self):
-        instance = TestMongoReplicatorExample()
+    def test_add_items(self):
+        instance = self.base_replication_collector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
 
-    def XXXtest__add_items(self):
-        pass
-
-    def XXXtest_chunks(self):
-        pass
 
 
 class TestMongoReplicatorExample(MongoReplicator):

@@ -26,18 +26,23 @@ class MockResponse():
 
     def json(self):
         # TODO test here but for push mongo now
-        pass
+        return {'sid': '12345'}
 
 
 class MockSession():
     def post(self, url, data=None, json=None, **kwargs):
-        print(url)
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=204)
+        elif url == "https://localhost:8089/services/search/jobs?output_mode=json":
+            return MockResponse(status_code=200)
+        else:
+            print("HANDLE ", url)
 
     def get(self, url, **kwargs):
-        pass
-        print(url)
+        if url == "https://localhost:8089/services/search/jobs/12345/results?output_mode=json":
+            return MockResponse(status_code=200)
+        else:
+            print("HANDLE ", url)
 
     def request(self, url, data=None, json=None, **kwargs):
         print(url)

@@ -44,7 +44,7 @@ class ReplicationTracker(models.Model):
         except AttributeError:
             try:
                 module = importlib.import_module("{}.replication".format(self.content_type.app_label))
-            except ImportError:
+            except ImportError:  # pragma no-cover
                 raise ImportError("Unable to find replication.py in app %s" % self.content_type.app_label)
 
         target_module = SplunkReplicator if self.replication_type == 2 else MongoReplicator
@@ -67,7 +67,7 @@ class ReplicationTracker(models.Model):
         if len(options) == 1:
             return options[0]
         elif len(options) > 1:
-            raise IOError("Unable to identify replication module for %s many found use replication_class_name %r" % self.content_type.app_label, options)
+            raise IOError("Unable to identify replication module for %s many found use replication_class_name %r" % (self.content_type.app_label, options))
         raise IOError("Unable to identify replication module for %s" % self.content_type.app_label)
 
 

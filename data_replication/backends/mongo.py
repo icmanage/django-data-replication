@@ -44,7 +44,6 @@ class MongoRequest(object):
         try:
             self._client.admin.command('ismaster')
         except ConnectionFailure:
-            print("Server not available")
             raise ConnectionFailure("Server at %s is not available" % self.uri)
 
         return self._client

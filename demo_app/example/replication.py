@@ -2,7 +2,7 @@ from django.forms import model_to_dict
 
 from data_replication.backends.mongo import MongoReplicator
 from data_replication.backends.splunk import SplunkReplicator
-from .models import Example
+from .models import Example, ManyExample
 
 
 class ExampleMixin():
@@ -20,8 +20,15 @@ class TestMongoReplicatorExample(ExampleMixin, MongoReplicator):
     model = Example
     change_keys = ['last_used']
 
-
 class TestSplunkReplicatorExample(ExampleMixin, SplunkReplicator):
     model = Example
     change_keys = ['last_updated']
 
+
+class TestMongoReplicatorManyExample(ExampleMixin, MongoReplicator):
+    model = ManyExample
+    change_keys = ['last_used']
+
+class TestMongoReplicatorManyExample2(ExampleMixin, MongoReplicator):
+    model = ManyExample
+    change_keys = ['last_used']
