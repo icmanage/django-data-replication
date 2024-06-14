@@ -1,14 +1,9 @@
-import logging
 
-import mock
-from django.core.exceptions import ImproperlyConfigured
-from mock import patch, MagicMock
 from django.apps import apps
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
+from mock import mock
 
-# from data_replication import tasks
 from data_replication.backends.splunk import SplunkPostException
 from data_replication.models import ReplicationTracker, Replication
 
@@ -61,19 +56,7 @@ class MockSession2():
 
 mock_session_fail = MockSession2()
 
-
-class MockMongoClient(dict):
-    def __init__(self, url):
-        pass
-
-    class admin:
-        def command(self, str):
-            return True
-    def get_database(self):
-        pass
-
-
-class TestTasks(TestCase):
+class TestSplunkTasks(TestCase):
 
     @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
     def test_push_splunk_objects(self, **kwargs):
@@ -81,6 +64,7 @@ class TestTasks(TestCase):
         for i in range(3):
             example = Example.objects.create(name='User' + str(i))
             object_ids.append(example.id)
+
         rt = replication_tracker_factory(model=Example, replication_type=2)
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         self.assertEqual(Replication.objects.count(), 0)
@@ -96,15 +80,15 @@ class TestTasks(TestCase):
         self.assertEqual(Replication.objects.filter(state=1).count(), 3)
 
 
-    # TODO test here for missing coverage in tasks
-    # @patch(push_splunk_objects)
-    def XXXtest_exception_handling(self, mock_logging_error):
-        mock_da_push = MagicMock()
-        mock_da_push.return_value = 'SOMETHING'
-        expected_error_message = "Splunk Improperly configured - Your error message"
-        with self.assertRaises(ImproperlyConfigured) as cm:
-            push_splunk_objects()
-        mock_logging_error.assert_called_once_with(expected_error_message)
+    # # TODO test here for missing coverage in tasks
+    # # @patch(push_splunk_objects)
+    # def XXXtest_exception_handling(self, mock_logging_error):
+    #     mock_da_push = MagicMock()
+    #     mock_da_push.return_value = 'SOMETHING'
+    #     expected_error_message = "Splunk Improperly configured - Your error message"
+    #     with self.assertRaises(ImproperlyConfigured) as cm:
+    #         push_splunk_objects()
+    #     mock_logging_error.assert_called_once_with(expected_error_message)
 
     @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session_fail)
     def test_push_splunk_objects_fail(self, **kwargs):
@@ -122,8 +106,36 @@ class TestTasks(TestCase):
             )
         self.assertEqual(Replication.objects.count(), 0)
 
-    @mock.patch('data_replication.backends.mongo.MongoRequest', mock_session)
-    def test_push_mongo_objects(self, **kwargs):
+
+class MockMongoClient(dict):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    class admin:
+        def command(self, *args, **kwargs):
+            return True
+
+    def get_database(self, *args, **kwargs):
+        class collection:
+            def insert_many(self, objects, *args, **kwargs):
+                class ReturnObj:
+                    inserted_ids = [x['pk'] for x in objects]
+                return ReturnObj()
+
+        class db:
+            Example = collection()
+            pass
+
+
+
+        return db
+
+client = MockMongoClient()
+
+class TestMongoTasks(TestCase):
+
+    @mock.patch('data_replication.backends.mongo.MongoRequest._client', client)
+    def test_push_mongo_objects(self):
         object_ids = []
         for i in range(3):
             example = Example.objects.create(name='User' + str(i))

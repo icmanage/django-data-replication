@@ -19,6 +19,7 @@ from ..apps import DataMigrationSettings as settings
 
 
 class MongoRequest(object):
+    _client = None
 
     def __init__(self, *args, **kwargs):
 
@@ -32,7 +33,6 @@ class MongoRequest(object):
             self.database_name = kwargs.get('database_name', settings.MONGO_DB_NAME)
         except AttributeError:
             self.database_name = None
-        self._client = None
 
     @property
     def client(self):

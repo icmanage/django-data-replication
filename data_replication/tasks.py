@@ -4,6 +4,7 @@
 import logging
 
 from celery import shared_task
+from django.utils.timezone import now
 
 from .backends.base import ImproperlyConfiguredException
 from .backends.mongo import MongoRequest
@@ -36,18 +37,27 @@ def push_splunk_objects(**kwargs):
     assert model_name is not None, "You failed to include model_name"
 
     from data_replication.models import ReplicationTracker
+    from data_replication.models import Replication
+
     tracker = ReplicationTracker.objects.get(id=tracker_id)
 
     Replicator = tracker.get_replicator(replication_class_name=replication_class_name)
     data = Replicator.add_items(object_ids)
+
+    # Add these to be tracked.
+    for oid in object_ids:
+        Replication.objects.get_or_create(
+            object_id=oid,
+            content_type_id=content_type_id,
+            tracker_id=tracker_id,
+            defaults={'state': 0, 'last_updated': now()}
+        )
+
     for item in data:
         if 'model' not in item.keys():
             item['model'] = model_name
-            print('model missing')
-
         else:
             log.warning("Model already exists?")
-            print("Model already exists?")
 
         assert 'pk' in item.keys(), "Missing pk in model"
 
@@ -56,14 +66,11 @@ def push_splunk_objects(**kwargs):
     except ImproperlyConfiguredException as err:
         log.error("Splunk Improperly configured - %s" % err)
         return
-    print('posting data')
     splunk.post_data(content=data, source=source, sourcetype=source_type, host=host, dry_run=dry_run)
 
-    from data_replication.models import Replication
     Replication.objects.filter(
         content_type_id=content_type_id, tracker_id=tracker_id,
-        object_id__in=object_ids).update(state=1)
-    print('added')
+        object_id__in=object_ids).update(state=1, last_updated=now())
     return "Added %d %s models objects to splunk" % (len(data), model_name)
 
 
@@ -85,10 +92,20 @@ def push_mongo_objects(**kwargs):
     assert model_name is not None, "You failed to include model_name"
 
     from data_replication.models import ReplicationTracker
+    from data_replication.models import Replication
     tracker = ReplicationTracker.objects.get(id=tracker_id)
 
     Replicator = tracker.get_replicator(replication_class_name=replication_class_name)
     data = Replicator.add_items(object_ids)
+
+    # Add these to be tracked.
+    for oid in object_ids:
+        Replication.objects.get_or_create(
+            object_id=oid,
+            content_type_id=content_type_id,
+            tracker_id=tracker_id,
+            defaults={'state': 0, 'last_updated': now()}
+        )
 
     for item in data:
         assert 'pk' in item.keys(), "Missing pk in model"
@@ -105,9 +122,8 @@ def push_mongo_objects(**kwargs):
         log.error("Unable to connect to Mongo!! - %s", err)
 
     else:
-        from data_replication.models import Replication
         Replication.objects.filter(
             content_type_id=content_type_id, tracker_id=tracker_id,
-            object_id__in=object_ids).update(state=1)
+            object_id__in=object_ids).update(state=1, last_updated=now())
 
         return "Added %d %s models objects to mongo" % (len(data), collection_name)

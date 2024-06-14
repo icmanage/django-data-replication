@@ -1,16 +1,12 @@
-import self
+from mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from django.contrib.contenttypes.models import ContentType
 
-import data_replication
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
-import mock
-from mock import patch, MagicMock
-
-from data_replication.models import Replication
 
 User = get_user_model()
 
