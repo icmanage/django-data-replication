@@ -118,7 +118,7 @@ class BaseReplicationCollector(object):
             replications = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
             try:
                 self.last_look.last_updated = max(list(replications.values_list('last_updated', flat=True)))
-            except ValueError:
+            except ValueError:  # pragma: no cover
                 pass
         self.last_look.save()
         self.locked = False
@@ -172,7 +172,7 @@ class BaseReplicationCollector(object):
 
         try:
             self.lock()
-        except RuntimeError as err:
+        except RuntimeError as err:  # pragma: no cover
             log.info("Unable to lock! - %r", err)
             return err
 

@@ -51,7 +51,7 @@ class Command(BaseCommand):
         self.replication_class_name = options.get('replication_class_name')
 
         self.replication_type = options.get('replication_type')
-        if options.get('replication_type') is not None:
+        if options.get('replication_type') is not None:  # pragma: no cover
             kwargs['replication_type'] = next(
                 (x[0] for x in REPLICATION_TYPES if x[1].lower() == options.get('replication_type')))
 

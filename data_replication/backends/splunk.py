@@ -183,7 +183,6 @@ class SplunkRequest(object):
         url = '{base_url}/services/receivers/stream'.format(base_url=self.base_url)
         headers = self.headers.copy()
         headers.update({'content-type': 'application/json', 'x-splunk-input-mode': 'streaming'})
-
         if not isinstance(content, (list, tuple)):
             content = [content]
 

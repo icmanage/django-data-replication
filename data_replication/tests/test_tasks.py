@@ -19,6 +19,7 @@ Example = apps.get_model('example', 'Example')
 
 class MockResponse():
     status_code = 200
+    dry_run = False
 
     def __init__(self, **kwargs):
         self.status_code = kwargs.get('status_code', self.status_code)
@@ -28,7 +29,7 @@ class MockResponse():
 
 
 class MockSession():
-    def post(self, url, data=None, json=None, **kwargs):
+    def post(self, url, data=None, json=None, dry_run=False, **kwargs):
         print(url)
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=204)
