@@ -26,6 +26,7 @@ SPLUNK_PREFERRED_DATETIME = "%Y-%m-%d %H:%M:%S:%f"
 INTS = re.compile(r"^-?[0-9]+$")
 NUMS = re.compile(r"^[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$")
 
+
 def splunk_default(obj):
     if isinstance(obj, decimal.Decimal):
         return float(obj)
@@ -54,10 +55,9 @@ class SplunkRequest(object):
     session = None
 
     def __init__(self, *args, **kwargs):
-        print(settings.SPLUNK_USERNAME, settings.SPLUNK_PASSWORD)
         try:
             self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
-        except AttributeError:   # no_pregma
+        except AttributeError:  # no_pregma
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
@@ -112,7 +112,6 @@ class SplunkRequest(object):
         return data.get('sid')
 
     def get_search_status(self, search_id, wait_for_results=True):
-
         self.connect()
         url = '{base_url}/services/search/jobs/{search_id}/results?output_mode=json'
         start = None
@@ -125,8 +124,8 @@ class SplunkRequest(object):
 
             if error_count > 3:
                 break
-
             if not start or (datetime.datetime.now() - start).seconds > 5:
+                print('ALWAYS HERE')
                 log.debug("Waiting on results")
                 start = datetime.datetime.now()
             if request.status_code == 200:
@@ -204,8 +203,8 @@ class SplunkRequest(object):
             if response.status_code != 204:
                 log.error("Unable to push to {} - {}".format(url, content))
                 raise SplunkPostException("Unable to push to {} - {}".format(url, content))
-        else:   # no_pregma
-            log.info(data)
+        else:
+            log.info(data)  # pragma: no cover
 
         return None
 

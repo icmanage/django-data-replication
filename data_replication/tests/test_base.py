@@ -42,8 +42,6 @@ class TestBase(TestCase):
         self.assertTrue(instance.use_subtasks)
         self.assertIsNone(instance.log_level)
 
-    # specific question I want to ask here:
-    # How do you know to take those exact parameters into your argument? Reset, max_count, etc.
     def test_custom_values(self):
         instance = TestMongoReplicatorExample(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
         self.assertTrue(instance.reset)

@@ -115,7 +115,6 @@ def push_mongo_objects(**kwargs):
     except ImproperlyConfiguredException as err:
         log.error("Mongo Improperly configured - %s" % err)
         return
-    # TODO: The test for this function is catching this exception and therefore not the bottom chunk. Fix it
     try:
         mongo.post_data(content=data, collection_name=collection_name)
     except (ConnectionFailure, OperationFailure) as err:

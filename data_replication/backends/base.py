@@ -210,7 +210,6 @@ class BaseReplicationCollector(object):
             object_id__in=object_pks,
             content_type=self.content_type).delete()
 
-    # TODO test these super basic functions for practice
     def delete_items(self, object_pks):
         raise NotImplementedError
 

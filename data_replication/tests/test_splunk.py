@@ -20,6 +20,14 @@ Example = apps.get_model('example', 'Example')
 
 
 class TestSplunk(TestCase):
+
+    def setUp(self):
+        class FooBar(SplunkRequest):
+            model = Example
+            change_keys = ['foo']
+
+        self.splunk_request = FooBar
+
     def test_splunk_basics(self):
         self.assertEqual(splunk.__author__, "Steven Klass", "author is incorrect")
         self.assertEqual(splunk.__date__, "9/21/17 08:11", "date is incorrect")
@@ -44,6 +52,9 @@ class TestSplunk(TestCase):
             raise SplunkPostException('hello')
         except SplunkPostException as error:
             self.assertIn('hello', str(error))
+
+    def test_delete_items(self):
+        instance = self.splunk_request()
 
     # @patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
     def XXXtest_get_search_status(self):

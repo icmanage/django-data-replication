@@ -1,4 +1,3 @@
-
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -25,12 +24,12 @@ class MockResponse():
         self.status_code = kwargs.get('status_code', self.status_code)
 
     def json(self):
-        # TODO test here but for push mongo now
         return {'sid': '12345'}
 
 
 class MockSession():
     def post(self, url, data=None, json=None, **kwargs):
+        print(url)
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=204)
         elif url == "https://localhost:8089/services/search/jobs?output_mode=json":
@@ -44,10 +43,13 @@ class MockSession():
         else:
             print("HANDLE ", url)
 
-    def request(self, url, data=None, json=None, **kwargs):
+    def request(self, method, url,
+                params=None, data=None, headers=None, cookies=None, files=None,
+                auth=None, timeout=None, allow_redirects=True, proxies=None,
+                hooks=None, stream=None, verify=None, cert=None, json=None):
         print(url)
         if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
-            return MockResponse(status_code=204)
+            return MockResponse(status_code=400)
 
 
 mock_session = MockSession()
@@ -60,6 +62,7 @@ class MockSession2():
 
 
 mock_session_fail = MockSession2()
+
 
 class TestSplunkTasks(TestCase):
 
@@ -83,7 +86,6 @@ class TestSplunkTasks(TestCase):
         )
         self.assertEqual(Replication.objects.count(), 3)
         self.assertEqual(Replication.objects.filter(state=1).count(), 3)
-
 
     # # TODO test here for missing coverage in tasks
     # # @patch(push_splunk_objects)
@@ -131,11 +133,11 @@ class MockMongoClient(dict):
             Example = collection()
             pass
 
-
-
         return db
 
+
 client = MockMongoClient()
+
 
 class TestMongoTasks(TestCase):
 
