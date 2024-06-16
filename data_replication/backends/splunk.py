@@ -125,7 +125,6 @@ class SplunkRequest(object):
             if error_count > 3:
                 break
             if not start or (datetime.datetime.now() - start).seconds > 5:
-                print('ALWAYS HERE')
                 log.debug("Waiting on results")
                 start = datetime.datetime.now()
             if request.status_code == 200:
