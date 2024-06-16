@@ -27,6 +27,7 @@ class TestSplunk(TestCase):
         class FooBar(SplunkRequest):
             model = Example
             change_keys = ['foo']
+            object_pks = ['all', 'these', 'things', 'fart']
 
         self.splunk_request = FooBar
 
@@ -57,6 +58,7 @@ class TestSplunk(TestCase):
 
     def test_delete_items(self):
         instance = self.splunk_request()
+        instance.delete_items(object_pks=['fart'])
 
     @patch.object(SplunkRequest, 'connect')
     def test_get_search_status(self, mock_sleep):

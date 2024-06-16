@@ -71,10 +71,12 @@ class SplunkRequest(object):
         self.headers = dict()
 
     def connect(self, **kwargs):
+        print('connecting')
         if self.session_key:
             return
 
         if self.session:
+            print('session true')
             return self.session
 
         self.session = requests.Session()
@@ -139,7 +141,9 @@ class SplunkRequest(object):
         return request.json(), request.status_code
 
     def delete_items(self, object_pks):
+        print('deleting')
         if not len(object_pks):
+            print('not good length')
             return
         ids = " OR ".join(["id={}".format(x) for x in object_pks])
         delete_query = "{} ({}) | delete".format(self.search_quantifier, ids)
