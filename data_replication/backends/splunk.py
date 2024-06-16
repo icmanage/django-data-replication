@@ -61,7 +61,7 @@ class SplunkRequest(object):
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
-        except AttributeError:  # no_pregma
+        except AttributeError:  # pragma: no-cover
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_PASSWORD")
         self.scheme = kwargs.get('scheme', settings.SPLUNK_SCHEME)
         self.host = kwargs.get('host', settings.SPLUNK_HOST)
@@ -135,6 +135,7 @@ class SplunkRequest(object):
                 error_count += 1
 
             time.sleep(.5)
+        print("Finished getting search")
         return request.json(), request.status_code
 
     def delete_items(self, object_pks):

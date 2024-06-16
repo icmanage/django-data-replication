@@ -2,6 +2,7 @@ import re
 from django.conf import settings
 from django.test import TestCase
 import mock
+from django.utils.datetime_safe import datetime
 from mock import Mock, patch
 from data_replication.backends.base import ImproperlyConfiguredException
 from data_replication.models import ReplicationTracker
@@ -14,6 +15,7 @@ from django.apps import apps
 
 from data_replication.tasks import push_splunk_objects
 from data_replication.tests.factories import replication_tracker_factory
+from data_replication.tests.test_tasks import mock_session
 
 data_replication_app = apps.get_app_config('data_replication')
 Example = apps.get_model('example', 'Example')
@@ -56,11 +58,20 @@ class TestSplunk(TestCase):
     def test_delete_items(self):
         instance = self.splunk_request()
 
-    # @patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
-    def XXXtest_get_search_status(self):
-        self.instance = SplunkRequest()
-        result, status_code = self.instance.get_search_status(search_id='123')
-        self.assertEqual(result, {'mock': 'data'})
+    @patch.object(SplunkRequest, 'connect')
+    def test_get_search_status(self, mock_sleep):
+        mock_session = Mock()
+        mock_request = Mock()
+        mock_request.status_code = 400
+        mock_request.json.return_value = {'results': ['mocked_data']}
+        mock_session.get.return_value = mock_request
+
+        with patch.object(SplunkRequest, 'session', new=mock_session):
+            search_instance = SplunkRequest()
+            result, status_code = search_instance.get_search_status('mock_search_id')
+
+            self.assertEqual(status_code, 400)
+            self.assertEqual(result, {'results': ['mocked_data']})
 
     def XXXtest_missing_settings(self):
         # Test that ImproperlyConfiguredException is raised if required settings are missing
