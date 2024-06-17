@@ -27,9 +27,17 @@ class TestSplunk(TestCase):
         class FooBar(SplunkRequest):
             model = Example
             change_keys = ['foo']
-            object_pks = ['all', 'these', 'things', 'fart']
+            object_pks = ['all', 'these', 'things']
+            self.search_quantifier = True
 
         self.splunk_request = FooBar
+
+        class FooBarf(SplunkRequest):
+            model = Example
+            change_keys = ['foo']
+            object_pks = []
+
+        self.splunk_request2 = FooBarf
 
     def test_splunk_basics(self):
         self.assertEqual(splunk.__author__, "Steven Klass", "author is incorrect")
@@ -58,7 +66,12 @@ class TestSplunk(TestCase):
 
     def test_delete_items(self):
         instance = self.splunk_request()
-        instance.delete_items(object_pks=['fart'])
+        instance.search_quantifier = False
+        instance.delete_items(object_pks=['all', 'these', 'things'])
+
+    def test_delete_items_fail(self):
+        instance = self.splunk_request2()
+        instance.delete_items(object_pks=[])
 
     @patch.object(SplunkRequest, 'connect')
     def test_get_search_status(self, mock_sleep):
