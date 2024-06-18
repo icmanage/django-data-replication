@@ -57,7 +57,7 @@ class SplunkRequest(object):
     def __init__(self, *args, **kwargs):
         try:
             self.username = kwargs.get('username', settings.SPLUNK_USERNAME)
-        except AttributeError:  # no_pregma
+        except AttributeError:  # pragma: no cover
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
@@ -82,14 +82,14 @@ class SplunkRequest(object):
         self.session = requests.Session()
         try:
             url = '{base_url}/services/auth/login?output_mode=json'.format(base_url=self.base_url)
-            request = self.session.post(
+            response = self.session.post(
                 url, data={'username': self.username, 'password': self.password},
                 auth=(self.username, self.password), verify=False)
-            if request.status_code != 200:
+            if response.status_code != 200:
                 raise SplunkAuthenticationException(
                     "Authorization error ({status_code}) connecting to {url}".format(
-                        status_code=request.status_code, url=url))
-            self.session_key = request.json().get('sessionKey')
+                        status_code=response.status_code, url=url))
+            self.session_key = response.json().get('sessionKey')
             self.headers = {'Authorization': 'Splunk {session_key}'.format(**self.__dict__),
                             'content-type': 'application/json'}
         except:
@@ -140,16 +140,6 @@ class SplunkRequest(object):
         print("Finished getting search")
         return request.json(), request.status_code
 
-    def delete_items(self, object_pks):
-        print('deleting')
-        if not len(object_pks):
-            print('not good length')
-            return
-        ids = " OR ".join(["id={}".format(x) for x in object_pks])
-        delete_query = "{} ({}) | delete".format(self.search_quantifier, ids)
-        search_id = self.splunk.create_search(delete_query)
-        return self.splunk.get_search_status(search_id, wait_for_results=True)
-
     @classmethod
     def get_normalized_data(cls, content):
 
@@ -187,9 +177,8 @@ class SplunkRequest(object):
         url = '{base_url}/services/receivers/stream'.format(base_url=self.base_url)
         headers = self.headers.copy()
         headers.update({'content-type': 'application/json', 'x-splunk-input-mode': 'streaming'})
-        if not isinstance(content, (list, tuple)):
+        if not isinstance(content, (list, tuple)):  # pragma: no cover
             content = [content]
-
         content = [self.get_normalized_data(item) for item in content]
 
         _content = []

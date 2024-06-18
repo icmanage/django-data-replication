@@ -15,7 +15,7 @@ from django.apps import apps
 
 from data_replication.tasks import push_splunk_objects
 from data_replication.tests.factories import replication_tracker_factory
-from data_replication.tests.test_tasks import mock_session
+from data_replication.tests.test_tasks import mock_session, MockSession, MockSession2
 
 data_replication_app = apps.get_app_config('data_replication')
 Example = apps.get_model('example', 'Example')
@@ -28,7 +28,6 @@ class TestSplunk(TestCase):
             model = Example
             change_keys = ['foo']
             object_pks = ['all', 'these', 'things']
-            self.search_quantifier = True
 
         self.splunk_request = FooBar
 
@@ -64,15 +63,6 @@ class TestSplunk(TestCase):
         except SplunkPostException as error:
             self.assertIn('hello', str(error))
 
-    def test_delete_items(self):
-        instance = self.splunk_request()
-        instance.search_quantifier = False
-        instance.delete_items(object_pks=['all', 'these', 'things'])
-
-    def test_delete_items_fail(self):
-        instance = self.splunk_request2()
-        instance.delete_items(object_pks=[])
-
     @patch.object(SplunkRequest, 'connect')
     def test_get_search_status(self, mock_sleep):
         mock_session = Mock()
@@ -87,6 +77,17 @@ class TestSplunk(TestCase):
 
             self.assertEqual(status_code, 400)
             self.assertEqual(result, {'results': ['mocked_data']})
+
+    @mock.patch('requests.Session', MockSession)
+    def test_connect(self):
+        splunk_request = SplunkRequest()
+        splunk_request.connect()
+
+    # TODO finish this test
+    @mock.patch('requests.Session', MockSession2)
+    def test_connect_barf(self):
+        splunk_request = SplunkRequest()
+        splunk_request.connect()
 
     def XXXtest_missing_settings(self):
         # Test that ImproperlyConfiguredException is raised if required settings are missing

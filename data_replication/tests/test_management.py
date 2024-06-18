@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.management import CommandError
 from django.test import TestCase
 
 from django.core import management

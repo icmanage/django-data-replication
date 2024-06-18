@@ -35,12 +35,16 @@ class MockSession():
             return MockResponse(status_code=204)
         elif url == "https://localhost:8089/services/search/jobs?output_mode=json":
             return MockResponse(status_code=200)
+        elif url == 'https://localhost:8089/services/auth/login?output_mode=json':
+            return MockResponse(status_code=200)
         else:
             print("HANDLE ", url)
 
     def get(self, url, **kwargs):
         if url == "https://localhost:8089/services/search/jobs/12345/results?output_mode=json":
             return MockResponse(status_code=200)
+        elif url == 'https://localhost:8089/services/auth/login?output_mode=json':
+            return MockResponse(status_code=205)
         else:
             print("HANDLE ", url)
 
@@ -128,6 +132,7 @@ class MockMongoClient(dict):
             def insert_many(self, objects, *args, **kwargs):
                 class ReturnObj:
                     inserted_ids = [x['pk'] for x in objects]
+
                 return ReturnObj()
 
         class db:

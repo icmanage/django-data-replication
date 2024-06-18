@@ -10,8 +10,6 @@ from django.test import TestCase
 from data_replication.models import ReplicationTracker
 
 
-# I had a question here for why the instance attributes are seemingly created outside __init__
-# this makes the attributes "exist outside of Command"
 class TestReplicate(TestCase):
     def test_basic(self):
         instance = Command()
@@ -88,7 +86,6 @@ class TestReplicate(TestCase):
             self.assertEqual(instance.max_count, int(options.get('max_count')) if options.get('max_count') else None)
             self.assertEqual(instance.reset, options.get('reset', False))
 
-    # I don't want to use GPT to finish this at least for now. I'll come back to it
     def XXXtest_handle(self, **options):
         instance = Command()
         # total = instance.replications.count()
