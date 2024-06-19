@@ -52,7 +52,6 @@ class MockSession():
                 params=None, data=None, headers=None, cookies=None, files=None,
                 auth=None, timeout=None, allow_redirects=True, proxies=None,
                 hooks=None, stream=None, verify=None, cert=None, json=None):
-        print(url)
         if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
             return MockResponse(status_code=400)
 
@@ -78,7 +77,7 @@ class MockSession2():
                 params=None, data=None, headers=None, cookies=None, files=None,
                 auth=None, timeout=None, allow_redirects=True, proxies=None,
                 hooks=None, stream=None, verify=None, cert=None, json=None):
-        print(url)
+        print('fail request mock in action')
         if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
             return MockResponse(status_code=420)
 
@@ -138,6 +137,7 @@ class TestSplunkTasks(TestCase):
 
 class MockMongoClient(dict):
     def __init__(self, *args, **kwargs):
+        collection_name = 'test collection'
         pass
 
     class admin:
@@ -146,6 +146,8 @@ class MockMongoClient(dict):
 
     def get_database(self, *args, **kwargs):
         class collection:
+            collection_name = 'test collection'
+
             def insert_many(self, objects, *args, **kwargs):
                 class ReturnObj:
                     inserted_ids = [x['pk'] for x in objects]
