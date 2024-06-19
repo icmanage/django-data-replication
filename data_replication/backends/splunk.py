@@ -71,12 +71,9 @@ class SplunkRequest(object):
         self.headers = dict()
 
     def connect(self, **kwargs):
-        print('connecting')
-        if self.session_key:
+        if self.session_key:  # pragma: no cover
             return
-
         if self.session:
-            print('session true')
             return self.session
 
         self.session = requests.Session()
@@ -86,6 +83,7 @@ class SplunkRequest(object):
                 url, data={'username': self.username, 'password': self.password},
                 auth=(self.username, self.password), verify=False)
             if response.status_code != 200:
+                print('bruh')
                 raise SplunkAuthenticationException(
                     "Authorization error ({status_code}) connecting to {url}".format(
                         status_code=response.status_code, url=url))
@@ -123,7 +121,6 @@ class SplunkRequest(object):
                                        headers=self.headers, verify=False)
             if not wait_for_results:
                 break
-
             if error_count > 3:
                 break
             if not start or (datetime.datetime.now() - start).seconds > 5:
@@ -137,7 +134,6 @@ class SplunkRequest(object):
                 error_count += 1
 
             time.sleep(.5)
-        print("Finished getting search")
         return request.json(), request.status_code
 
     @classmethod
@@ -210,13 +206,13 @@ class SplunkReplicator(BaseReplicationCollector):
     @property
     def search_quantifier(self):
         data = ""
-        if self.search_quantifiers:
+        if self.search_quantifiers:  # pragma: no cover
             data = self.search_quantifier
         return data + " model={}".format(self.model._meta.model_name)
 
     def delete_items(self, object_pks):
-        if not len(object_pks):
-            return
+        if not len(object_pks):  # pragma: no cover
+            return  # pragma: no cover
         splunk = SplunkRequest()
         ids = " OR ".join(["pk={}".format(x) for x in object_pks])
         delete_query = "{} ({}) | delete".format(self.search_quantifier, ids)

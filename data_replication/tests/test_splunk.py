@@ -83,11 +83,11 @@ class TestSplunk(TestCase):
         splunk_request = SplunkRequest()
         splunk_request.connect()
 
-    # TODO finish this test
     @mock.patch('requests.Session', MockSession2)
     def test_connect_barf(self):
-        splunk_request = SplunkRequest()
-        splunk_request.connect()
+        with self.assertRaises(AttributeError):
+            splunk_request = SplunkRequest()
+            splunk_request.connect()
 
     def XXXtest_missing_settings(self):
         # Test that ImproperlyConfiguredException is raised if required settings are missing

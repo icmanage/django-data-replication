@@ -62,8 +62,25 @@ mock_session = MockSession()
 
 class MockSession2():
     def post(self, url, data=None, json=None, **kwargs):
+        print('fail post mock in action')
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=205)
+
+    def get(self, url, **kwargs):
+        if url == "https://localhost:8089/services/search/jobs/12345/results?output_mode=json":
+            return MockResponse(status_code=200)
+        elif url == 'https://localhost:8089/services/auth/login?output_mode=json':
+            return MockResponse(status_code=205)
+        else:
+            print("HANDLE ", url)
+
+    def request(self, method, url,
+                params=None, data=None, headers=None, cookies=None, files=None,
+                auth=None, timeout=None, allow_redirects=True, proxies=None,
+                hooks=None, stream=None, verify=None, cert=None, json=None):
+        print(url)
+        if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
+            return MockResponse(status_code=420)
 
 
 mock_session_fail = MockSession2()
