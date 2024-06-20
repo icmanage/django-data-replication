@@ -7,9 +7,10 @@ from django.test import TestCase
 
 from django.contrib.contenttypes.models import ContentType
 
+from data_replication import models
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
-from data_replication.models import Replication
+from data_replication.models import Replication, ReplicationTracker
 from data_replication.tests.factories import replication_tracker_factory
 from data_replication.tests.test_tasks import mock_session
 
@@ -20,11 +21,18 @@ Example = apps.get_model('example', 'Example')
 class TestBase(TestCase):
 
     def setUp(self):
-        class FooBar(BaseReplicationCollector):
+        class MockB(BaseReplicationCollector):
             model = Example
             change_keys = ['foo']
+            self.skip_locks = True
+            self.reset = False
+            # self.last_look = None
+            self.last_look = ReplicationTracker.objects.get(
+                content_type=BaseReplicationCollector.content_type,
+                replication_type=models.replication_type)
+            self.last_look.state = 0
 
-        self.base_replication_collector = FooBar
+        self.base_replication_collector = MockB
 
     def test_default_values(self):
         instance = TestMongoReplicatorExample()
@@ -60,7 +68,6 @@ class TestBase(TestCase):
         with self.assertRaises(AttributeError):
             YourModelWithoutChangeKeys()
 
-    # confused about this
     def test_get_model(self, **kwargs):
         self.instance = TestMongoReplicatorExample()
         self.assertEqual(self.instance.get_model(), User)
@@ -82,8 +89,19 @@ class TestBase(TestCase):
         pass
 
     def test_lock(self):
-        instance = TestMongoReplicatorExample()
-        pass
+        instance = TestMongoReplicatorExample(state=0)
+        instance.skip_locks = False
+        instance.reset = False
+        instance.lock()
+        self.assertFalse(instance.reset)
+
+    @mock.patch('data_replication.backends.base.BaseReplicationCollector', BaseReplicationCollector)
+    def test_lock_new(self):
+        instance = self.base_replication_collector()
+        instance.skip_locks = False
+        instance.reset = False
+        instance.lock()
+        self.assertFalse(instance.reset)
 
     def test_unlock(self):
         instance = TestMongoReplicatorExample()

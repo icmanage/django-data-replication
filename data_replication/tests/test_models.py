@@ -1,4 +1,3 @@
-
 from django.apps import apps
 from django.test import TestCase
 
@@ -9,6 +8,7 @@ from mock import Mock
 
 Example = apps.get_model("example", "Example")
 ManyExample = apps.get_model("example", "ManyExample")
+
 
 class DataReplicationTests(TestCase):
 
@@ -49,5 +49,3 @@ class DataReplicationTests(TestCase):
         rt = replication_tracker_factory(ManyExample, replication_type=1)
         rt = replication_tracker_factory(ManyExample, replication_type=1)
         self.assertRaises(IOError, rt.get_replicator)
-
-
