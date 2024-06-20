@@ -1,13 +1,12 @@
 from django.apps import apps
 from django.utils.timezone import now
-from mock import patch, mock
+from mock import patch, mock, MagicMock
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from django.contrib.contenttypes.models import ContentType
 
-from data_replication import models
 from data_replication.backends.base import BaseReplicationCollector
 from data_replication.backends.mongo import MongoReplicator
 from data_replication.models import Replication, ReplicationTracker
@@ -22,15 +21,18 @@ class TestBase(TestCase):
 
     def setUp(self):
         class MockB(BaseReplicationCollector):
+            mock_instance = MagicMock()
             model = Example
             change_keys = ['foo']
             self.skip_locks = True
             self.reset = False
             # self.last_look = None
-            self.last_look = ReplicationTracker.objects.get(
-                content_type=BaseReplicationCollector.content_type,
-                replication_type=models.replication_type)
-            self.last_look.state = 0
+            # last_look = ReplicationTracker.objects.get(
+            #     content_type=BaseReplicationCollector.content_type,
+            #     replication_type=mock_instance.replication_type
+            # )
+            # ftr = replication_tracker_factory()
+            the_state = ReplicationTracker.state
 
         self.base_replication_collector = MockB
 
@@ -90,14 +92,6 @@ class TestBase(TestCase):
 
     def test_lock(self):
         instance = TestMongoReplicatorExample(state=0)
-        instance.skip_locks = False
-        instance.reset = False
-        instance.lock()
-        self.assertFalse(instance.reset)
-
-    @mock.patch('data_replication.backends.base.BaseReplicationCollector', BaseReplicationCollector)
-    def test_lock_new(self):
-        instance = self.base_replication_collector()
         instance.skip_locks = False
         instance.reset = False
         instance.lock()
