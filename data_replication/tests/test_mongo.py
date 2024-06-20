@@ -19,6 +19,7 @@ class MongoTestCase(test.TestCase):
         mongo_request = MongoRequest()
         mongo_request.db()
 
+    # TODO fix or remove
     @patch('data_replication.backends.mongo.MongoRequest._client', client)
     def test_delete(self, **kwargs):
         mongo = MongoRequest()

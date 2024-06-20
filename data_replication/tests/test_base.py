@@ -24,6 +24,8 @@ class TestBase(TestCase):
             mock_instance = MagicMock()
             model = Example
             change_keys = ['foo']
+            search_quantifiers = True,
+            search_quantifier = "search_quantifier_value"
             self.skip_locks = True
             reset = True
             # self.last_look = None
@@ -67,6 +69,7 @@ class TestBase(TestCase):
     def test_missing_change_keys_attribute(self):
         class YourModelWithoutChangeKeys(BaseReplicationCollector):
             model = User
+
         with self.assertRaises(AttributeError):
             YourModelWithoutChangeKeys()
 
@@ -74,11 +77,13 @@ class TestBase(TestCase):
         self.instance = TestMongoReplicatorExample()
         self.assertEqual(self.instance.get_model(), User)
 
-    def test_get_queryset(self):
-        instance = TestMongoReplicatorExample()
-
+    # TODO fix or remove
     def test_search_quantifier(self):
-        instance = TestMongoReplicatorExample()
+        other = TestMongoReplicatorExample()
+        other.search_quantifier()
+        instance = self.base_replication_collector()
+        expected_result = "search_quantifier_value"
+        self.assertEqual(instance.search_quantifier, expected_result)
 
     def test_content_type(self):
         instance = TestMongoReplicatorExample()
@@ -97,6 +102,7 @@ class TestBase(TestCase):
         instance.lock()
         self.assertTrue(instance.reset)
 
+    # TODO fix or remove
     def test_lock_oth(self):
         instance = self.base_replication_collector
         instance.skip_locks = False
@@ -149,7 +155,6 @@ class TestBase(TestCase):
         instance = self.base_replication_collector()
         with self.assertRaises(NotImplementedError):
             instance.delete_items([1, 2, 3])
-
 
 
 class TestMongoReplicatorExample(MongoReplicator):
