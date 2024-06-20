@@ -33,7 +33,7 @@ class ManagementCommmandTestCase(TestCase):
 
         rt = replication_tracker_factory(
             model=Example, replication_type=2,
-            last_updated=datetime.datetime.now() - datetime.timedelta(days=1)
+            last_updated=datetime.datetime.now() - datetime.timedelta(days=1), state=0
         )
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         self.assertEqual(Replication.objects.count(), 0)

@@ -99,9 +99,11 @@ class BaseReplicationCollector(object):
         else:
             print('world')
             if self.last_look.state == 0:
+                print('earth')
                 if not self.skip_locks:
                     raise RuntimeError("Already processing")
             if self.reset:
+                print('reset iz true')
                 log.warning("Resetting {}".format(self.verbose_name))
                 del_pks = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
                 self._delete_items(list(del_pks.values_list('object_id', flat=True)))

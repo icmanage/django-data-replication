@@ -25,7 +25,7 @@ class TestBase(TestCase):
             model = Example
             change_keys = ['foo']
             self.skip_locks = True
-            self.reset = False
+            reset = True
             # self.last_look = None
             # last_look = ReplicationTracker.objects.get(
             #     content_type=BaseReplicationCollector.content_type,
@@ -92,6 +92,13 @@ class TestBase(TestCase):
 
     def test_lock(self):
         instance = TestMongoReplicatorExample(state=0)
+        instance.skip_locks = False
+        instance.reset = True
+        instance.lock()
+        self.assertTrue(instance.reset)
+
+    def test_lock_oth(self):
+        instance = self.base_replication_collector
         instance.skip_locks = False
         instance.reset = False
         instance.lock()
