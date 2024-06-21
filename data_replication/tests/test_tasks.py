@@ -134,8 +134,6 @@ class TestSplunkTasks(TestCase):
 
 class MockMongoClient(dict):
     def __init__(self, *args, **kwargs):
-        collection_name = 'test collection'
-        object_ids = ('id1', 'id2')
         pass
 
     class admin:

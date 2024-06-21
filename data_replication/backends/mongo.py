@@ -75,9 +75,10 @@ class MongoReplicator(BaseReplicationCollector):
     def collection_name(self):
         return self.model._meta.model_name
 
-    def delete_items(self, object_pks):
-        mongo = MongoRequest()
-        mongo.delete_ids(collection_name=self.collection_name, object_ids=object_pks)
+    # TODO remove after 6 mos
+    # def delete_items(self, object_pks):
+    #     mongo = MongoRequest()
+    #     mongo.delete_ids(collection_name=self.collection_name, object_ids=object_pks)
 
     @property
     def task_name(self):
