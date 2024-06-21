@@ -84,7 +84,6 @@ class BaseReplicationCollector(object):
         return self.get_model()._meta.verbose_name.title()
 
     def lock(self):
-        print('hello')
         from data_replication.models import Replication, ReplicationTracker
         prior_date = now() - datetime.timedelta(days=365 * 100)
         try:
@@ -97,9 +96,8 @@ class BaseReplicationCollector(object):
                 replication_type=self.replication_type,
                 last_updated=prior_date, state=2)
         else:
-            print('world')
             if self.last_look.state == 0:
-                print('earth')
+                print('hitting else')
                 if not self.skip_locks:
                     raise RuntimeError("Already processing")
             if self.reset:

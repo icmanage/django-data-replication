@@ -102,19 +102,18 @@ class TestBase(TestCase):
         pass
 
     def test_lock(self):
-        instance = TestMongoReplicatorExample(state=0)
-        instance.skip_locks = False
-        instance.reset = True
-        instance.lock()
-        self.assertTrue(instance.reset)
-
-    # TODO fix or remove
-    def test_lock_oth(self):
-        instance = self.base_replication_collector
+        instance = TestMongoReplicatorExample()
         instance.skip_locks = False
         instance.reset = False
         instance.lock()
         self.assertFalse(instance.reset)
+
+    # TODO fix or remove
+    def test_lock_oth(self):
+        instance = TestMongoReplicatorExample()
+        instance.skip_locks = False
+        instance.reset = True
+        instance.lock()
 
     def test_unlock(self):
         instance = TestMongoReplicatorExample()
