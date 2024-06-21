@@ -30,7 +30,6 @@ class MockResponse():
 
 class MockSession():
     def post(self, url, data=None, json=None, dry_run=False, **kwargs):
-        print(url)
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=204)
         elif url == "https://localhost:8089/services/search/jobs?output_mode=json":
@@ -61,7 +60,6 @@ mock_session = MockSession()
 
 class MockSession2():
     def post(self, url, data=None, json=None, **kwargs):
-        print('fail post mock in action')
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=205)
 
@@ -77,7 +75,6 @@ class MockSession2():
                 params=None, data=None, headers=None, cookies=None, files=None,
                 auth=None, timeout=None, allow_redirects=True, proxies=None,
                 hooks=None, stream=None, verify=None, cert=None, json=None):
-        print('fail request mock in action')
         if url == '{base_url}/services/search/jobs/{search_id}/results?output_mode=json':
             return MockResponse(status_code=420)
 
