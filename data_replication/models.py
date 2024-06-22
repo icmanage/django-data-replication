@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  # pragma: no cover
 """models.py: Django data_replication"""
 
 import importlib

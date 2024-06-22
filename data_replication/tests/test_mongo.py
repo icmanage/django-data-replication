@@ -1,6 +1,7 @@
 from django import test
 import mock
 from mock import patch
+from pymongo.errors import ConnectionFailure
 
 from data_replication import tasks
 from data_replication.backends.mongo import MongoRequest
@@ -14,6 +15,13 @@ class MongoTestCase(test.TestCase):
     def test_client(self):
         mongo_request = MongoRequest()
         mongo_request.client()
+
+    @patch('data_replication.backends.mongo.MongoRequest._client', client)
+    def test_client_not_none(self):
+        mongo_request = MongoRequest()
+        mongo_request._client = None
+        with self.assertRaises(ConnectionFailure):
+            mongo_request.client()
 
     @patch('data_replication.backends.mongo.MongoRequest._client', client)
     def test_db(self):

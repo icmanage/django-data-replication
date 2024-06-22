@@ -242,8 +242,8 @@ class BaseReplicationCollector(object):
             make_sure_mysql_usable()
             try:
                 Replication.objects.get_or_create(**replication_data)
-            except:
-                log.error("Issue with creating %r".format(replication_data))
+            except:  # pragma: no cover
+                log.error("Issue with creating %r".format(replication_data))  # pragma: no cover
 
         log.debug("Added %d replication entries", len(bulk_inserts))
 
@@ -264,8 +264,8 @@ class BaseReplicationCollector(object):
             if self.use_subtasks:
                 try:
                     self.task_name.delay(**kwargs)
-                except OperationalError as err:
-                    log.error("Unable dispatch task %s - %s", self.task_name, err)
+                except OperationalError as err:  # pragma: no cover
+                    log.error("Unable dispatch task %s - %s", self.task_name, err)  # pragma: no cover
                     self.task_name(**kwargs)
             else:
                 self.task_name(**kwargs)

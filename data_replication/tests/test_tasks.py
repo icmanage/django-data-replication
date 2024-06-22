@@ -1,8 +1,9 @@
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from mock import mock
+from mock import mock, MagicMock
 
+from data_replication import tasks
 from data_replication.backends.splunk import SplunkPostException
 from data_replication.models import ReplicationTracker, Replication
 
@@ -104,16 +105,6 @@ class TestSplunkTasks(TestCase):
         )
         self.assertEqual(Replication.objects.count(), 3)
         self.assertEqual(Replication.objects.filter(state=1).count(), 3)
-
-    # # TODO test here for missing coverage in tasks
-    # # @patch(push_splunk_objects)
-    # def XXXtest_exception_handling(self, mock_logging_error):
-    #     mock_da_push = MagicMock()
-    #     mock_da_push.return_value = 'SOMETHING'
-    #     expected_error_message = "Splunk Improperly configured - Your error message"
-    #     with self.assertRaises(ImproperlyConfigured) as cm:
-    #         push_splunk_objects()
-    #     mock_logging_error.assert_called_once_with(expected_error_message)
 
     @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session_fail)
     def test_push_splunk_objects_fail(self, **kwargs):

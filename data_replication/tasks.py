@@ -64,7 +64,7 @@ def push_splunk_objects(**kwargs):
     try:
         splunk = SplunkRequest()
     except ImproperlyConfiguredException as err:
-        log.error("Splunk Improperly configured - %s" % err)
+        log.error("Splunk Improperly configured - %s" % err)  # pragma: no cover
         return
     splunk.post_data(content=data, source=source, sourcetype=source_type, host=host, dry_run=dry_run)
 
@@ -113,12 +113,12 @@ def push_mongo_objects(**kwargs):
     try:
         mongo = MongoRequest()
     except ImproperlyConfiguredException as err:
-        log.error("Mongo Improperly configured - %s" % err)
+        log.error("Mongo Improperly configured - %s" % err)  # pragma: no cover
         return
     try:
         mongo.post_data(content=data, collection_name=collection_name)
     except (ConnectionFailure, OperationFailure) as err:
-        log.error("Unable to connect to Mongo!! - %s", err)
+        log.error("Unable to connect to Mongo!! - %s", err)  # pragma: no cover
 
     else:
         Replication.objects.filter(
