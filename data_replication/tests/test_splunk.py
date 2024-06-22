@@ -89,7 +89,7 @@ class TestSplunk(TestCase):
             splunk_request = SplunkRequest()
             splunk_request.connect()
 
-    def XXXtest_missing_settings(self):
+    def test_missing_settings(self):
         # Test that ImproperlyConfiguredException is raised if required settings are missing
         with self.assertRaises(ImproperlyConfiguredException):
             SplunkRequest()

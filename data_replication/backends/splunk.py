@@ -134,6 +134,7 @@ class SplunkRequest(object):
                 error_count += 1
 
             time.sleep(.5)
+        print('getting search', error_count)
         return request.json(), request.status_code
 
     @classmethod
