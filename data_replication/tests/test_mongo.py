@@ -16,6 +16,7 @@ class MongoTestCase(test.TestCase):
         mongo_request = MongoRequest()
         mongo_request.client()
 
+    # TODO mock this so it doesn't take so long
     @patch('data_replication.backends.mongo.MongoRequest._client', client)
     def test_client_not_none(self):
         mongo_request = MongoRequest()
@@ -28,7 +29,6 @@ class MongoTestCase(test.TestCase):
         mongo_request = MongoRequest()
         mongo_request.db()
 
-    # TODO fix or remove
     @mock.patch('data_replication.backends.mongo.MongoRequest._client')
     def test_delete_ids(self, mock_client):
         mock_db = mock_client.return_value

@@ -71,20 +71,23 @@ class MongoReplicator(BaseReplicationCollector):
     source_type = "json"
     host = "hostname"
 
-    @property
-    def collection_name(self):
-        return self.model._meta.model_name
+    # TODO remove after 6 mos
+    # @property
+    # def collection_name(self):
+    #     return self.model._meta.model_name
 
     # TODO remove after 6 mos
     # def delete_items(self, object_pks):
     #     mongo = MongoRequest()
     #     mongo.delete_ids(collection_name=self.collection_name, object_ids=object_pks)
 
-    @property
-    def task_name(self):
-        from data_replication.tasks import push_mongo_objects
-        return push_mongo_objects
+    # TODO remove after 6 mos
+    # @property
+    # def task_name(self):
+    #     from data_replication.tasks import push_mongo_objects
+    #     return push_mongo_objects
 
-    def get_task_kwargs(self):
-        return {'model_name': self.model._meta.model_name, 'collection_name': self.collection_name,
-                'replication_class_name': self.__class__.__name__}
+    # TODO remove after 6 mos
+    # def get_task_kwargs(self):
+    #     return {'model_name': self.model._meta.model_name, 'collection_name': self.collection_name,
+    #             'replication_class_name': self.__class__.__name__}
