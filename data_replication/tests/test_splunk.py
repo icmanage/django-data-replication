@@ -78,6 +78,22 @@ class TestSplunk(TestCase):
             self.assertEqual(status_code, 400)
             self.assertEqual(result, {'results': ['mocked_data']})
 
+    @patch.object(SplunkRequest, 'connect')
+    def test_get_search_status_break(self, mock_sleep):
+        mock_session = Mock()
+        mock_request = Mock()
+        mock_request.error_count = 4
+        # mock_request.status_code = 400
+        # mock_request.json.return_value = {'results': ['mocked_data']}
+        # mock_session.get.return_value = mock_request
+
+        with patch.object(SplunkRequest, 'session', new=mock_session):
+            search_instance = SplunkRequest()
+            result, status_code = search_instance.get_search_status('mock_search_id')
+
+            # self.assertEqual(status_code, 400)
+            # self.assertEqual(result, {'results': ['mocked_data']})
+
     @mock.patch('requests.Session', MockSession)
     def test_connect(self):
         splunk_request = SplunkRequest()
