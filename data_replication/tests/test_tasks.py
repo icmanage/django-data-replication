@@ -125,6 +125,7 @@ class TestSplunkTasks(TestCase):
 
 class MockMongoClient(dict):
     def __init__(self, *args, **kwargs):
+        _client = None
         pass
 
     class admin:

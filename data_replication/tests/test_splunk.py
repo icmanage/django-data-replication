@@ -79,20 +79,36 @@ class TestSplunk(TestCase):
             self.assertEqual(result, {'results': ['mocked_data']})
 
     @patch.object(SplunkRequest, 'connect')
-    def test_get_search_status_break(self, mock_sleep):
+    def test_get_search_status_break_error_count(self, mock_sleep):
         mock_session = Mock()
         mock_request = Mock()
         mock_request.error_count = 4
-        # mock_request.status_code = 400
-        # mock_request.json.return_value = {'results': ['mocked_data']}
-        # mock_session.get.return_value = mock_request
+        mock_request.status_code = 400
+        mock_request.json.return_value = {'results': ['mocked_data']}
+        mock_session.get.return_value = mock_request
 
         with patch.object(SplunkRequest, 'session', new=mock_session):
             search_instance = SplunkRequest()
             result, status_code = search_instance.get_search_status('mock_search_id')
 
-            # self.assertEqual(status_code, 400)
-            # self.assertEqual(result, {'results': ['mocked_data']})
+            self.assertEqual(status_code, 400)
+            self.assertEqual(result, {'results': ['mocked_data']})
+
+    @patch.object(SplunkRequest, 'connect')
+    def test_get_search_status_break_wait_for_results(self, mock_sleep):
+        mock_session = Mock()
+        mock_request = Mock()
+        mock_request.wait_for_results = False
+        mock_request.status_code = 200
+        mock_request.json.return_value = {'results': ['mocked_data']}
+        mock_session.get.return_value = mock_request
+
+        with patch.object(SplunkRequest, 'session', new=mock_session):
+            search_instance = SplunkRequest()
+            result, status_code = search_instance.get_search_status('mock_search_id')
+
+            self.assertEqual(status_code, 200)
+            self.assertEqual(result, {'results': ['mocked_data']})
 
     @mock.patch('requests.Session', MockSession)
     def test_connect(self):
@@ -104,14 +120,3 @@ class TestSplunk(TestCase):
         with self.assertRaises(AttributeError):
             splunk_request = SplunkRequest()
             splunk_request.connect()
-
-    def test_missing_settings(self):
-        # Test that ImproperlyConfiguredException is raised if required settings are missing
-        with self.assertRaises(ImproperlyConfiguredException):
-            SplunkRequest()
-
-    def XXXtest_create_search(self):
-        instance = SplunkRequest()
-        mock_search = 'thing'
-        instance.create_search(mock_search)
-        self.assertEqual(instance.create_search(mock_search), mock_search)

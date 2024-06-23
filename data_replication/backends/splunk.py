@@ -83,7 +83,6 @@ class SplunkRequest(object):
                 url, data={'username': self.username, 'password': self.password},
                 auth=(self.username, self.password), verify=False)
             if response.status_code != 200:
-                print('bruh')
                 raise SplunkAuthenticationException(
                     "Authorization error ({status_code}) connecting to {url}".format(
                         status_code=response.status_code, url=url))
@@ -134,7 +133,6 @@ class SplunkRequest(object):
                 error_count += 1
 
             time.sleep(.5)
-        print('getting search', error_count)
         return request.json(), request.status_code
 
     @classmethod

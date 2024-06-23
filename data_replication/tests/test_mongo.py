@@ -47,5 +47,3 @@ class MongoTestCase(test.TestCase):
         remaining_count = mock_collection.count_documents({})
         # self.assertEqual(remaining_count, 0)
 
-    def test_get_task_kwargs(self):
-        pass
