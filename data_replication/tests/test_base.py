@@ -97,23 +97,12 @@ class TestBase(TestCase):
         actual_content_type = instance.content_type
         self.assertEqual(actual_content_type, expected_content_type)
 
-    def test_verbose_name(self):
-        instance = TestMongoReplicatorExample()
-        pass
-
     def test_lock(self):
         instance = TestMongoReplicatorExample()
         instance.skip_locks = False
         instance.reset = False
         instance.lock()
         self.assertFalse(instance.reset)
-
-    # TODO fix or remove
-    def XXXtest_lock_oth(self):
-        instance = TestMongoReplicatorExample()
-        instance.skip_locks = False
-        instance.reset = True
-        instance.lock()
 
     def test_unlock(self):
         instance = TestMongoReplicatorExample()
