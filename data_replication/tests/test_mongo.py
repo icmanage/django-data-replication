@@ -1,9 +1,9 @@
 from django import test
 import mock
 from mock import patch
+from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from data_replication import tasks
 from data_replication.backends.mongo import MongoRequest
 from data_replication.tests.test_tasks import MockMongoClient
 
@@ -16,7 +16,6 @@ class MongoTestCase(test.TestCase):
         mongo_request = MongoRequest()
         mongo_request.client()
 
-    # TODO mock this so it doesn't take so long
     @patch('data_replication.backends.mongo.MongoRequest._client', client)
     def test_client_not_none(self):
         mongo_request = MongoRequest()

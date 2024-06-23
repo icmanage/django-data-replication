@@ -1,9 +1,8 @@
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from mock import mock, MagicMock
+from mock import mock
 
-from data_replication import tasks
 from data_replication.backends.splunk import SplunkPostException
 from data_replication.models import ReplicationTracker, Replication
 
@@ -63,6 +62,8 @@ class MockSession2():
     def post(self, url, data=None, json=None, **kwargs):
         if url == 'https://localhost:8089/services/receivers/stream':
             return MockResponse(status_code=205)
+        elif url == 'https://localhost:8089/services/auth/login?output_mode=json':
+            return MockResponse(status_code=69)
 
     def get(self, url, **kwargs):
         if url == "https://localhost:8089/services/search/jobs/12345/results?output_mode=json":

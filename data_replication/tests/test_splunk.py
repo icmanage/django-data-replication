@@ -1,3 +1,4 @@
+import decimal
 import re
 from django.conf import settings
 from django.test import TestCase
@@ -116,7 +117,28 @@ class TestSplunk(TestCase):
         splunk_request.connect()
 
     @mock.patch('requests.Session', MockSession2)
+    def test_connect_error(self):
+        splunk_request = SplunkRequest()
+        with self.assertRaises(SplunkAuthenticationException):
+            splunk_request.connect()
+
+    @mock.patch('requests.Session', MockSession2)
     def test_connect_barf(self):
-        with self.assertRaises(AttributeError):
+        with self.assertRaises(SplunkAuthenticationException):
             splunk_request = SplunkRequest()
             splunk_request.connect()
+
+    def test_splunk_default_error(self):
+        obj = 6.9
+        with self.assertRaises(TypeError):
+            instance = splunk.splunk_default(obj)
+
+    def test_splunk_default_dec(self):
+        obj = decimal.Decimal('6.9')
+        instance = splunk.splunk_default(obj)
+        self.assertEqual(instance, 6.9)
+
+    def test_splunk_default_dat(self):
+        obj = datetime(2024, 6, 23, 00, 00, 00)
+        instance = splunk.splunk_default(obj)
+        self.assertEqual(instance, '2024-06-23T00:00:00')
