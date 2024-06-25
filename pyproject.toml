@@ -1,0 +1,120 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "datatableview_user_columns"
+dynamic = ["version"]
+description = "Allows a user to specify columns for a datatableview"
+readme = "README.md"
+requires-python = ">=3"
+authors = [
+    { name = "Datatable view user columns", email = "nadiashovkovy@gmail.com" },
+]
+keywords = [
+    "django datatableview",
+]
+classifiers = [
+    # Optional
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        "Development Status :: 4 - Beta",
+        # Indicate who your project is intended for
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        # Pick your license as you wish
+        "License :: OSI Approved :: MIT License",
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+]
+dependencies = [
+    "django",
+    "django-datatable-view",
+    "django-crispy-forms",
+    "crispy-bootstrap5"
+
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8",
+    "bandit",
+    "coverage",
+    "pre-commit",
+    "black",
+    "django-environ"
+]
+
+
+[project.urls]
+# Bugs = "{}/issues"
+Thanks = "https://saythanks.io/to/rh0dium"
+Source = "https://github.com/icmanage/datatableview_user_columns"
+
+[tool.hatch.version]
+path = "datatableview_user_columns/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/datatableview_user_columns",
+    "/datatableview_user_columns/static/**/*",
+    "/datatableview_user_columns/templates/**/*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["datatableview_user_columns"]
+include = [
+    "static/js/*.js",
+    "static/css/*.css",
+    "templates/datatableview_user_columns/*.html",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.bandit]
+targets = ['datatableview_user_columns', "demo_app"]
+exclude_dirs = ["datatableview_user_columns/tests"]
+#skips = ["B303", "B308", "B323", "B324", "B703"]
+
+[tool.coverage.run]
+branch = true
+command_line = "demo_app/manage.py test --noinput --settings=demo_app.settings"
+omit = [
+    "*/demo_app/**",
+    "*/migrations/*",
+    "*/tests/**",
+]
+
+[tool.coverage.report]
+fail_under = 69
+precision = 1
+skip_covered = true
+skip_empty = true
+ignore_errors = true
+sort = "cover"
+
+[tool.bumper]
+exclude = [".idea", ".github", "demo_app"]
+version_files = ["datatableview_user_columns/__init__.py"]
+repo = "icmanage/django-datatable-view-user-columns"
+report = "out.json"
