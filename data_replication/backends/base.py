@@ -72,7 +72,7 @@ class BaseReplicationCollector(object):
     def search_quantifier(self):
         data = ""
         if self.search_quantifiers:
-            data = self.search_quantifier
+            data = self.search_quantifiers
         return data + " model={}".format(self.model._meta.model_name)
 
     @property

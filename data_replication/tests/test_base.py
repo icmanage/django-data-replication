@@ -83,13 +83,11 @@ class TestBase(TestCase):
         caller = instance.search_quantifier
         self.assertEqual(caller, ' model=user')
 
-    # P: This runs an infinite recursion error when search_quantifiers
-    # is set to true. Is that a bug, or a problem with my testing?
-    def XXXtest_search_quantifier_con(self):
+    def test_search_quantifier_con(self):
         instance = TestMongoReplicatorExample()
-        instance.search_quantifiers = True
+        instance.search_quantifiers = 'True'
         caller = instance.search_quantifier
-        self.assertEqual(caller, ' model=user')
+        self.assertEqual(caller, 'True model=user')
 
     def test_content_type(self):
         instance = TestMongoReplicatorExample()
