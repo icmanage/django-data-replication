@@ -1,22 +1,14 @@
 import decimal
-import re
-from django.conf import settings
 from django.test import TestCase
 import mock
 from django.utils.datetime_safe import datetime
 from mock import Mock, patch
-from data_replication.backends.base import ImproperlyConfiguredException
-from data_replication.models import ReplicationTracker
 import data_replication.backends.splunk as splunk
 from data_replication.backends.splunk import SplunkAuthenticationException
 from data_replication.backends.splunk import SplunkPostException
 from data_replication.backends.splunk import SplunkRequest
-from data_replication.backends.splunk import SplunkReplicator
 from django.apps import apps
-
-from data_replication.tasks import push_splunk_objects
-from data_replication.tests.factories import replication_tracker_factory
-from data_replication.tests.test_tasks import mock_session, MockSession, MockSession2
+from data_replication.tests.test_tasks import MockSession, MockSession2
 
 data_replication_app = apps.get_app_config('data_replication')
 Example = apps.get_model('example', 'Example')

@@ -1,6 +1,5 @@
 import datetime
 
-from django.core.management import CommandError
 from django.test import TestCase
 
 from django.core import management
@@ -15,6 +14,7 @@ from data_replication.tests.test_tasks import mock_session
 ip_verification_app = apps.get_app_config('ip_verification')
 
 Example = apps.get_model('example', 'Example')
+
 
 class DevNull:
     pass

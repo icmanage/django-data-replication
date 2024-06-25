@@ -4,7 +4,6 @@ from django.test import TestCase
 from data_replication.models import ReplicationTracker
 from data_replication.tests.factories import replication_tracker_factory
 from django.contrib.contenttypes.models import ContentType
-from mock import Mock
 
 Example = apps.get_model("example", "Example")
 ManyExample = apps.get_model("example", "ManyExample")

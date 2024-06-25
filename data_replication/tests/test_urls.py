@@ -1,9 +1,4 @@
-from django.utils.timezone import now
 from django import test
-import logging
-from pymongo.errors import ConnectionFailure, OperationFailure
-from data_replication.models import ReplicationTracker
-
 import data_replication.urls as urls
 
 

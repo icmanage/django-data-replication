@@ -1,7 +1,4 @@
 from django import test
-from django.utils.timezone import now
-import logging
-
 import data_replication.views as views
 
 

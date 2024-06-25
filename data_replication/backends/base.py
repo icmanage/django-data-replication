@@ -9,9 +9,6 @@ from django.contrib.admin.options import get_content_type_for_model
 from django.utils.timezone import now
 from kombu.exceptions import OperationalError
 
-# from unittest import mock
-# import unittest.mock
-
 __author__ = 'Steven Klass'
 __date__ = '9/25/17 16:15'
 __copyright__ = 'Copyright 2017 IC Manage. All rights reserved.'
