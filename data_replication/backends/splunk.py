@@ -61,7 +61,7 @@ class SplunkRequest(object):
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_USERNAME")
         try:
             self.password = kwargs.get('password', settings.SPLUNK_PASSWORD)
-        except AttributeError:  # pragma: no-cover
+        except AttributeError:
             raise ImproperlyConfiguredException("Missing data_replication_app.SPLUNK_PASSWORD")
         self.scheme = kwargs.get('scheme', settings.SPLUNK_SCHEME)
         self.host = kwargs.get('host', settings.SPLUNK_HOST)

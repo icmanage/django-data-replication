@@ -64,7 +64,7 @@ class Command(BaseCommand):
 
         self.replications = ReplicationTracker.objects.filter(**kwargs)
 
-        if not self.replications.count():  # pragma: no-cover
+        if not self.replications.count():  # pragma: no cover
             raise CommandError("No Replication Trackers are not present")
         self.no_subtasks = options.get('no_subtasks', False)
         self.max_count = int(options.get('max_count')) if options.get('max_count') else None

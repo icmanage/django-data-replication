@@ -44,7 +44,7 @@ class ReplicationTracker(models.Model):
         except AttributeError:
             try:
                 module = importlib.import_module("{}.replication".format(self.content_type.app_label))
-            except ImportError:  # pragma no-cover
+            except ImportError:  # pragma no cover
                 raise ImportError("Unable to find replication.py in app %s" % self.content_type.app_label)
 
         target_module = SplunkReplicator if self.replication_type == 2 else MongoReplicator
