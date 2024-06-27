@@ -1,18 +1,18 @@
 [build-system]
-requires = ["hatchling"]
+requires = ['django>=3,<4', 'celery', 'pymongo', 'requests']
 build-backend = "hatchling.build"
 
 [project]
-name = "datatableview_user_columns"
+name = "django-data-replication"
 dynamic = ["version"]
 description = "Allows a user to specify columns for a datatableview"
 readme = "README.md"
-requires-python = ">=3"
+requires-python = "3, 3.7, 3.8, 3.9"
 authors = [
-    { name = "Datatable view user columns", email = "nadiashovkovy@gmail.com" },
+    { name = "Django Data Replicaton", email = "yoder.phoenix@gmail.com" },
 ]
 keywords = [
-    "django datatableview",
+    "django data replication",
 ]
 classifiers = [
     # Optional
@@ -33,9 +33,10 @@ classifiers = [
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
 ]
+# P: crispy??
 dependencies = [
     "django",
-    "django-datatable-view",
+    "django-data-replication",
     "django-crispy-forms",
     "crispy-bootstrap5"
 
@@ -55,24 +56,24 @@ test = [
 [project.urls]
 # Bugs = "{}/issues"
 Thanks = "https://saythanks.io/to/rh0dium"
-Source = "https://github.com/icmanage/datatableview_user_columns"
+Source = "https://github.com/icmanage/data_replication"
 
 [tool.hatch.version]
-path = "datatableview_user_columns/__init__.py"
+path = "data_replication/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "/datatableview_user_columns",
-    "/datatableview_user_columns/static/**/*",
-    "/datatableview_user_columns/templates/**/*",
+    "/data-replication",
+    "/data-replication/static/**/*",
+    "/data-replication/templates/**/*",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["datatableview_user_columns"]
+packages = ["data-replication"]
 include = [
     "static/js/*.js",
     "static/css/*.css",
-    "templates/datatableview_user_columns/*.html",
+    "templates/data_replication/*.html",
 ]
 
 [tool.black]
@@ -92,8 +93,8 @@ exclude = '''
 '''
 
 [tool.bandit]
-targets = ['datatableview_user_columns', "demo_app"]
-exclude_dirs = ["datatableview_user_columns/tests"]
+targets = ['data-replication', "demo_app"]
+exclude_dirs = ["data-replication/tests"]
 #skips = ["B303", "B308", "B323", "B324", "B703"]
 
 [tool.coverage.run]
@@ -115,6 +116,6 @@ sort = "cover"
 
 [tool.bumper]
 exclude = [".idea", ".github", "demo_app"]
-version_files = ["datatableview_user_columns/__init__.py"]
-repo = "icmanage/django-datatable-view-user-columns"
+version_files = ["data-replication/__init__.py"]
+repo = "icmanage/django-data-replication"
 report = "out.json"
