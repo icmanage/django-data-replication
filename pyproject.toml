@@ -36,10 +36,9 @@ classifiers = [
 # P: crispy??
 dependencies = [
     "django",
-    "django-data-replication",
-    "django-crispy-forms",
-    "crispy-bootstrap5"
-
+    "celery",
+    "pymongo",
+    "requests"
 ]
 
 [project.optional-dependencies]
@@ -104,10 +103,11 @@ omit = [
     "*/demo_app/**",
     "*/migrations/*",
     "*/tests/**",
+    "*/.venv/**"
 ]
 
 [tool.coverage.report]
-fail_under = 69
+fail_under = 90
 precision = 1
 skip_covered = true
 skip_empty = true
