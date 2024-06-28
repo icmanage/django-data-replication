@@ -39,7 +39,8 @@ dependencies = [
     "django",
     "celery",
     "pymongo",
-    "requests"
+    "requests",
+    "pytz"
 ]
 
 [project.optional-dependencies]
