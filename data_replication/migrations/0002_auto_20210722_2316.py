@@ -6,23 +6,27 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('data_replication', '0001_initial'),
+        ("data_replication", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='replication',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="replication",
+            name="id",
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
         migrations.AlterField(
-            model_name='replication',
-            name='state',
-            field=models.IntegerField(choices=[(0, 'Not Replicated'), (1, 'In Storage')]),
+            model_name="replication",
+            name="state",
+            field=models.IntegerField(choices=[(0, "Not Replicated"), (1, "In Storage")]),
         ),
         migrations.AlterField(
-            model_name='replicationtracker',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="replicationtracker",
+            name="id",
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
     ]

@@ -11,6 +11,7 @@ from .managers import TestResultLinkManager, RegressionTagSummaryManager
 
 class TestStatusName(models.Model):
     """This is a mapping of status to keep everything consistant"""
+
     name = models.CharField(max_length=128, null=True)
     status_id = models.PositiveIntegerField(null=True, db_index=True)
     last_used = models.DateTimeField(null=True)
@@ -18,11 +19,15 @@ class TestStatusName(models.Model):
 
 # Create your models here.
 class TestResultLink(models.Model):
-    updated_status = models.ForeignKey('TestStatusName', null=True, blank=True, on_delete=models.SET_NULL)
+    updated_status = models.ForeignKey(
+        "TestStatusName", null=True, blank=True, on_delete=models.SET_NULL
+    )
     test_result_id = models.PositiveIntegerField(null=True, db_index=True)
-    summary = models.ForeignKey('RegressionTagSummary', related_name="test_results", null=True, on_delete=SET_NULL)
+    summary = models.ForeignKey(
+        "RegressionTagSummary", related_name="test_results", null=True, on_delete=SET_NULL
+    )
     last_used = models.DateTimeField(db_index=True)
-    replications = GenericRelation('data_replication.Replication')
+    replications = GenericRelation("data_replication.Replication")
     options = JSONField(default=dict)
     objects = TestResultLinkManager()
 
@@ -36,15 +41,19 @@ class RegressionTagSummary(models.Model):
     failing_count = models.PositiveIntegerField(default=0)
 
     finalized = models.BooleanField(default=False)
-    available = models.BooleanField(default=False)  # This is used to identify those which are ready for showing.
+    available = models.BooleanField(
+        default=False
+    )  # This is used to identify those which are ready for showing.
 
     objects = RegressionTagSummaryManager()
 
 
 class RegressionAnalytic(models.Model):
-    summary = models.OneToOneField('RegressionTagSummary', related_name="analytics", null=True, on_delete=SET_NULL)
+    summary = models.OneToOneField(
+        "RegressionTagSummary", related_name="analytics", null=True, on_delete=SET_NULL
+    )
     last_updated = models.DateTimeField(auto_now=True, db_index=True)
-    replications = GenericRelation('data_replication.Replication')
+    replications = GenericRelation("data_replication.Replication")
 
 
 class PlannedTestCase(models.Model):
@@ -54,5 +63,5 @@ class PlannedTestCase(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        permissions = (('view_plannedtestcase', "View Planned Test Case"),)
-        ordering = ['plan_date']
+        permissions = (("view_plannedtestcase", "View Planned Test Case"),)
+        ordering = ["plan_date"]

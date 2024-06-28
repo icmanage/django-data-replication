@@ -9,10 +9,12 @@ from pymongo.errors import ConnectionFailure
 
 from .base import BaseReplicationCollector, ImproperlyConfiguredException
 
-__author__ = 'Steven Klass'
-__date__ = '9/21/17 08:11'
-__copyright__ = 'Copyright 2017 IC Manage. All rights reserved.'
-__credits__ = ['Steven Klass', ]
+__author__ = "Steven Klass"
+__date__ = "9/21/17 08:11"
+__copyright__ = "Copyright 2017 IC Manage. All rights reserved."
+__credits__ = [
+    "Steven Klass",
+]
 
 log = logging.getLogger(__name__)
 from ..apps import DataMigrationSettings as settings
@@ -24,13 +26,13 @@ class MongoRequest(object):
     def __init__(self, *args, **kwargs):
 
         try:
-            self.uri = kwargs.get('connection_uri', settings.MONGO_CONNECTION_URI)
+            self.uri = kwargs.get("connection_uri", settings.MONGO_CONNECTION_URI)
         except AttributeError:
             raise ImproperlyConfiguredException("Missing Mongo settings.MONGO_CONNECTION_URI")
 
         # This is explicitly called out as I could not get this to work with using a replicaSet
         try:
-            self.database_name = kwargs.get('database_name', settings.MONGO_DB_NAME)
+            self.database_name = kwargs.get("database_name", settings.MONGO_DB_NAME)
         except AttributeError:
             self.database_name = None
 
@@ -42,7 +44,7 @@ class MongoRequest(object):
         self._client = MongoClient(self.uri)
 
         try:
-            self._client.admin.command('ismaster')
+            self._client.admin.command("ismaster")
         except ConnectionFailure:
             raise ConnectionFailure("Server at %s is not available" % self.uri)
 
@@ -54,7 +56,7 @@ class MongoRequest(object):
             return self.client[self.database_name]
         return self.client.get_database()
 
-    def post_data(self, content, collection_name='default'):
+    def post_data(self, content, collection_name="default"):
         collection = getattr(self.db, collection_name)
         result = collection.insert_many(content)
         log.debug("Inserted %d and Mongo collection %s", len(result.inserted_ids), collection_name)

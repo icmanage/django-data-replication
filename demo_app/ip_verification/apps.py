@@ -7,7 +7,7 @@ from django.apps import AppConfig
 
 
 class IpVerificationConfig(AppConfig):
-    name = 'ip_verification'
+    name = "ip_verification"
 
     def _get_dotted_path_function(self, dotted_path):
         dotted_path = self.name + dotted_path if dotted_path.startswith(".") else dotted_path

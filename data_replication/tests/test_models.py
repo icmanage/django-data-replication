@@ -31,7 +31,7 @@ class DataReplicationTests(TestCase):
         # self.assertIsInstance(isinstance(models.module, ReplicationTracker))
 
     def test_get_replicator_mongo(self):
-        rt = replication_tracker_factory(Example, replication_type=1);
+        rt = replication_tracker_factory(Example, replication_type=1)
         replicator = rt.get_replicator()
         self.assertIn("TestMongoReplicatorExample", str(replicator))
 

@@ -11,9 +11,9 @@ from data_replication.models import ReplicationTracker, Replication
 from data_replication.tests.factories import replication_tracker_factory
 from data_replication.tests.test_tasks import mock_session
 
-ip_verification_app = apps.get_app_config('ip_verification')
+ip_verification_app = apps.get_app_config("ip_verification")
 
-Example = apps.get_model('example', 'Example')
+Example = apps.get_model("example", "Example")
 
 
 class DevNull:
@@ -28,12 +28,14 @@ class ManagementCommmandTestCase(TestCase):
         When you do this you now this data available for each tests"""
         object_ids = []
         for i in range(3):
-            example = Example.objects.create(name='User' + str(i))
+            example = Example.objects.create(name="User" + str(i))
             object_ids.append(example.id)
 
         rt = replication_tracker_factory(
-            model=Example, replication_type=2,
-            last_updated=datetime.datetime.now() - datetime.timedelta(days=1), state=0
+            model=Example,
+            replication_type=2,
+            last_updated=datetime.datetime.now() - datetime.timedelta(days=1),
+            state=0,
         )
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         self.assertEqual(Replication.objects.count(), 0)
@@ -44,7 +46,7 @@ class ManagementCommmandTestCase(TestCase):
         # kwargs["stderr"] = DevNull()
         return management.call_command(*args, **kwargs)
 
-    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
+    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test_basic(self):
         """This is how we call the management commands for testing"""
 
@@ -61,7 +63,7 @@ class ManagementCommmandTestCase(TestCase):
             "TestSplunkReplicatorExample",  # The class name of the replicator
             "--max_count",
             "2",
-            "--no_subtasks"
+            "--no_subtasks",
         )
 
         self.assertEqual(Replication.objects.count(), 2)

@@ -18,8 +18,8 @@ from django.utils.timezone import now
 log = logging.getLogger(__name__)
 
 
-RegressionTagSummary = apps.get_model('ip_verification', 'RegressionTagSummary')
-TestResultLink = apps.get_model('ip_verification', 'TestResultLink')
+RegressionTagSummary = apps.get_model("ip_verification", "RegressionTagSummary")
+TestResultLink = apps.get_model("ip_verification", "TestResultLink")
 
 
 def regression_tag_summary_factory(**kwargs):
@@ -39,19 +39,17 @@ def regression_tag_summary_factory(**kwargs):
     untested_count = 0
     if not finalized:
         try:
-            untested_count = random.randint(1, total - passing-failing)
+            untested_count = random.randint(1, total - passing - failing)
         except ValueError:
             untested_count = 1
     kw = {
-        'last_updated': now(),
-        'first_requested': now()- datetime.timedelta(
-            hours=random.randint(1, 3),
-            minutes=random.randint(1, 5)),
-        'untested_count': untested_count,
-        'passing_count': passing,
-        'failing_count': failing,
-        'available': True,
-
+        "last_updated": now(),
+        "first_requested": now()
+        - datetime.timedelta(hours=random.randint(1, 3), minutes=random.randint(1, 5)),
+        "untested_count": untested_count,
+        "passing_count": passing,
+        "failing_count": failing,
+        "available": True,
     }
     kw.update(kwargs)
     return RegressionTagSummary.objects.create(**kw)
@@ -63,5 +61,3 @@ def test_result_link_factory(summary=None, **kwargs):
     data = dict(summary=summary, test_result_id=random.randint(1, 1000000), last_used=now())
     data.update(**kwargs)
     return TestResultLink.objects.create(**data)
-
-

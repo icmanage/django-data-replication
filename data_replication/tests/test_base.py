@@ -14,7 +14,7 @@ from data_replication.tests.factories import replication_tracker_factory
 from data_replication.tests.test_tasks import mock_session
 
 User = get_user_model()
-Example = apps.get_model('example', 'Example')
+Example = apps.get_model("example", "Example")
 
 
 class TestBase(TestCase):
@@ -23,8 +23,8 @@ class TestBase(TestCase):
         class MockB(BaseReplicationCollector):
             mock_instance = MagicMock()
             model = Example
-            change_keys = ['foo']
-            search_quantifiers = None,
+            change_keys = ["foo"]
+            search_quantifiers = (None,)
             search_quantifier = "search_quantifier_value"
             self.skip_locks = True
             reset = True
@@ -55,11 +55,13 @@ class TestBase(TestCase):
         self.assertIsNone(instance.log_level)
 
     def test_custom_values(self):
-        instance = TestMongoReplicatorExample(reset=True, max_count=10, use_subtasks=False, log_level='DEBUG')
+        instance = TestMongoReplicatorExample(
+            reset=True, max_count=10, use_subtasks=False, log_level="DEBUG"
+        )
         self.assertTrue(instance.reset)
         self.assertEqual(instance.max_count, 10)
         self.assertFalse(instance.use_subtasks)
-        self.assertEqual(instance.log_level, 'DEBUG')
+        self.assertEqual(instance.log_level, "DEBUG")
 
     def test_missing_model_attribute(self):
         with self.assertRaises(AttributeError):
@@ -81,13 +83,13 @@ class TestBase(TestCase):
     def test_search_quantifier(self):
         instance = TestMongoReplicatorExample()
         caller = instance.search_quantifier
-        self.assertEqual(caller, ' model=user')
+        self.assertEqual(caller, " model=user")
 
     def test_search_quantifier_con(self):
         instance = TestMongoReplicatorExample()
-        instance.search_quantifiers = 'True'
+        instance.search_quantifiers = "True"
         caller = instance.search_quantifier
-        self.assertEqual(caller, 'True model=user')
+        self.assertEqual(caller, "True model=user")
 
     def test_content_type(self):
         instance = TestMongoReplicatorExample()
@@ -107,19 +109,27 @@ class TestBase(TestCase):
         self.assertEqual(instance.last_look, None)
         self.assertFalse(instance.locked)
 
-    @mock.patch('data_replication.backends.splunk.SplunkRequest.session', mock_session)
+    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test__delete_items(self):
         instance = self.base_replication_collector()
         self.assertRaises(NotImplementedError, instance.delete_items, object_pks=[1, 2, 3])
 
-        rt = replication_tracker_factory(Example, 'splunk')
+        rt = replication_tracker_factory(Example, "splunk")
         oids = []
         for i in range(3):
             oids.append(Example.objects.create(name="test%d" % i).pk)
 
-        Replication.objects.bulk_create([
-            Replication(tracker=rt, object_id=x, content_type=ContentType.objects.get_for_model(Example),
-                        state=1, last_updated=now()) for x in oids]
+        Replication.objects.bulk_create(
+            [
+                Replication(
+                    tracker=rt,
+                    object_id=x,
+                    content_type=ContentType.objects.get_for_model(Example),
+                    state=1,
+                    last_updated=now(),
+                )
+                for x in oids
+            ]
         )
         self.assertEqual(Replication.objects.count(), 3)
         replicator = rt.get_replicator()
@@ -151,4 +161,4 @@ class TestBase(TestCase):
 
 class TestMongoReplicatorExample(MongoReplicator):
     model = User
-    change_keys = ['last_used']
+    change_keys = ["last_used"]

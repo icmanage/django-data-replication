@@ -5,5 +5,4 @@ from django.test import TestCase
 class TestReplicate(TestCase):
     def test_basic(self):
         instance = Command()
-        self.assertEqual(instance.help, 'Replicate data to the different engines')
-
+        self.assertEqual(instance.help, "Replicate data to the different engines")
