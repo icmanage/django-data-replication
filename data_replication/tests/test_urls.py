@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 from django import test
 import data_replication.urls as urls
 
 
 class UrlsTest(test.TestCase):
-
     def test_urls(self):
         self.assertEqual(urls.__author__, "Steven Klass", "author is incorrect")
         self.assertEqual(urls.__date__, "9/21/17 07:57", "date is incorrect")

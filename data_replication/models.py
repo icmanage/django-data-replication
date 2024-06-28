@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-  # pragma: no cover
+# -*- coding: utf-8 -*-
 """models.py: Django data_replication"""
 
 import importlib
@@ -42,7 +42,6 @@ class ReplicationTracker(models.Model):
         )
 
     def get_replicator(self, **kwargs):
-
         app_config = apps.get_app_config(self.content_type.app_label)
         try:
             module = app_config.module.replication

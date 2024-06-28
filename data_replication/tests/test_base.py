@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.apps import apps
 from django.utils.timezone import now
 from mock import patch, mock, MagicMock
@@ -18,7 +19,6 @@ Example = apps.get_model("example", "Example")
 
 
 class TestBase(TestCase):
-
     def setUp(self):
         class MockB(BaseReplicationCollector):
             mock_instance = MagicMock()

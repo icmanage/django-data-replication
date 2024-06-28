@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.forms import model_to_dict
 
 from data_replication.backends.mongo import MongoReplicator

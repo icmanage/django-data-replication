@@ -48,16 +48,6 @@ class TestResultReplicatorMixin(object):
         )
         if self.summary_ids:
             kw = {"summary_id__in": self.summary_ids}
-        else:
-            kw = {"summary_id__isnull": False, "last_used__gte": datetime.datetime(2017, 1, 1)}
-
-            queryset = (
-                self.get_model()
-                .objects.filter(**kw)
-                .exclude(summary_id__in=incomplete_jobs)
-                .order_by("-id")
-            )
-
         return (
             self.get_model()
             .objects.filter(**kw)
@@ -96,7 +86,6 @@ class TestResultReplicatorMixin(object):
 
     @property
     def accounted_pks(self):
-
         from data_replication.models import Replication
 
         if len(self._accounted_pks):

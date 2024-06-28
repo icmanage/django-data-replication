@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import test
 import mock
 from mock import patch

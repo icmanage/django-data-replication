@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -115,7 +116,6 @@ mock_session_fail = MockSession2()
 
 
 class TestSplunkTasks(TestCase):
-
     @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test_push_splunk_objects(self, **kwargs):
         object_ids = []
@@ -184,7 +184,6 @@ client = MockMongoClient()
 
 
 class TestMongoTasks(TestCase):
-
     @mock.patch("data_replication.backends.mongo.MongoRequest._client", client)
     def test_push_mongo_objects(self):
         object_ids = []

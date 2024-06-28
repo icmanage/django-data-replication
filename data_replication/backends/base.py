@@ -138,7 +138,6 @@ class BaseReplicationCollector(object):
 
     @property
     def accounted_pks(self):
-
         from data_replication.models import Replication
 
         if len(self._accounted_pks):
@@ -190,7 +189,6 @@ class BaseReplicationCollector(object):
         return (self.add_pks, self.update_pks, self.delete_pks)
 
     def analyze(self):
-
         try:
             self.lock()
         except RuntimeError as err:  # pragma: no cover
@@ -281,15 +279,15 @@ class BaseReplicationCollector(object):
             make_sure_mysql_usable()
             try:
                 Replication.objects.get_or_create(**replication_data)
-            except:  # pragma: no cover
-                log.error("Issue with creating %r".format(replication_data))  # pragma: no cover
+            except Exception as err:  # pragma: no cover
+                log.error(f"Issue with creating  {replication_data} {err}")
 
         log.debug("Added %d replication entries", len(bulk_inserts))
 
-        def chunks(l, n):
+        def chunks(data, size):
             """Yield successive n-sized chunks from l."""
-            for i in range(0, len(l), n):
-                yield l[i : i + n]
+            for i in range(0, len(data), size):
+                yield data[i : i + size]
 
         for count, chunk in enumerate(chunks(object_pks, chunk_size)):
             kwargs = {

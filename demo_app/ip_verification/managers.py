@@ -176,8 +176,8 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                 # This is old style (Django < 1.11)
                 try:
                     _json = json.loads(item)
-                except:
-                    log.exception("Unable to load %s %r", type(item), item)
+                except Exception as err:
+                    log.exception("Unable to load %s %r %r", type(item), item, err)
                     _json = {}
             _json["pk"] = pk
             _json["summary_pk"] = summary_id
@@ -189,7 +189,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                     _json["runtime_seconds"] = ip_verification_app.get_compute_secs(
                         _json["runtime"], "0:0:0"
                     )
-                except:
+                except Exception:
                     pass
 
             data.append(_json)
@@ -206,7 +206,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
     def as_json(self, pretty=False, as_list=False, prune_empty=True):
         return self.filter()._as_json(pretty=pretty, as_list=as_list)
 
-    def get_summary_data(self, data=None):
+    def get_summary_data(self, data=None):  # noqa: C901
         if data is None:
             data = self.filter()._as_json(as_list=True)
 
@@ -331,7 +331,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
         return result
 
     def get_expanded_data(self, data=None, unique_keys=None):
-
         if data is None:
             data = self.filter()._as_json(as_list=True)
 
@@ -356,7 +355,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
         for item in data:
             if item.get("test_status") == "COVERAGE":
                 continue
-            least_key, least_key_names = [], []
+            least_key = []
             if "sub_project" in grouping:
                 least_key.append(item.get("sub_project"))
             if "suite_name" in grouping:
@@ -407,7 +406,7 @@ class TestResultLinkQuerySet(models.query.QuerySet):
 
         return result
 
-    def get_coverage_data(self, data=None, unique_keys=None):
+    def get_coverage_data(self, data=None, unique_keys=None):  # noqa: C901
         if data is None:
             data = self.filter()._as_json(as_list=True)
 
@@ -437,7 +436,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
 
         coverage_keys = []
         for item in data:
-
             if item.get("test_status") != "COVERAGE":
                 continue
 
@@ -484,13 +482,13 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                         results[key]["{}_numerator".format(k.lower())] = int(
                             coverage.get("{}_numerator".format(k))
                         )
-                    except:
+                    except Exception:
                         pass
                     try:
                         results[key]["{}_denominator".format(k.lower())] = int(
                             coverage.get("{}_denominator".format(k))
                         )
-                    except:
+                    except Exception:
                         pass
                 elif coverage.get("{}_nume".format(k)) and coverage.get("{}_deno".format(k)):
                     # value = float(coverage.get('{}_nume'.format(k))) / float(coverage.get('{}_deno'.format(k)))
@@ -502,13 +500,13 @@ class TestResultLinkQuerySet(models.query.QuerySet):
                         results[key]["{}_numerator".format(k.lower())] = coverage.get(
                             "{}_nume".format(k)
                         )
-                    except:
+                    except Exception:
                         pass
                     try:
                         results[key]["{}_denominator".format(k.lower())] = coverage.get(
                             "{}_deno".format(k)
                         )
-                    except:
+                    except Exception:
                         pass
                 results[key]["valid_coverage_results"] = True
                 results[key][k.lower()] = value
@@ -525,7 +523,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
         return results
 
     def get_failure_data(self, data=None, unique_keys=None):
-
         if data is None:
             data = self.filter()._as_json(as_list=True)
 
@@ -542,7 +539,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
         return summary
 
     def get_planned_test_data(self, data=None):
-
         if data is None:
             data = self.filter()._as_json(as_list=True)
 
@@ -552,7 +548,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
 
         group_counter = {}
         ptc_counter = {}
-        prior_group_counter = {}
         prior_ptc_counter = {}
 
         for item in data:
@@ -671,12 +666,10 @@ class TestResultLinkQuerySet(models.query.QuerySet):
         }
 
     def get_rollup_data(self):
-
         raw_data = self.filter().as_json(as_list=True)
 
         result = self.get_summary_data(raw_data)
 
-        common_keys = result.get("common_keys")
         unique_keys = result.get("unique_keys")
 
         common_data = self.get_common_data(raw_data)
@@ -705,7 +698,6 @@ class TestResultLinkQuerySet(models.query.QuerySet):
 
 
 class TestResultLinkManager(models.Manager):
-
     def get_queryset(self):
         return TestResultLinkQuerySet(self.model, using=self._db)
 
@@ -713,7 +705,6 @@ class TestResultLinkManager(models.Manager):
         return self.get_queryset().as_json(pretty=pretty, as_list=as_list)
 
     def filter_latest_results_for_run(self, regression_tag, user, run, summary=None):
-
         data = self.filter(regression_tag=regression_tag, user=user, run=run, deleted=False)
 
         _values = (
@@ -817,7 +808,6 @@ class TestResultLinkManager(models.Manager):
 
 
 class RegressionTagSummaryQuerySet(models.query.QuerySet):
-
     def filter_by_user(self, user):
         if user.is_superuser:
             return self.filter(available=True)
@@ -838,7 +828,6 @@ class RegressionTagSummaryQuerySet(models.query.QuerySet):
 
 
 class RegressionTagSummaryManager(models.Manager):
-
     def get_queryset(self):
         return RegressionTagSummaryQuerySet(self.model, using=self._db)
 

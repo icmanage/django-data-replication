@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from data_replication.management.commands.replicate import Command
 from django.test import TestCase
 

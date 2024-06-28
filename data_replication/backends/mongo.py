@@ -8,6 +8,7 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 from .base import BaseReplicationCollector, ImproperlyConfiguredException
+from ..apps import DataMigrationSettings as settings
 
 __author__ = "Steven Klass"
 __date__ = "9/21/17 08:11"
@@ -15,16 +16,13 @@ __copyright__ = "Copyright 2017 IC Manage. All rights reserved."
 __credits__ = [
     "Steven Klass",
 ]
-
 log = logging.getLogger(__name__)
-from ..apps import DataMigrationSettings as settings
 
 
 class MongoRequest(object):
     _client = None
 
     def __init__(self, *args, **kwargs):
-
         try:
             self.uri = kwargs.get("connection_uri", settings.MONGO_CONNECTION_URI)
         except AttributeError:

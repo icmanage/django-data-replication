@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 from django import test
 import data_replication.forms as forms
 
 
 class FormsTest(test.TestCase):
-
     def test_forms(self):
         self.assertEqual(forms.__author__, "Steven Klass", "author is incorrect")
         self.assertEqual(forms.__date__, "9/21/17 07:58", "date is incorrect")

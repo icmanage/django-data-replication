@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def get_compute_secs(item):
     try:
         hours, minutes, secs = item.split(":")

@@ -79,7 +79,6 @@ class Command(BaseCommand):
     requires_system_checks = True
 
     def set_options(self, **options):
-
         self.verbosity = int(options.get("verbosity", 0))
 
         kwargs = {}

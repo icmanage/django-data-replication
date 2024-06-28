@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.apps import apps
 from django.test import TestCase
 
@@ -10,7 +11,6 @@ ManyExample = apps.get_model("example", "ManyExample")
 
 
 class DataReplicationTests(TestCase):
-
     def setUp(self):
         self.ct = ContentType.objects.get_for_model(Example)
 

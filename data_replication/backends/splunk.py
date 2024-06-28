@@ -7,6 +7,8 @@ import logging
 import re
 import time
 from collections import OrderedDict
+from ..apps import DataMigrationSettings as settings
+
 
 import datetime
 import requests
@@ -22,8 +24,6 @@ __credits__ = [
 ]
 
 log = logging.getLogger(__name__)
-from ..apps import DataMigrationSettings as settings
-
 SPLUNK_PREFERRED_DATETIME = "%Y-%m-%d %H:%M:%S:%f"
 INTS = re.compile(r"^-?[0-9]+$")
 NUMS = re.compile(r"^[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$")
@@ -100,7 +100,7 @@ class SplunkRequest(object):
                 "Authorization": "Splunk {session_key}".format(**self.__dict__),
                 "content-type": "application/json",
             }
-        except:
+        except Exception:
             log.error(
                 "Issue connecting to %(base_url)s with %(username)s:%(password)s", self.__dict__
             )
@@ -162,7 +162,6 @@ class SplunkRequest(object):
 
     @classmethod
     def get_normalized_data(cls, content):
-
         data = OrderedDict()
         keys = content.keys()
 

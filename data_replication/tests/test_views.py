@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 from django import test
 import data_replication.views as views
 
 
 class ViewsTest(test.TestCase):
-
     def test_views(self):
         self.assertEqual(views.__author__, "Steven Klass", "author is incorrect")
         self.assertEqual(views.__date__, "9/21/17 07:56", "date is incorrect")

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import decimal
 from django.test import TestCase
 import mock
@@ -15,7 +16,6 @@ Example = apps.get_model("example", "Example")
 
 
 class TestSplunk(TestCase):
-
     def setUp(self):
         class FooBar(SplunkRequest):
             model = Example
