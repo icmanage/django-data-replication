@@ -1,5 +1,5 @@
 [build-system]
-requires = ['django>=3,<4', 'celery', 'pymongo', 'requests']
+requires = ['hatchling']
 build-backend = "hatchling.build"
 
 [project]
