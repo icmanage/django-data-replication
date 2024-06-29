@@ -40,7 +40,8 @@ dependencies = [
     "celery",
     "pymongo",
     "requests",
-    "pytz"
+    "pytz",
+    "django-extensions"
 ]
 
 [project.optional-dependencies]
