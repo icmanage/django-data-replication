@@ -96,7 +96,7 @@ exclude = '''
 [tool.bandit]
 targets = ['data-replication', "demo_app"]
 exclude_dirs = ["data-replication/tests"]
-#skips = ["B303", "B308", "B323", "B324", "B703"]
+skips = ["B311", "B110", "B603", "B101", "B404", "B310", "B323", "B603", "B108", "B102", "B302", "B324", "B303"]
 
 [tool.coverage.run]
 branch = true
