@@ -9,7 +9,7 @@ description = "Allows a user to specify columns for a datatableview"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "Django Data Replicaton", email = "yoder.phoenix@gmail.com" },
+    { name = "Django Data Replicaton", email = "steven@stem+c" },
 ]
 keywords = [
     "django data replication",

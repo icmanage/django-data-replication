@@ -63,5 +63,4 @@ class PlannedTestCase(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        permissions = (("view_plannedtestcase", "View Planned Test Case"),)
         ordering = ["plan_date"]
