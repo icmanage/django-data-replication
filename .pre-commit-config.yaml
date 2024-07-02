@@ -1,0 +1,32 @@
+default_language_version:
+  python: python3 # changed from 3.12 try again
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-added-large-files
+        args: [ '--maxkb=500' ]
+      - id: check-byte-order-marker
+        exclude: .*\.csv|.*\.xsd|.*\.xlsx|.*\.xml
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-private-key
+      - id: fix-encoding-pragma
+      - id: end-of-file-fixer
+        exclude: .idea/.*|.*\.blg|.*\.json|.*\.dat
+      - id: trailing-whitespace
+        exclude: .idea/.*|.*\.blg|.*\.json|.*\.dat
+      - id: mixed-line-ending
+        exclude: .idea/.*
+      - id: check-json
+  -   repo: https://github.com/ambv/black
+      rev: 23.3.0
+      hooks:
+      - id: black
+        language_version: python3
+  -   repo: https://github.com/pycqa/flake8
+      rev: 5.0.4
+      hooks:
+      - id: flake8
+        language_version: python3 # changed from 3.12
