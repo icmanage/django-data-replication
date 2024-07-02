@@ -76,7 +76,7 @@ class Command(BaseCommand):
             help="Reset -- DEV ONLY FOR TESTING",
         ),
 
-    requires_system_checks = True
+    requires_system_checks = []
 
     def set_options(self, **options):
         self.verbosity = int(options.get("verbosity", 0))

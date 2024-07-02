@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
+
 from django import test
-import mock
-from mock import patch
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
@@ -29,7 +29,7 @@ class MongoTestCase(test.TestCase):
         mongo_request = MongoRequest()
         mongo_request.db()
 
-    @mock.patch("data_replication.backends.mongo.MongoRequest._client")
+    @patch("data_replication.backends.mongo.MongoRequest._client")
     def test_delete_ids(self, mock_client):
         mock_db = mock_client.return_value
         mock_collection = mock_db["test_collection"]

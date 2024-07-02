@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+from unittest.mock import patch
 
 from django.test import TestCase
 
 from django.core import management
 
 from django.apps import apps
-from mock import mock
 
 from data_replication.models import ReplicationTracker, Replication
 from data_replication.tests.factories import replication_tracker_factory
@@ -35,7 +35,9 @@ class ManagementCommmandTestCase(TestCase):
         rt = replication_tracker_factory(
             model=Example,
             replication_type=2,
-            last_updated=datetime.datetime.now() - datetime.timedelta(days=1),
+            last_updated=(datetime.datetime.now() - datetime.timedelta(days=1)).replace(
+                tzinfo=datetime.timezone.utc
+            ),
             state=0,
         )
         self.assertEqual(ReplicationTracker.objects.count(), 1)
@@ -47,7 +49,7 @@ class ManagementCommmandTestCase(TestCase):
         # kwargs["stderr"] = DevNull()
         return management.call_command(*args, **kwargs)
 
-    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
+    @patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test_basic(self):
         """This is how we call the management commands for testing"""
 

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import MagicMock, patch
+
 from django.apps import apps
 from django.utils.timezone import now
-from mock import patch, mock, MagicMock
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -109,7 +110,7 @@ class TestBase(TestCase):
         self.assertEqual(instance.last_look, None)
         self.assertFalse(instance.locked)
 
-    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
+    @patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test__delete_items(self):
         instance = self.base_replication_collector()
         self.assertRaises(NotImplementedError, instance.delete_items, object_pks=[1, 2, 3])

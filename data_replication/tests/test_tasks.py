@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
+
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from mock import mock
 
 from data_replication.backends.splunk import SplunkPostException
 from data_replication.models import ReplicationTracker, Replication
@@ -116,7 +117,7 @@ mock_session_fail = MockSession2()
 
 
 class TestSplunkTasks(TestCase):
-    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
+    @patch("data_replication.backends.splunk.SplunkRequest.session", mock_session)
     def test_push_splunk_objects(self, **kwargs):
         object_ids = []
         for i in range(3):
@@ -137,7 +138,7 @@ class TestSplunkTasks(TestCase):
         self.assertEqual(Replication.objects.count(), 3)
         self.assertEqual(Replication.objects.filter(state=1).count(), 3)
 
-    @mock.patch("data_replication.backends.splunk.SplunkRequest.session", mock_session_fail)
+    @patch("data_replication.backends.splunk.SplunkRequest.session", mock_session_fail)
     def test_push_splunk_objects_fail(self, **kwargs):
         with self.assertRaises(SplunkPostException):
             object_ids = []
@@ -184,7 +185,7 @@ client = MockMongoClient()
 
 
 class TestMongoTasks(TestCase):
-    @mock.patch("data_replication.backends.mongo.MongoRequest._client", client)
+    @patch("data_replication.backends.mongo.MongoRequest._client", client)
     def test_push_mongo_objects(self):
         object_ids = []
         for i in range(3):

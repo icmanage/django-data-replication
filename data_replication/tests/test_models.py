@@ -16,7 +16,7 @@ class DataReplicationTests(TestCase):
 
     def test_tostring(self):
         obj = replication_tracker_factory(Example, replication_type="mongo")
-        self.assertEqual(str(obj), "u'Mongo' replication of u'example'")
+        self.assertEqual(str(obj), "'Mongo' replication of 'example'")
 
     def test_replicator_factory(self, **kwargs):
         rt = replication_tracker_factory(Example, replication_type="splunk", state=1)

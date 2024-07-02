@@ -133,3 +133,4 @@ class DisableMigrations(object):
 
 
 MIGRATION_MODULES = DisableMigrations()
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

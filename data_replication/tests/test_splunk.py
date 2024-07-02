@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import decimal
+from unittest.mock import patch, Mock
+
 from django.test import TestCase
-import mock
-from django.utils.datetime_safe import datetime
-from mock import Mock, patch
+import datetime
 import data_replication.backends.splunk as splunk
 from data_replication.backends.splunk import SplunkAuthenticationException
 from data_replication.backends.splunk import SplunkPostException
@@ -107,18 +107,18 @@ class TestSplunk(TestCase):
             self.assertEqual(status_code, 200)
             self.assertEqual(result, {"results": ["mocked_data"]})
 
-    @mock.patch("requests.Session", MockSession)
+    @patch("requests.Session", MockSession)
     def test_connect(self):
         splunk_request = SplunkRequest()
         splunk_request.connect()
 
-    @mock.patch("requests.Session", MockSession2)
+    @patch("requests.Session", MockSession2)
     def test_connect_error(self):
         splunk_request = SplunkRequest()
         with self.assertRaises(SplunkAuthenticationException):
             splunk_request.connect()
 
-    @mock.patch("requests.Session", MockSession2)
+    @patch("requests.Session", MockSession2)
     def test_connect_barf(self):
         with self.assertRaises(SplunkAuthenticationException):
             splunk_request = SplunkRequest()
@@ -135,6 +135,6 @@ class TestSplunk(TestCase):
         self.assertEqual(instance, 6.9)
 
     def test_splunk_default_dat(self):
-        obj = datetime(2024, 6, 23, 00, 00, 00)
+        obj = datetime.datetime(2024, 6, 23, 00, 00, 00).replace(tzinfo=datetime.timezone.utc)
         instance = splunk.splunk_default(obj)
-        self.assertEqual(instance, "2024-06-23T00:00:00")
+        self.assertEqual(instance, "2024-06-23T00:00:00+00:00")
