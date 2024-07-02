@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models

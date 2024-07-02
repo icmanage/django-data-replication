@@ -23,13 +23,6 @@ class DataReplicationTests(TestCase):
         self.assertEqual(ReplicationTracker.objects.count(), 1)
         self.assertEqual(rt.state, 1)
 
-        # testing line 48
-        # with self.assertRaises(ImportError):
-        #     self.assertIsInstance(not ct, ReplicationTracker)
-        # rt2 = ReplicationTracker.objects.create(state=10)
-        # self.assertEqual(rt2.state, 1 or 2)
-        # self.assertIsInstance(isinstance(models.module, ReplicationTracker))
-
     def test_get_replicator_mongo(self):
         rt = replication_tracker_factory(Example, replication_type=1)
         replicator = rt.get_replicator()

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """replication.py: Django ip_verification"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
 
 import logging
 

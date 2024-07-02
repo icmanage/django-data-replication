@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """__init__.py: Django data_replication package container"""
 
-from __future__ import unicode_literals
-from __future__ import print_function
 
 __name__ = "data_replication"
 __author__ = "Steven Klass"

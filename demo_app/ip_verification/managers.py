@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """managers.py: Django """
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import datetime
 import json
