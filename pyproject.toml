@@ -1,0 +1,126 @@
+[build-system]
+requires = ['hatchling']
+build-backend = "hatchling.build"
+
+[project]
+name = "data-replication"
+dynamic = ["version"]
+description = "Allows a user to specify columns for a datatableview"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Django Data Replicaton", email = "steven@stem+c" },
+]
+keywords = [
+    "django data replication",
+]
+classifiers = [
+    # Optional
+        # How mature is this project? Common values are
+        #   3 - Alpha
+        #   4 - Beta
+        #   5 - Production/Stable
+        "Development Status :: 4 - Beta",
+        # Indicate who your project is intended for
+        "Environment :: Web Environment",
+        "Framework :: Django",
+        # Pick your license as you wish
+        "License :: OSI Approved :: MIT License",
+        # Specify the Python versions you support here. In particular, ensure
+        # that you indicate whether you support Python 2, Python 3 or both.
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+]
+# P: crispy??
+dependencies = [
+    "django",
+    "celery",
+    "pymongo",
+    "requests",
+    "pytz",
+    "django-extensions"
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8",
+    "bandit",
+    "coverage",
+    "pre-commit",
+    "black",
+    "django-environ"
+]
+
+
+[project.urls]
+# Bugs = "{}/issues"
+Thanks = "https://saythanks.io/to/rh0dium"
+Source = "https://github.com/icmanage/data_replication"
+
+[tool.hatch.version]
+path = "data_replication/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/data-replication",
+    "/data-replication/static/**/*",
+    "/data-replication/templates/**/*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["data-replication"]
+include = [
+    "static/js/*.js",
+    "static/css/*.css",
+    "templates/data_replication/*.html",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | dist
+)/
+'''
+
+[tool.bandit]
+targets = ['data-replication', "demo_app"]
+exclude_dirs = ["data-replication/tests"]
+skips = ["B311", "B110", "B603", "B101", "B310", "B323", "B108", "B102", "B302", "B324", "B303", "B605", "B403",
+"B606", "B306", "B411", "B301", "B307", "B105", "B602", "B607", "B608", "B611", "B318", "B319", "B314", "B405",
+"B406", "B408", "B409", "B112", "B113", "B104", "B107", "B202"]
+
+[tool.coverage.run]
+branch = true
+command_line = "demo_app/manage.py test --noinput --settings=demo_app.settings"
+omit = [
+    "*/demo_app/**",
+    "*/migrations/*",
+    "*/tests/**",
+    "*/.venv/**"
+]
+
+[tool.coverage.report]
+fail_under = 90
+precision = 1
+skip_covered = true
+skip_empty = true
+ignore_errors = true
+sort = "cover"
+
+[tool.bumper]
+exclude = [".idea", ".github", "demo_app"]
+version_files = ["data-replication/__init__.py"]
+repo = "icmanage/django-data-replication"
+report = "out.json"
