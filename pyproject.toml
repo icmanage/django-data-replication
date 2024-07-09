@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "data-replication"
 dynamic = ["version"]
-description = "Allows a user to specify columns for a datatableview"
+description = "Replicate data to both splunk and mongo"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
