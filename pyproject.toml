@@ -3,7 +3,7 @@ requires = ['hatchling']
 build-backend = "hatchling.build"
 
 [project]
-name = "django-data-replication"
+name = "data-replication"
 dynamic = ["version"]
 description = "Allows a user to specify columns for a datatableview"
 readme = "README.md"
