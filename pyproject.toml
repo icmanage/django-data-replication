@@ -121,6 +121,6 @@ sort = "cover"
 
 [tool.bumper]
 exclude = [".idea", ".github", "demo_app"]
-version_files = ["data-replication/__init__.py"]
+version_files = ["data_replication/__init__.py"]
 repo = "icmanage/django-data-replication"
 report = "out.json"
