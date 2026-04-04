@@ -112,6 +112,9 @@ class BaseReplicationCollector(object):
                 )
                 self._delete_items(list(del_pks.values_list("object_id", flat=True)))
                 self.last_look.last_updated = prior_date
+            # Ensure last_updated is set (handles NULL values from db corruption)
+            if self.last_look.last_updated is None:
+                self.last_look.last_updated = prior_date
             self.last_look.state = 2
             self.last_look.save()
         self.locked = True
@@ -132,7 +135,9 @@ class BaseReplicationCollector(object):
                     list(replications.values_list("last_updated", flat=True))
                 )
             except ValueError:  # pragma: no cover
-                pass
+                # No replications found - ensure last_updated is not None
+                if self.last_look.last_updated is None:
+                    self.last_look.last_updated = now()
         self.last_look.save()
         self.locked = False
 
