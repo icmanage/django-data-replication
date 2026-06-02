@@ -1,9 +1,12 @@
+# -*- coding: utf-8 -*-
 """A setuptools based setup module.
 
 See:
 https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
+from __future__ import unicode_literals
+__copyright__ = 'Copyright 2011-2026 IC Manage. All rights reserved.'
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages

@@ -20,6 +20,7 @@ without the optional Mongo/Splunk/Celery dependencies:
 """
 from __future__ import unicode_literals
 from __future__ import print_function
+__copyright__ = 'Copyright 2011-2026 IC Manage. All rights reserved.'
 
 import sys
 import types

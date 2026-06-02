@@ -11,7 +11,7 @@ from django.conf import settings
 
 __author__ = 'Steven Klass'
 __date__ = '9/26/17 10:28'
-__copyright__ = 'Copyright 2011-2017 Pivotal Energy Solutions. All rights reserved.'
+__copyright__ = 'Copyright 2011-2026 IC Manage. All rights reserved.'
 __credits__ = ['Steven Klass', ]
 
 
