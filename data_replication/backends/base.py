@@ -104,6 +104,8 @@ class BaseReplicationCollector(object):
                 del_pks = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
                 self._delete_items(list(del_pks.values_list('object_id', flat=True)))
                 self.last_look.last_updated = prior_date
+            if self.last_look.last_updated is None:
+                self.last_look.last_updated = prior_date
             self.last_look.state = 2
             self.last_look.save()
         self.locked = True
@@ -119,7 +121,8 @@ class BaseReplicationCollector(object):
             try:
                 self.last_look.last_updated = max(list(replications.values_list('last_updated', flat=True)))
             except ValueError:
-                pass
+                if self.last_look.last_updated is None:
+                    self.last_look.last_updated = now()
         self.last_look.save()
         self.locked = False
 
@@ -132,8 +135,8 @@ class BaseReplicationCollector(object):
             return self._accounted_pks
 
         make_sure_mysql_usable()
-        self._accounted_pks = Replication.objects.filter(
-            tracker=self.last_look).values_list('object_id', flat=True)
+        self._accounted_pks = list(Replication.objects.filter(
+            tracker=self.last_look).values_list('object_id', flat=True))
 
         return self._accounted_pks
 
@@ -146,7 +149,7 @@ class BaseReplicationCollector(object):
 
         make_sure_mysql_usable()
         kwargs = {'%s__gt' % k: self.last_look.last_updated for k in self.change_keys}
-        self._queryset_pks = self.get_queryset().filter(**kwargs).values_list('pk', flat=True)
+        self._queryset_pks = list(self.get_queryset().filter(**kwargs).values_list('pk', flat=True))
 
         return self._queryset_pks
 
@@ -232,7 +235,8 @@ class BaseReplicationCollector(object):
         for item in self.get_queryset().filter(pk__in=object_pks).values_list('pk', *self.change_keys):
             item = list(item)
             pk = item.pop(0)
-            last_updated = max(item)
+            item = [x for x in item if x is not None]
+            last_updated = max(item) if item else now()
             bulk_inserts.append(
                 dict(content_type=self.content_type, tracker=self.last_look,
                      object_id=pk, defaults=dict(state=0, last_updated=last_updated)))
