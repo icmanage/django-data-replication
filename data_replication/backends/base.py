@@ -114,7 +114,10 @@ class BaseReplicationCollector(object):
         """Sets our last look and open the db"""
         self.last_look.state = 0
         if not self.reset and not self.max_count:
-            self.last_look.last_updated = self.query_time
+            # query_time is set by changed_queryset_pks; a subclass that
+            # overrides that property may never set it, so fall back to now()
+            # rather than persisting NULL into the NOT NULL last_updated column.
+            self.last_look.last_updated = self.query_time or now()
         else:
             from data_replication.models import Replication
             replications = Replication.objects.filter(content_type=self.content_type, tracker=self.last_look)
