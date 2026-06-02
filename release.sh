@@ -1,20 +1,25 @@
 #!/usr/bin/env bash
 #
 # Release django-data-replication via the shared ../releaser tool -- the same
-# mechanism ip_verification uses. The releaser bumps setup.py, creates the git
-# release, and builds a tarball of the package. On prod it is installed with
-#     pip install --upgrade <extracted-dir>/
+# mechanism ip_verification uses. The releaser bumps setup.py + the package
+# __init__, creates the git release, and builds a tarball of the package. On
+# prod it is installed with `pip install --upgrade <extracted-dir>/`.
 #
 # Requirements:
 #   * Run from the repo root with the ../releaser checkout alongside it.
-#   * ICM VPN connectivity (the releaser checks internal FTP first).
+#   * ICM VPN connectivity.
+#   * stable/1.0.x pushed to origin (the releaser tags against the remote).
 #
-# NOTE: the releaser only auto-creates a release on the `master` branch. This
-# is the stable/1.0.x maintenance branch, so the version MUST be passed
-# explicitly:
+# --force-micro keeps this maintenance branch inside the 1.0.x corridor
+# (1.0.4, 1.0.5, ...) so a large changeset can never auto-roll into the
+# already-published 1.1.x range. Being a non-master branch, the releaser will
+# warn and ask you to confirm the release.
 #
-#     ./release.sh 1.0.4
-#
+# Usage:
+#   ./release.sh              # auto micro-bump from the latest tag, prompts to confirm
+#   ./release.sh --dry-run    # preview the version + actions, change nothing
+#   ./release.sh --release 1.0.7   # force a specific version
+#   ./release.sh --noinput    # skip the branch confirmation prompt (automation)
 
 LABEL=data_replication
 
@@ -26,19 +31,12 @@ fi
 # Activate the venv that carries the releaser's dependencies.
 source ../icm_ipcatalog/.venv/bin/activate
 
-RELEASE_ARG=""
-if [ -n "$1" ]; then
-    RELEASE_ARG="--release=$1"
-else
-    echo "WARNING: no version given. On stable/1.0.x the releaser will NOT"
-    echo "         create a release unless you pass one, e.g. ./release.sh 1.0.4"
-fi
-
 python ../releaser/release.py \
     --label=${LABEL} \
     --env=.env \
     --verbose 3 \
-    ${RELEASE_ARG}
+    --force-micro \
+    "$@"
 
 if [ $? -eq 0 ]; then
     echo ""
