@@ -23,7 +23,8 @@
 
 LABEL=data_replication
 
-# Load build-time environment (e.g. P4USER / P4PORT / P4CLIENT).
+# Load build-time environment. Must define ICMUSER (the ssh user for the ICM
+# FTP) so --push-tarball can scp the release up. .env is gitignored.
 if [ -f .env ]; then
     export $(grep -v '^#' .env | xargs)
 fi
@@ -31,11 +32,14 @@ fi
 # Activate the venv that carries the releaser's dependencies.
 source ../icm_ipcatalog/.venv/bin/activate
 
+# --push-tarball publishes the plain package tarball to ICM so the prod deploy
+# is just `pip install --upgrade <tarball>`.
 python ../releaser/release.py \
     --label=${LABEL} \
     --env=.env \
     --verbose 3 \
     --force-micro \
+    --push-tarball \
     "$@"
 
 if [ $? -eq 0 ]; then
