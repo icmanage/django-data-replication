@@ -61,9 +61,21 @@ pip install --upgrade django_data_replication-X.tar.gz
 #   (e.g. supervisorctl restart <celery worker group>)
 ```
 
+## Testing
+
+Python 2.7 + Django 1.11, via `manage.py test` against the never-shipped
+`demo_app/` project:
+```bash
+python2.7 -m virtualenv .venv
+.venv/bin/pip install -r requirements-test.txt   # pinned py2.7-safe versions
+.venv/bin/python demo_app/manage.py test data_replication --settings=demo_app.settings_test
+# or: make test
+```
+Tests live in `data_replication/tests/` (in-memory sqlite; Mongo/Splunk mocked).
+
 ## Conventions
 
-- **Python 2.7 only** on this branch. Run the tests with a py2.7 + Django 1.11 venv.
+- **Python 2.7 only** on this branch.
 - The releaser's `pre_file_check` requires every `.py` file to carry a
   `# -*- coding: utf-8 -*-` pragma, `from __future__ import unicode_literals`, and a
   `Copyright 2011-<year>` copyright. Keep new files compliant or the release will fail.

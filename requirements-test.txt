@@ -1,0 +1,13 @@
+# Test environment for the stable/1.0.x line -- Python 2.7 / Django 1.11.
+# Create with:  python2.7 -m virtualenv .venv && .venv/bin/pip install -r requirements-test.txt
+# Run with:     .venv/bin/python runtests.py
+#
+# These pins matter: newer releases of several deps dropped Python 2.7.
+Django==1.11.29
+pytz
+six
+mock                  # unittest.mock isn't in the py2.7 stdlib
+django-appconf==1.0.3  # 1.0.4+ is py3-only (uses `class X(metaclass=...)`)
+requests
+pymongo<4             # pymongo 4.x is py3-only
+celery>=4,<5          # kombu 4.x provides kombu.exceptions.OperationalError

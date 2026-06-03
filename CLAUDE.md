@@ -16,18 +16,25 @@ Fixes for prod are made here and stay Python-2.7-safe (**no f-strings**, etc.).
 
 ## Commands
 
-There is no `demo_app` on this branch and the `tests/test_basic.py` /
-`tests/test_advanced.py` files are broken cookiecutter stubs (they import a
-nonexistent `sample`). The meaningful test is the self-contained regression,
-run under a Python 2.7 + Django 1.11 venv:
+Tests run under a Python 2.7 + Django 1.11 venv via the standard
+`manage.py test` against the never-shipped `demo_app/` project:
 
 ```bash
-# one-time: a py2.7 venv (pyenv has 2.7.18)
-python2.7 -m virtualenv /tmp/ddr27 && /tmp/ddr27/bin/pip install "Django==1.11.29" pytz
+# one-time (pyenv has 2.7.18); pins matter -- see requirements-test.txt
+python2.7 -m virtualenv .venv
+.venv/bin/pip install -r requirements-test.txt
 
-# run the regression (stubs heavy deps; no Mongo/Splunk/Celery needed)
-PYTHONPATH=. /tmp/ddr27/bin/python tests/run_unlock_regression.py
+# run the suite (or: make test)
+.venv/bin/python demo_app/manage.py test data_replication --settings=demo_app.settings_test
+# a subset:
+.venv/bin/python demo_app/manage.py test data_replication.tests.test_base.UnlockTests --settings=demo_app.settings_test
 ```
+
+Tests live in `data_replication/tests/`. `demo_app/` is a Django project that
+is **not built or shipped** (excluded from the sdist) — it provides the test
+settings (`demo_app/demo_app/settings_test.py`) and the `example` app whose
+`Example` model + `replication.py` drive the tests. The DB is in-memory
+sqlite; external Mongo/Splunk I/O is mocked.
 
 ### Releasing & deploying
 Releases are cut with the shared `../releaser` via `./release.sh`. See `README.md`
