@@ -29,6 +29,15 @@ if [ -f .env ]; then
     export $(grep -v '^#' .env | xargs)
 fi
 
+# Fail loudly if ICMUSER is missing: without it --push-tarball scp's as your
+# local account (e.g. steven@localhost), which is denied on the ICM FTP and
+# dies mid-release with a confusing publickey/passphrase error.
+if [ -z "$ICMUSER" ]; then
+    echo "ERROR: ICMUSER is not set. Create a .env here with ICMUSER=<icm ssh user>" >&2
+    echo "       (copy it from ../ipcatalog_verification/.env) before releasing." >&2
+    exit 1
+fi
+
 # Activate the venv that carries the releaser's dependencies.
 source ../icm_ipcatalog/.venv/bin/activate
 
