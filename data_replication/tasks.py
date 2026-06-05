@@ -27,6 +27,10 @@ log = logging.getLogger(__name__)
 @shared_task(ignore_result=True, store_errors_even_if_ignored=True)
 def push_splunk_objects(**kwargs):
 
+    if not getattr(settings, 'ENABLE_REPLICATION', True):
+        log.debug("ENABLE_REPLICATION is False; skipping push_splunk_objects")
+        return "Replication disabled"
+
     object_ids = kwargs.get('object_ids')
     tracker_id = kwargs.get('tracker_id')
     content_type_id = kwargs.get('content_type_id')
@@ -73,6 +77,10 @@ def push_splunk_objects(**kwargs):
 
 @shared_task(ignore_result=True, store_errors_even_if_ignored=True)
 def push_mongo_objects(**kwargs):
+
+    if not getattr(settings, 'ENABLE_REPLICATION', True):
+        log.debug("ENABLE_REPLICATION is False; skipping push_mongo_objects")
+        return "Replication disabled"
 
     object_ids = kwargs.get('object_ids')
     tracker_id = kwargs.get('tracker_id')
