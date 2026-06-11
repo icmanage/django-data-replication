@@ -165,8 +165,12 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
+    # NB: the key MUST be a native ``str``. With ``unicode_literals`` active
+    # under Python 2.7 a bare 'data_replication' is ``unicode``, which prod's
+    # old setuptools rejects in check_package_data ("package_data must be a
+    # dictionary mapping package names to lists of wildcard patterns").
     package_data={
-        'data_replication': ['fixtures/data_replication/*.json',]},
+        str('data_replication'): ['fixtures/data_replication/*.json',]},
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
